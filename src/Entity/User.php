@@ -32,7 +32,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"users:read"})
-     * @Assert\NotBlank
      * @Assert\Length(min=2, max=30)
      */
     private $firstname;
@@ -40,7 +39,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"users:read"})
-     * @Assert\NotBlank
      * @Assert\Length(min=2, max=30)
      */
     private $lastname;
@@ -57,7 +55,6 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\Length(min=4, max=30)
-     * @Assert\NotBlank
      */
     private $password;
 

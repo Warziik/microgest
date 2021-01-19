@@ -7,3 +7,10 @@
 /vendor/
 /node_modules/
 /config/jwt/*.pem
+
+###> symfony/phpunit-bridge ###
+/bin/.phpunit
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###

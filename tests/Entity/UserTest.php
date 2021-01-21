@@ -4,10 +4,14 @@ namespace App\Tests\Entity;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Validator\Validation;
 
 class UserTest extends KernelTestCase
 {
+    /**
+     * Return a valid User Entity
+     * 
+     * @return User
+     */
     private function getEntity(): User
     {
         return (new User())
@@ -17,11 +21,16 @@ class UserTest extends KernelTestCase
             ->setPassword("demo1234");
     }
 
+    /**
+     * Test the validation constraints of an entity
+     * 
+     * @param int $nbErrorExpected Number of errors expected due to the validation constraints
+     * @param User $entity Entity to test the validation constraints
+     */
     private function assertHasErrors(int $nbErrorExpected, User $entity): void
     {
-        $kernel = self::bootKernel();
-        $validator = $kernel->getContainer()->get("validator");
-
+        self::bootKernel();
+        $validator = self::$container->get('validator');
         $errors = $validator->validate($entity);
         $messages = [];
 

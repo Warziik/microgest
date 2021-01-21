@@ -50,7 +50,7 @@ class CustomerTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
 
-        static::createClient()->request(Request::METHOD_POST, "/api/customers", ["auth_bearer" => $authToken, "json" => [
+        $response = static::createClient()->request(Request::METHOD_POST, "/api/customers", ["auth_bearer" => $authToken, "json" => [
             "firstname" => "Firstname-test",
             "lastname" => "Lastname-test",
             "email" => "customer-test@localhost.dev",
@@ -60,7 +60,15 @@ class CustomerTest extends ApiTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
-        $this->assertJsonContains([]);
+        $this->assertJsonContains([
+            "@context" => "/api/contexts/Customer",
+            "@type" => "Customer",
+            "firstname" => "Firstname-test",
+            "lastname" => "Lastname-test",
+            "email" => "customer-test@localhost.dev"
+        ]);
+        $this->assertRegExp('~^/api/customers/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesResourceItemJsonSchema(Customer::class);
     }
 
     /**
@@ -99,13 +107,19 @@ class CustomerTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
 
-        static::createClient()->request(Request::METHOD_PUT, "/api/customers/1", ["auth_bearer" => $authToken, "json" => [
+        $response = static::createClient()->request(Request::METHOD_PUT, "/api/customers/1", ["auth_bearer" => $authToken, "json" => [
             "company" => "testCustomerCompany",
         ]]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertJsonContains([]);
+        $this->assertJsonContains([
+            "@context" => "/api/contexts/Customer",
+            "@type" => "Customer",
+            "company" => "testCustomerCompany"
+        ]);
+        $this->assertRegExp('~^/api/customers/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesResourceItemJsonSchema(Customer::class);
     }
 
     /**
@@ -117,7 +131,7 @@ class CustomerTest extends ApiTestCase
             "company" => "testCustomerCompany",
         ]]);
 
-        $this->assertResponseStatusCodeSame(401);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
     /**

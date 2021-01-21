@@ -7,12 +7,14 @@ use App\DataFixtures\UserFixtures;
 use App\DataFixtures\CustomerFixtures;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Tests\AssertTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CustomerTest extends ApiTestCase
 {
     use FixturesTrait;
+    use AssertTrait;
 
     /**
      * Return a valid Customer Entity
@@ -25,44 +27,6 @@ class CustomerTest extends ApiTestCase
             ->setFirstname("firstname")
             ->setLastname("lastname")
             ->setEmail("customer@localhost.dev");
-    }
-
-    /**
-     * Test the validation constraints of an entity
-     * 
-     * @param int $nbErrorExpected Number of errors expected due to the validation constraints
-     * @param Customer $entity Entity to test the validation constraints
-     */
-    private function assertHasErrors(int $nbErrorExpected, Customer $entity): void
-    {
-        self::bootKernel();
-        $validator = self::$container->get('validator');
-        $errors = $validator->validate($entity);
-        $messages = [];
-
-        foreach ($errors as $e) {
-            $messages[] = $e->getPropertyPath() . " => " . $e->getMessage();
-        }
-
-        $this->assertCount($nbErrorExpected, $errors, implode(", ", $messages));
-    }
-
-    /**
-     * Retrieve an authorization JWT Token to make API call
-     * 
-     * @return string JWT Token
-     */
-    private function getAuthToken(): string
-    {
-        $this->loadFixtures([UserFixtures::class, CustomerFixtures::class]);
-
-        $response = static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
-            "username" => "testUser@localhost.dev",
-            "password" => "demo1234",
-        ]]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-
-        return $response->toArray()["token"];
     }
 
     /**

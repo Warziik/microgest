@@ -3,10 +3,13 @@
 namespace App\Tests\Entity;
 
 use App\Entity\User;
+use App\Tests\AssertTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserTest extends KernelTestCase
 {
+    use AssertTrait;
+
     /**
      * Return a valid User Entity
      * 
@@ -19,26 +22,6 @@ class UserTest extends KernelTestCase
             ->setLastname("LastName")
             ->setEmail("valid@email.fr")
             ->setPassword("demo1234");
-    }
-
-    /**
-     * Test the validation constraints of an entity
-     * 
-     * @param int $nbErrorExpected Number of errors expected due to the validation constraints
-     * @param User $entity Entity to test the validation constraints
-     */
-    private function assertHasErrors(int $nbErrorExpected, User $entity): void
-    {
-        self::bootKernel();
-        $validator = self::$container->get('validator');
-        $errors = $validator->validate($entity);
-        $messages = [];
-
-        foreach ($errors as $e) {
-            $messages[] = $e->getPropertyPath() . " => " . $e->getMessage();
-        }
-
-        $this->assertCount($nbErrorExpected, $errors, implode(", ", $messages));
     }
 
     public function testFirstnameTooShort(): void

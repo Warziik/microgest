@@ -6,7 +6,10 @@ use App\DataFixtures\UserFixtures;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+// TODO: Write documentation for each test.
 class AuthTest extends ApiTestCase
 {
     use FixturesTrait;
@@ -15,7 +18,7 @@ class AuthTest extends ApiTestCase
     {
         $this->loadFixtures([UserFixtures::class]);
 
-        $response = static::createClient()->request("POST", "/api/authentication_token", ["json" => [
+        static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
             "username" => "demoUser-0@localhost.dev",
             "password" => "demo1234",
         ]]);
@@ -26,14 +29,14 @@ class AuthTest extends ApiTestCase
     {
         $this->loadFixtures([UserFixtures::class]);
 
-        $response = static::createClient()->request("POST", "/api/authentication_token", ["json" => [
+        static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
             "username" => "invalidUser",
             "password" => "demo1234",
         ]]);
-        $this->assertResponseStatusCodeSame(401);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertResponseHeaderSame('content-type', 'application/json');
         $this->assertJsonContains([
-            'code' => 401,
+            'code' => Response::HTTP_UNAUTHORIZED,
             'message' => 'Invalid credentials.'
         ]);
     }
@@ -42,13 +45,13 @@ class AuthTest extends ApiTestCase
     {
         $this->loadFixtures([UserFixtures::class]);
 
-        $response = static::createClient()->request("POST", "/api/users", ["json" => [
+        $response = static::createClient()->request(Request::METHOD_POST, "/api/users", ["json" => [
             "firstname" => "demoUser-firstname",
             "lastname" => "demoUser-lastname",
             "email" => "demo@domain.fr",
             "password" => "demo1234"
         ]]);
-        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/api/contexts/User',
@@ -67,10 +70,10 @@ class AuthTest extends ApiTestCase
     {
         $this->loadFixtures([UserFixtures::class]);
 
-        $response = static::createClient()->request("POST", "/api/users", ["json" => [
+        $response = static::createClient()->request(Request::METHOD_POST, "/api/users", ["json" => [
             "email" => ""
         ]]);
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 }

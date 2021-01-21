@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -15,7 +18,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  * @ApiResource(
- *      normalizationContext={"groups"={"users:read"}}
+ *      normalizationContext={"groups"={"users:read"}},
+ *      collectionOperations={"post"},
+ *      itemOperations={
+ *          "get"={"security"="object == user"},
+ *          "put"={"security"="object == user"},
+ *          "patch"={"security"="object == user"},
+ *          "delete"={"security"="object == user"}
+ *      }
  * )
  * @UniqueEntity(fields={"email"}, message="This email address is already in use.")
  */
@@ -25,27 +35,27 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      * @Assert\Length(min=2, max=30)
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      * @Assert\Length(min=2, max=30)
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -60,25 +70,33 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      */
     private $roles = [];
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users:read"})
+     * @Groups({"users:read", "customers:read"})
      */
     private $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true)
+     * @ApiSubresource
+     * @Groups({"users:read"})
+     */
+    private $customers;
 
     public function __construct()
     {
         $this->setCreatedAt(new DateTime());
+        $this->customers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -203,6 +221,36 @@ class User implements UserInterface
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Customer[]
+     */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer(Customer $customer): self
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+            $customer->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomer(Customer $customer): self
+    {
+        if ($this->customers->removeElement($customer)) {
+            // set the owning side to null (unless already changed)
+            if ($customer->getOwner() === $this) {
+                $customer->setOwner(null);
+            }
+        }
 
         return $this;
     }

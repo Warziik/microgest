@@ -17,6 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
+ * @ORM\HasLifecycleCallbacks
  * @ApiResource(
  *      normalizationContext={"groups"={"users:read"}},
  *      collectionOperations={"post"},
@@ -253,5 +254,13 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamp(): void
+    {
+        $this->setUpdatedAt(new DateTime());
     }
 }

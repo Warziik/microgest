@@ -26,6 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @ORM\Table(name="customers")
+ * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"email"}, message="This email address is already in use.")
  */
 class Customer
@@ -178,5 +179,13 @@ class Customer
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamp(): void
+    {
+        $this->setUpdatedAt(new DateTime());
     }
 }

@@ -24,7 +24,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      itemOperations={
  *          "get"={"security"="object == user"},
  *          "put"={"security"="object == user"},
- *          "patch"={"security"="object == user"},
  *          "delete"={"security"="object == user"}
  *      }
  * )
@@ -65,7 +64,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\Length(min=4, max=30)
+     * @Assert\Length(min=3, max=255)
      */
     private $password;
 

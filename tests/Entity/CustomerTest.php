@@ -39,8 +39,8 @@ class CustomerTest extends ApiTestCase
         static::createClient()->request(Request::METHOD_GET, "/api/customers/3", ["auth_bearer" => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
 
-        static::createClient()->request(Request::METHOD_GET, "/api/users/18/customers", ["auth_bearer" => $authToken]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        //static::createClient()->request(Request::METHOD_GET, "/api/users/18/customers", ["auth_bearer" => $authToken]);
+        //$this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**

@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CustomerRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,11 +20,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *  itemOperations={
  *      "get"={"security"="object.getOwner() == user"},
  *      "put"={"security"="object.getOwner() == user"},
- *      "patch"={"security"="object.getOwner() == user"},
- *       "delete"={"security"="object.getOwner() == user"}
+ *      "delete"={"security"="object.getOwner() == user"}
  *  },
  *  subresourceOperations={
- *      "api_users_customers_get_subresource"={"security"="object == user", "normalization_context"={"groups"={"users_customers_subresource"}}},     
+ *      "api_users_customers_get_subresource"={"normalization_context"={"groups"={"users_customers_subresource"}}}    
  *  }
  * )
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -35,21 +37,21 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $lastname;
 
@@ -57,14 +59,14 @@ class Customer
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Email
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max=30)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $company;
 
@@ -77,19 +79,26 @@ class Customer
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
      */
     private $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true)
+     * @ApiSubresource
+     */
+    private $invoices;
 
     public function __construct()
     {
         $this->setCreatedAt(new DateTime());
+        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,5 +196,35 @@ class Customer
     public function updateTimestamp(): void
     {
         $this->setUpdatedAt(new DateTime());
+    }
+
+    /**
+     * @return Collection|Invoice[]
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): self
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices[] = $invoice;
+            $invoice->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): self
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getCustomer() === $this) {
+                $invoice->setCustomer(null);
+            }
+        }
+
+        return $this;
     }
 }

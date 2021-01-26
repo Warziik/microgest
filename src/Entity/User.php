@@ -35,27 +35,27 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      * @Assert\Length(min=2, max=30)
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      * @Assert\Length(min=2, max=30)
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -70,19 +70,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      */
     private $roles = [];
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users:read", "customers:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read"})
      */
     private $updatedAt;
 

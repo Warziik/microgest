@@ -3,10 +3,9 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Customer;
-use App\DataFixtures\UserFixtures;
-use App\DataFixtures\CustomerFixtures;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Entity\User;
 use App\Tests\AssertTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +25,34 @@ class CustomerTest extends ApiTestCase
         return (new Customer)
             ->setFirstname("firstname")
             ->setLastname("lastname")
-            ->setEmail("customer@localhost.dev");
+            ->setEmail("customer@localhost.dev")
+            ->setOwner(new User());
+    }
+
+    /**
+     * Test get Customer
+     */
+    public function testGetCustomer(): void
+    {
+        $authToken = $this->getAuthToken();
+
+        static::createClient()->request(Request::METHOD_GET, "/api/customers/1", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        static::createClient()->request(Request::METHOD_GET, "/api/users/1/customers", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    /**
+     * Test get Customer without being logged.
+     */
+    public function testGetCustomerWithoutAuthorization(): void
+    {
+        static::createClient()->request(Request::METHOD_GET, "/api/customers/1");
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+
+        static::createClient()->request(Request::METHOD_GET, "/api/users/1/customers");
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -41,6 +67,17 @@ class CustomerTest extends ApiTestCase
 
         //static::createClient()->request(Request::METHOD_GET, "/api/users/18/customers", ["auth_bearer" => $authToken]);
         //$this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * Test get an unexisting Customer.
+     */
+    public function testGetInvalidCustomer(): void
+    {
+        $authToken = $this->getAuthToken();
+
+        static::createClient()->request(Request::METHOD_GET, "/api/customers/999", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -88,16 +125,16 @@ class CustomerTest extends ApiTestCase
     }
 
     /**
-     * Update a Customer that dosnt belongs to the logged User
+     * Test create an invalid Customer
      */
-    public function testUpdateUnownedCustomer(): void
+    public function testCreateInvalidCustomer(): void
     {
         $authToken = $this->getAuthToken();
-
-        static::createClient()->request(Request::METHOD_PUT, "/api/customers/3", ["auth_bearer" => $authToken, "json" => [
-            "owner" => "/api/users/9"
+        static::createClient()->request(Request::METHOD_POST, "/api/customers", ["auth_bearer" => $authToken, "json" => [
+            "firstname" => "Test"
         ]]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -135,14 +172,29 @@ class CustomerTest extends ApiTestCase
     }
 
     /**
-     * Delete a Customer that dosnt belongs to the logged User
+     * Update a Customer that dosnt belongs to the logged User
      */
-    public function testDeleteUnownedCustomer(): void
+    public function testUpdateUnownedCustomer(): void
     {
         $authToken = $this->getAuthToken();
 
-        static::createClient()->request(Request::METHOD_DELETE, "/api/customers/9", ["auth_bearer" => $authToken]);
+        static::createClient()->request(Request::METHOD_PUT, "/api/customers/3", ["auth_bearer" => $authToken, "json" => [
+            "owner" => "/api/users/9"
+        ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * Test update an unexisting Customer.
+     */
+    public function testUpdateInvalidCustomer(): void
+    {
+        $authToken = $this->getAuthToken();
+
+        static::createClient()->request(Request::METHOD_PUT, "/api/customers/1", ["auth_bearer" => $authToken, "json" => [
+            "firstname" => null,
+        ]]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -166,34 +218,69 @@ class CustomerTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
-    // TODO: Extract the methods below in a separate file
-    public function testFirstnameTooShort(): void
+    /**
+     * Delete a Customer that dosnt belongs to the logged User
+     */
+    public function testDeleteUnownedCustomer(): void
     {
-        $this->assertHasErrors(1, $this->getEntity()->setFirstname("f"));
+        $authToken = $this->getAuthToken();
+
+        static::createClient()->request(Request::METHOD_DELETE, "/api/customers/9", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function testInvalidBlankFirstname(): void
+    /**
+     * Test delete an unexisting Customer.
+     */
+    public function testDeleteInvalidCustomer(): void
     {
+        $authToken = $this->getAuthToken();
+
+        static::createClient()->request(Request::METHOD_DELETE, "/api/customers/99999", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Unit Tests: Properties Constraints
+     */
+    public function testFirstnameConstraints(): void
+    {
+        $this->assertHasErrors(0, $this->getEntity()->setFirstname("Test"));
+
         $this->assertHasErrors(1, $this->getEntity()->setFirstname(""));
+        $this->assertHasErrors(1, $this->getEntity()->setFirstname("f"));
+        $this->assertHasErrors(1, $this->getEntity()->setFirstname("abcdefghijklmnopqrstuvwxyz0123456789"));
     }
 
-    public function testLastnameTooShort(): void
+    public function testLastnameConstraints(): void
     {
-        $this->assertHasErrors(1, $this->getEntity()->setLastname("f"));
-    }
+        $this->assertHasErrors(0, $this->getEntity()->setLastname("Test"));
 
-    public function testInvalidBlankLastname(): void
-    {
         $this->assertHasErrors(1, $this->getEntity()->setLastname(""));
+        $this->assertHasErrors(1, $this->getEntity()->setLastname("f"));
+        $this->assertHasErrors(1, $this->getEntity()->setLastname("abcdefghijklmnopqrstuvwxyz0123456789"));
     }
 
-    public function testInvalidEmail(): void
+    public function testEmailConstraints(): void
     {
+        $this->assertHasErrors(0, $this->getEntity()->setEmail("demo@localhost.dev"));
+
+        $this->assertHasErrors(1, $this->getEntity()->setEmail(""));
         $this->assertHasErrors(1, $this->getEntity()->setEmail("invalid_email_format"));
     }
 
-    public function testInvalidBlankEmail(): void
+    public function testCompanyConstraints(): void
     {
-        $this->assertHasErrors(1, $this->getEntity()->setEmail(""));
+        $this->assertHasErrors(0, $this->getEntity()->setCompany("DemoCompany"));
+        $this->assertHasErrors(0, $this->getEntity()->setCompany(null));
+
+        $this->assertHasErrors(1, $this->getEntity()->setCompany("abcdefghijklmnopqrstuvwxyz0123456789"));
+    }
+
+    public function testOwnerConstraints(): void
+    {
+        $this->assertHasErrors(0, $this->getEntity()->setOwner(new User()));
+
+        $this->assertHasErrors(1, $this->getEntity()->setOwner(null));
     }
 }

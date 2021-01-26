@@ -73,19 +73,22 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"customers:read"})
+     * @Groups({"customers:read", "invoices:read"})
+     * @Assert\NotBlank
      */
     private $owner;
 
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Assert\Type(\DateTimeInterface::class)
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Assert\Type(\DateTimeInterface::class)
      */
     private $updatedAt;
 

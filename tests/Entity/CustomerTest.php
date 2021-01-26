@@ -185,7 +185,7 @@ class CustomerTest extends ApiTestCase
     }
 
     /**
-     * Test update an unexisting Customer.
+     * Test update a Customer with an invalid request.
      */
     public function testUpdateInvalidCustomer(): void
     {

@@ -77,12 +77,14 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"users:read", "customers:read", "invoices:read"})
+     * @Assert\Type(\DateTimeInterface::class)
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Groups({"users:read", "customers:read", "invoices:read"})
+     * @Assert\Type(\DateTimeInterface::class)
      */
     private $updatedAt;
 

@@ -79,7 +79,7 @@ class Invoice
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"invoices:read", "customers_invoices_subresource"})
-     * @Assert\Regex("/^[0-9]{4}-[0-9]{4}$/")
+     * @Assert\Regex(pattern="/^[0-9]{4}-[0-9]{4}$/", message="{{ value }} must respect this format: YYYY-0000")
      */
     private $chrono;
 

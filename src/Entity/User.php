@@ -88,7 +88,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true)
-     * @ApiSubresource
+     * @ApiSubresource(maxDepth=1)
      * @Groups({"users:read"})
      */
     private $customers;

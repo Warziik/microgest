@@ -19,6 +19,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             ->setCompany("")
             ->setOwner($this->getReference("testUser"));
         $manager->persist($testCustomer);
+        $this->addReference("testCustomer", $testCustomer);
 
         for ($i = 0; $i < 200; $i++) {
             $customer = (new Customer())

@@ -37,21 +37,21 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      */
     private $lastname;
 
@@ -59,41 +59,42 @@ class Customer
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Email
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max=30)
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      */
     private $company;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"customers:read", "invoices:read"})
+     * @Groups({"customers:read"})
      * @Assert\NotBlank
      */
     private $owner;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      * @Assert\Type(\DateTimeInterface::class)
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"customers:read", "users_customers_subresource", "invoices:read"})
+     * @Groups({"customers:read", "users_customers_subresource"})
      * @Assert\Type(\DateTimeInterface::class)
      */
     private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true)
+     * @Groups({"customers:read"})
      * @ApiSubresource
      */
     private $invoices;

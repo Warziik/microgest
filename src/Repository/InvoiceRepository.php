@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Invoice;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,6 +19,30 @@ class InvoiceRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Invoice::class);
+    }
+
+    /**
+     * Retrieve the last chrono set to an Invoice by the logged User.
+     * 
+     * @param User $user The current logged User
+     * @return null|string
+     */
+    public function findLastChrono(User $user): ?string
+    {
+        $query = $this->createQueryBuilder('i')
+            ->select('i.chrono')
+            ->join('i.customer', 'c')
+            ->where('c.owner = :user')
+            ->setParameter('user', $user)
+            ->orderBy("i.chrono", "DESC")
+            ->setMaxResults(1)
+            ->getQuery();
+
+        try {
+            return $query->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
     }
 
     // /**

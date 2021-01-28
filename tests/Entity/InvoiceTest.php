@@ -24,12 +24,9 @@ class InvoiceTest extends ApiTestCase
     private function getEntity(): Invoice
     {
         return (new Invoice())
-            ->setChrono(date("Y") . "-" . "9998")
             ->setAmount(rand(200, 5000))
             ->setStatus("NEW")
-            ->setCustomer(new Customer())
-            ->setPaidAt(null)
-            ->setSentAt(null);
+            ->setCustomer(new Customer());
     }
 
     /**
@@ -90,7 +87,6 @@ class InvoiceTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
         $response = static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
-            "chrono" => "2021-9999",
             "amount" => 2200,
             "status" => "SENT",
             "sentAt" => "2021-01-09 20:15:13",
@@ -115,7 +111,6 @@ class InvoiceTest extends ApiTestCase
     public function testCreateInvoiceWithoutAuthorization(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["json" => [
-            "chrono" => "2021-9999",
             "amount" => 2200,
             "status" => "SENT",
             "sentAt" => "2021-01-09 20:15:13",

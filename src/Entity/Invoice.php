@@ -7,7 +7,6 @@ use App\Repository\InvoiceRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
@@ -26,7 +25,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * )
  * @ORM\Table(name="invoices")
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
- * @UniqueEntity(fields={"chrono"}, message="This chrono is already set to another invoice.")
  */
 class Invoice
 {

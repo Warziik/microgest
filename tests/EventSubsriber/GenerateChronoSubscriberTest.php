@@ -2,8 +2,6 @@
 
 namespace App\Tests\EventSubsriber;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\DataFixtures\UserFixtures;
 use App\Entity\Invoice;
 use App\Entity\Customer;
 use App\Entity\User;
@@ -14,15 +12,13 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\KernelEvents;
 use App\EventSubscriber\GenerateChronoSubscriber;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
-use App\EventSubscriber\PasswordEncoderSubscriber;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class GenerateChronoSubscriberTest extends ApiTestCase
+class GenerateChronoSubscriberTest extends TestCase
 {
     public function testEventSubscription(): void
     {
-        $this->assertArrayHasKey(KernelEvents::VIEW, PasswordEncoderSubscriber::getSubscribedEvents());
+        $this->assertArrayHasKey(KernelEvents::VIEW, GenerateChronoSubscriber::getSubscribedEvents());
     }
 
     public function testGenerateChrono(): void

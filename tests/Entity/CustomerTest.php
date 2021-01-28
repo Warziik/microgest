@@ -90,9 +90,7 @@ class CustomerTest extends ApiTestCase
         $response = static::createClient()->request(Request::METHOD_POST, "/api/customers", ["auth_bearer" => $authToken, "json" => [
             "firstname" => "Firstname-test",
             "lastname" => "Lastname-test",
-            "email" => "customer-test@localhost.dev",
-            "company" => "",
-            "owner" => "/api/users/1"
+            "email" => "customer-test@localhost.dev"
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -116,9 +114,7 @@ class CustomerTest extends ApiTestCase
         static::createClient()->request(Request::METHOD_POST, "/api/customers", ["json" => [
             "firstname" => "Firstname-test",
             "lastname" => "Lastname-test",
-            "email" => "customer-test@localhost.dev",
-            "company" => "",
-            "owner" => "/api/users/1"
+            "email" => "customer-test@localhost.dev"
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);

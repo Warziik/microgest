@@ -38,8 +38,7 @@ class PasswordEncoderSubscriber implements EventSubscriberInterface
         $method = $event->getRequest()->getMethod();
 
         if ($entity instanceof User && $method === Request::METHOD_POST) {
-            $entity->setPassword("demo1234");
-            $this->passwordEncoder->encodePassword(new User(), "demo1234");
+            $entity->setPassword($this->passwordEncoder->encodePassword($entity, $entity->getPassword()));
         }
     }
 }

@@ -18,9 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *      "delete"={"security"="object.getCustomer().getOwner() == user"}
  *  },
  *  subresourceOperations={
- *      "api_customers_invoices_get_subresource"={
- *          "normalization_context"={"groups"={"customers_invoices_subresource"}}
- *      },     
+ *      "api_customers_invoices_get_subresource"={"security"="is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])", "normalization_context"={"groups"={"customers_invoices_subresource"}}}
  *  }
  * )
  * @ORM\Table(name="invoices")

@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      "delete"={"security"="object.getOwner() == user"}
  *  },
  *  subresourceOperations={
- *      "api_users_customers_get_subresource"={"normalization_context"={"groups"={"users_customers_subresource"}}}    
+ *      "api_users_customers_get_subresource"={"security"="is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])", "normalization_context"={"groups"={"users_customers_subresource"}}}    
  *  }
  * )
  * @ORM\Entity(repositoryClass=CustomerRepository::class)

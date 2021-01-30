@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
  *  normalizationContext={"groups"={"invoices:read"}},
+ *  denormalizationContext={"groups"={"invoices:write"}},
  *  collectionOperations={"post"},
  *  itemOperations={
  *      "get"={"security"="object.getCustomer().getOwner() == user"},
@@ -36,7 +37,7 @@ class Invoice
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"invoices:read", "customers_invoices_subresource"})
+     * @Groups({"invoices:read", "customers_invoices_subresource", "invoices:write"})
      * @Assert\NotBlank
      * @Assert\Type(type="numeric", message="The amount must be a number.")
      */
@@ -44,7 +45,7 @@ class Invoice
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"invoices:read", "customers_invoices_subresource"})
+     * @Groups({"invoices:read", "customers_invoices_subresource", "invoices:write"})
      * @Assert\NotBlank
      * @Assert\Choice(choices={"NEW", "SENT", "PAID", "CANCELLED"}, message="The status must be of type 'NEW', 'SENT', 'PAID' or 'CANCELLED' only.")
      */
@@ -53,21 +54,21 @@ class Invoice
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"invoices:read"})
+     * @Groups({"invoices:read", "invoices:write"})
      * @Assert\NotBlank
      */
     private $customer;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"invoices:read", "customers_invoices_subresource"})
+     * @Groups({"invoices:read", "customers_invoices_subresource", "invoices:write"})
      * @Assert\Type(\DateTimeInterface::class)
      */
     private $sentAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"invoices:read", "customers_invoices_subresource"})
+     * @Groups({"invoices:read", "customers_invoices_subresource", "invoices:write"})
      * @Assert\Type(\DateTimeInterface::class)
      */
     private $paidAt;

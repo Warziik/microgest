@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *  normalizationContext={"groups"={"customers:read"}},
+ *  denormalizationContext={"groups"={"customers:write"}},
  *  collectionOperations={"post"},
  *  itemOperations={
  *      "get"={"security"="object.getOwner() == user"},
@@ -44,14 +45,14 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
      */
     private $lastname;
 
@@ -59,14 +60,14 @@ class Customer
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Email
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Length(max=30)
-     * @Groups({"customers:read", "users_customers_subresource"})
+     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
      */
     private $company;
 

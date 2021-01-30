@@ -20,6 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks
  * @ApiResource(
  *      normalizationContext={"groups"={"users:read"}},
+ *      denormalizationContext={"groups"={"users:write"}},
  *      collectionOperations={"post"},
  *      itemOperations={
  *          "get"={"security"="object == user"},
@@ -41,21 +42,21 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read", "customers:read", "invoices:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
      * @Assert\Length(min=2, max=30)
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read", "customers:read", "invoices:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
      * @Assert\Length(min=2, max=30)
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users:read", "customers:read", "invoices:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -64,13 +65,14 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"users:write"})
      * @Assert\Length(min=3, max=255)
      */
     private $password;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"users:read", "customers:read", "invoices:read"})
+     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
      */
     private $roles = [];
 

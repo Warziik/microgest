@@ -10,15 +10,10 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 
-class GenerateChronoSubscriber implements EventSubscriberInterface
+final class GenerateChronoSubscriber implements EventSubscriberInterface
 {
-    private Security $security;
-    private InvoiceRepository $repository;
-
-    public function __construct(Security $security, InvoiceRepository $repository)
+    public function __construct(private Security $security, private InvoiceRepository $repository)
     {
-        $this->security = $security;
-        $this->repository = $repository;
     }
 
     public static function getSubscribedEvents()

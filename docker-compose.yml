@@ -52,6 +52,13 @@ services:
       - mysql8-service
     environment:
       - PMA_ARBITRARY=1
+
+  # Maildev
+  maildev:
+    image: maildev/maildev
+    container_name: maildev-container
+    ports:
+      - "8889:80"
       
 volumes: 
   db_data: {}

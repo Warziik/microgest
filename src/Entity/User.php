@@ -3,15 +3,17 @@
 namespace App\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Security\Core\User\UserInterface;
 use App\Repository\UserRepository;
+use App\Controller\ResetPassword;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\ForgotPassword;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -21,7 +23,47 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  *      normalizationContext={"groups"={"users:read"}},
  *      denormalizationContext={"groups"={"users:write"}},
- *      collectionOperations={"post"},
+ *      collectionOperations={
+ *          "post",
+ *          "forgotPassword"={
+ *               "method"="POST",
+ *               "path"="/users/forgot_password",
+ *               "controller"=ForgotPassword::class,
+ *               "denormalization_context"={"groups"={"forgotPassword:write"}},
+ *               "openapi_context"={
+ *                  "summary"="Sends an email to reset the password.",
+ *                  "description"="Get the User's email as body parameter and send a mail which contains a link to reset the password",
+ *                  "requestBody"={
+ *                     "description"="The email address of the User to which the reset password mail will be sent",
+ *                     "content"={"application/ld+json"={"schema"={"type"="string", "example"={"email"="string"}}}}
+ *                  },
+ *                  "responses"={
+ *                     "200"={"description"="Email sent successfully"},
+ *                     "400"={"description"="Email address must be provided as body parameter"},
+ *                     "404"={"description"="User not found"}
+ *                  }
+ *               }
+ *          },
+ *          "resetPassword"={
+ *              "method"="POST",
+ *              "path"="/users/reset_password",
+ *              "controller"=ResetPassword::class,
+ *              "denormalization_context"={"groups"={"resetPassword:write"}},
+ *              "openapi_context"={
+ *                  "summary"="Resets the User's password.",
+ *                  "requestBody"={ 
+ *                      "description"="The new password to set to the User and the hashed token generated when the User requested to reset his password",
+ *                      "content"={"application/ld+json"={"schema"={"type"="string", "example"={"password"="string", "token"="string"}}}}
+ *                  },
+ *                  "responses"={
+ *                      "200"={"description"="Password changed successfully"},
+ *                      "401"={"description"="Token has expired"},
+ *                      "403"={"description"="Invalid body content"},
+ *                      "404"={"description"="ResetPassword resource not found"}
+ *                  }
+ *              }
+ *          }
+ *      },
  *      itemOperations={
  *          "get"={"security"="object == user"},
  *          "put"={"security"="object == user"},
@@ -56,7 +98,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
+     * @Groups({"users:read", "customers:read", "invoices:read", "users:write", "forgotPassword:write"})
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -65,7 +107,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"users:write"})
+     * @Groups({"users:write", "resetPassword:write"})
      * @Assert\Length(min=3, max=255)
      */
     private $password;

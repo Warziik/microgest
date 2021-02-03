@@ -47,18 +47,20 @@ services:
     container_name: phpmyadmin-container
     restart: always
     ports:
-      - "8888:80"
+      - "8081:80"
     depends_on: 
       - mysql8-service
     environment:
       - PMA_ARBITRARY=1
 
   # Maildev
-  maildev:
+  maildev-service:
     image: maildev/maildev
     container_name: maildev-container
+    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    restart: always
     ports:
-      - "8889:80"
+      - "8082:80"
       
 volumes: 
   db_data: {}

@@ -7,6 +7,9 @@ use App\Entity\ResetPassword;
 use App\Entity\User;
 use App\Tests\AssertTrait;
 
+/**
+ * Unit tests
+ */
 class ResetPasswordTest extends ApiTestCase
 {
     use AssertTrait;

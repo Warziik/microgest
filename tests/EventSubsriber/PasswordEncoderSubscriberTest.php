@@ -30,11 +30,11 @@ class PasswordEncoderSubscriberTest extends TestCase
             ->setEmail("test@test.fr")
             ->setPassword("demo1234");
 
-        $passwordEncoder = $this->getMockBuilder(UserPasswordEncoderInterface::class)->getMock();
+        $passwordEncoder = $this->createMock(UserPasswordEncoderInterface::class);
         $passwordEncoder->expects($this->once())->method("encodePassword")->willReturn("foo");
         $subscriber = new PasswordEncoderSubscriber($passwordEncoder);
 
-        $kernel = $this->getMockBuilder(HttpKernelInterface::class)->getMock();
+        $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
         $event = new ViewEvent($kernel, $request, 1, $user);

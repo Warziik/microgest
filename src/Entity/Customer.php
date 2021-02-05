@@ -2,107 +2,100 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeInterface;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
- *  normalizationContext={"groups"={"customers:read"}},
- *  denormalizationContext={"groups"={"customers:write"}},
- *  collectionOperations={"post"},
- *  itemOperations={
- *      "get"={"security"="object.getOwner() == user"},
- *      "put"={"security"="object.getOwner() == user"},
- *      "delete"={"security"="object.getOwner() == user"}
- *  },
- *  subresourceOperations={
- *      "api_users_customers_get_subresource"={"security"="is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])", "normalization_context"={"groups"={"users_customers_subresource"}}}    
- *  }
- * )
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @ORM\Table(name="customers")
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity(fields={"email"}, message="This email address is already in use.")
  */
+#[UniqueEntity(fields: ["email"], message: "This email address is already in use.")]
+#[ApiResource(
+    normalizationContext: ["groups" => ["customers:read"]],
+    denormalizationContext: ["groups" => ["customers:write"]],
+    collectionOperations: ["post"],
+    itemOperations: [
+        "get" => ["security" => "object.getOwner() == user"],
+        "put" => ["security" => "object.getOwner() == user"],
+        "delete" => ["security" => "object.getOwner() == user"]
+    ],
+    subresourceOperations: [
+        "api_users_customers_get_subresource" => [
+            "security" => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
+            "normalization_context" => ["groups" => ["users_customers_subresource"]]
+        ]
+    ],
+)]
 class Customer
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"customers:read", "users_customers_subresource"})
      */
-    private $id;
+    #[Groups(["customers:read", "users_customers_subresource"])]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
-     */
-    private $firstname;
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 30)]
+    private ?string $firstname = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=2, max=30)
-     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
-     */
-    private $lastname;
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 30)]
+    private ?string $lastname = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\Email
-     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
-     */
-    private $email;
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private ?string $email = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Length(max=30)
-     * @Groups({"customers:read", "users_customers_subresource", "customers:write"})
-     */
-    private $company;
+    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\Length(max: 30)]
+    private ?string $company = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"customers:read"})
-     * @Assert\NotBlank
      */
-    private $owner;
+    #[Groups(["customers:read"])]
+    #[Assert\NotBlank]
+    private ?User $owner = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     * @Groups({"customers:read", "users_customers_subresource"})
-     * @Assert\Type(\DateTimeInterface::class)
-     */
-    private $createdAt;
+    /** @ORM\Column(type="datetime") */
+    #[Groups(["customers:read", "users_customers_subresource"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private ?DateTimeInterface $createdAt = null;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"customers:read", "users_customers_subresource"})
-     * @Assert\Type(\DateTimeInterface::class)
-     */
-    private $updatedAt;
+    /** @ORM\Column(type="datetime", nullable=true) */
+    #[Groups(["customers:read", "users_customers_subresource"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private ?DateTimeInterface $updatedAt = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true)
-     * @Groups({"customers:read"})
-     * @ApiSubresource
-     */
-    private $invoices;
+    /** @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true) */
+    #[Groups(["customers:read"])]
+    #[ApiSubresource]
+    private ?Collection $invoices = null;
 
     public function __construct()
     {
-        $this->setCreatedAt(new DateTime());
+        $this->setCreatedAt(new \DateTime());
         $this->invoices = new ArrayCollection();
     }
 

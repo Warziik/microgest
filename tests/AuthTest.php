@@ -70,10 +70,10 @@ class AuthTest extends ApiTestCase
     {
         $this->loadFixtures([UserFixtures::class]);
 
-        $response = static::createClient()->request(Request::METHOD_POST, "/api/users", ["json" => [
+        static::createClient()->request(Request::METHOD_POST, "/api/users", ["json" => [
             "email" => ""
         ]]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

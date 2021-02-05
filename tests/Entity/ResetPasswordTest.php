@@ -23,6 +23,6 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertHasErrors(0, $this->getEntity()->setToken(sha1(random_bytes(10))));
 
         $this->assertHasErrors(1, $this->getEntity()->setToken("test"));
-        $this->assertHasErrors(1, $this->getEntity()->setToken(""));
+        $this->assertHasErrors(2, $this->getEntity()->setToken(""));
     }
 }

@@ -19,8 +19,8 @@ composer install
 symfony console d:d:c
 # crée la base de données mysql 'microgest'
 
-symfony console d:s:u --force
-# mets à jour la base de données mysql 'microgest'
+symfony console d:s:c
+# crée le schéma de la base de données
 
 php bin/phpunit
 # lance les tests unitaires et fonctionnels

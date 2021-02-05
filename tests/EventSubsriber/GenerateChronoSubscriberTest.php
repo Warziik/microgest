@@ -28,15 +28,15 @@ class GenerateChronoSubscriberTest extends TestCase
             ->setStatus("NEW")
             ->setCustomer(new Customer());
 
-        $securityMock = $this->getMockBuilder(Security::class)->disableOriginalConstructor()->getMock();
+        $securityMock = $this->createMock(Security::class);
         $securityMock->expects($this->once())->method('getUser')->willReturn(new User());
 
-        $repositoryMock = $this->getMockBuilder(InvoiceRepository::class)->disableOriginalConstructor()->getMock();
+        $repositoryMock = $this->createMock(InvoiceRepository::class);
         $repositoryMock->expects($this->once())->method('findLastChrono');
 
         $subscriber = new GenerateChronoSubscriber($securityMock, $repositoryMock);
 
-        $kernel = $this->getMockBuilder(HttpKernelInterface::class)->getMock();
+        $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
         $event = new ViewEvent($kernel, $request, 1, $invoice);

@@ -9,15 +9,18 @@ use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-// TODO: Write documentation for each test.
 class AuthTest extends ApiTestCase
 {
     use FixturesTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->loadFixtures([UserFixtures::class]);
+    }
+    
     public function testLogin(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
             "username" => "demoUser-0@localhost.dev",
             "password" => "demo1234",
@@ -27,8 +30,6 @@ class AuthTest extends ApiTestCase
 
     public function testInvalidLogin(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
             "username" => "invalidUser",
             "password" => "demo1234",
@@ -43,8 +44,6 @@ class AuthTest extends ApiTestCase
 
     public function testRegister(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         $response = static::createClient()->request(Request::METHOD_POST, "/api/users", ["json" => [
             "firstname" => "demoUser-firstname",
             "lastname" => "demoUser-lastname",
@@ -68,8 +67,6 @@ class AuthTest extends ApiTestCase
 
     public function testInvalidRegister(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         static::createClient()->request(Request::METHOD_POST, "/api/users", ["json" => [
             "email" => ""
         ]]);

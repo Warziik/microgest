@@ -21,6 +21,8 @@ class ResetPasswordTest extends ApiTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         self::bootKernel();
         $this->loadFixtures([UserFixtures::class, ResetPasswordFixtures::class]);
         $this->em = self::$container->get("doctrine")->getManager();

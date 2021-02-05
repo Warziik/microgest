@@ -12,10 +12,15 @@ class ForgotPasswordTest extends ApiTestCase
 {
     use FixturesTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->loadFixtures([UserFixtures::class]);
+    }
+
     public function testValidRequest(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         static::createClient()->request(Request::METHOD_POST, "/api/users/forgot_password", ["json" => [
             "email" => "testUser@localhost.dev"
         ]]);
@@ -26,8 +31,6 @@ class ForgotPasswordTest extends ApiTestCase
 
     public function testInvalidRequest(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         static::createClient()->request(Request::METHOD_POST, "/api/users/forgot_password", ["json" => [
             "test" => "invalid_field"
         ]]);
@@ -37,8 +40,6 @@ class ForgotPasswordTest extends ApiTestCase
 
     public function testNotFoundResource(): void
     {
-        $this->loadFixtures([UserFixtures::class]);
-
         static::createClient()->request(Request::METHOD_POST, "/api/users/forgot_password", ["json" => [
             "email" => "invalid_email"
         ]]);

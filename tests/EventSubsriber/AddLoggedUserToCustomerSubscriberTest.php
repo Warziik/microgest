@@ -29,12 +29,12 @@ class AddLoggedUserToCustomerSubscriberTest extends TestCase
             ->setLastname("test")
             ->setEmail("test@localhost.dev");
 
-        $securityMock = $this->getMockBuilder(Security::class)->disableOriginalConstructor()->getMock();
+        $securityMock = $this->createMock(Security::class);
         $securityMock->expects($this->once())->method('getUser');
 
         $subscriber = new AddLoggedUserToCustomerSubscriber($securityMock);
 
-        $kernel = $this->getMockBuilder(HttpKernelInterface::class)->getMock();
+        $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
         $event = new ViewEvent($kernel, $request, 1, $customer);

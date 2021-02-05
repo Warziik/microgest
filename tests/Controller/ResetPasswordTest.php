@@ -3,14 +3,12 @@
 namespace App\Tests\Controller;
 
 use App\Entity\ResetPassword;
-use App\DataFixtures\UserFixtures;
-use App\DataFixtures\ResetPasswordFixtures;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\User;
-use DateTimeImmutable;
+use App\DataFixtures\ResetPasswordFixtures;
+use App\DataFixtures\UserFixtures;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ResetPasswordTest extends ApiTestCase
@@ -129,7 +127,9 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertJsonContains([
             "code" => Response::HTTP_BAD_REQUEST,
             "message" => "Token invalid.",
-            "violations" => []
+            "violations" => [
+                "This value is too short. It should have 10 characters or more."
+            ]
         ]);
 
         // Token must be a string, integer given
@@ -142,7 +142,10 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertJsonContains([
             "code" => Response::HTTP_BAD_REQUEST,
             "message" => "Token invalid.",
-            "violations" => []
+            "violations" => [
+                "This value is too short. It should have 10 characters or more.",
+                "This value should be of type string."
+            ]
         ]);
     }
 

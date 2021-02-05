@@ -130,7 +130,7 @@ class CustomerTest extends ApiTestCase
             "firstname" => "Test"
         ]]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -243,7 +243,7 @@ class CustomerTest extends ApiTestCase
     {
         $this->assertHasErrors(0, $this->getEntity()->setFirstname("Test"));
 
-        $this->assertHasErrors(1, $this->getEntity()->setFirstname(""));
+        $this->assertHasErrors(2, $this->getEntity()->setFirstname(""));
         $this->assertHasErrors(1, $this->getEntity()->setFirstname("f"));
         $this->assertHasErrors(1, $this->getEntity()->setFirstname("abcdefghijklmnopqrstuvwxyz0123456789"));
     }
@@ -252,7 +252,7 @@ class CustomerTest extends ApiTestCase
     {
         $this->assertHasErrors(0, $this->getEntity()->setLastname("Test"));
 
-        $this->assertHasErrors(1, $this->getEntity()->setLastname(""));
+        $this->assertHasErrors(2, $this->getEntity()->setLastname(""));
         $this->assertHasErrors(1, $this->getEntity()->setLastname("f"));
         $this->assertHasErrors(1, $this->getEntity()->setLastname("abcdefghijklmnopqrstuvwxyz0123456789"));
     }

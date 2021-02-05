@@ -132,7 +132,7 @@ class InvoiceTest extends ApiTestCase
             "customer" => "/api/customers/1"
         ]]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -242,6 +242,7 @@ class InvoiceTest extends ApiTestCase
      */
     public function testAmountConstraints(): void
     {
+        $this->expectException(\TypeError::class);
         $this->assertHasErrors(0, $this->getEntity()->setAmount(400.459));
 
         $this->assertHasErrors(1, $this->getEntity()->setAmount(null));

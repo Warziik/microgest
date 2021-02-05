@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\ForgotPassword;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,124 +21,100 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  * @ORM\HasLifecycleCallbacks
- * @ApiResource(
- *      normalizationContext={"groups"={"users:read"}},
- *      denormalizationContext={"groups"={"users:write"}},
- *      collectionOperations={
- *          "post",
- *          "forgotPassword"={
- *               "method"="POST",
- *               "path"="/users/forgot_password",
- *               "controller"=ForgotPassword::class,
- *               "denormalization_context"={"groups"={"forgotPassword:write"}},
- *               "openapi_context"={
- *                  "summary"="Sends an email to reset the password.",
- *                  "description"="Get the User's email as body parameter and send a mail which contains a link to reset the password",
- *                  "requestBody"={
- *                     "description"="The email address of the User to which the reset password mail will be sent",
- *                     "content"={"application/ld+json"={"schema"={"type"="string", "example"={"email"="string"}}}}
- *                  },
- *                  "responses"={
- *                     "200"={"description"="Email sent successfully"},
- *                     "400"={"description"="Email address must be provided as body parameter"},
- *                     "404"={"description"="User not found"}
- *                  }
- *               }
- *          },
- *          "resetPassword"={
- *              "method"="POST",
- *              "path"="/users/reset_password",
- *              "controller"=ResetPassword::class,
- *              "denormalization_context"={"groups"={"resetPassword:write"}},
- *              "openapi_context"={
- *                  "summary"="Resets the User's password.",
- *                  "requestBody"={ 
- *                      "description"="The new password to set to the User and the hashed token generated when the User requested to reset his password",
- *                      "content"={"application/ld+json"={"schema"={"type"="string", "example"={"password"="string", "token"="string"}}}}
- *                  },
- *                  "responses"={
- *                      "200"={"description"="Password changed successfully"},
- *                      "401"={"description"="Token has expired"},
- *                      "403"={"description"="Invalid body content"},
- *                      "404"={"description"="ResetPassword resource not found"}
- *                  }
- *              }
- *          }
- *      },
- *      itemOperations={
- *          "get"={"security"="object == user"},
- *          "put"={"security"="object == user"},
- *          "delete"={"security"="object == user"}
- *      }
- * )
- * @UniqueEntity(fields={"email"}, message="This email address is already in use.")
  */
+#[UniqueEntity(fields: ["email"], message: "This email address is already in use.")]
+#[ApiResource(
+    normalizationContext: ["groups" => ["users:read"]],
+    denormalizationContext: ["groups" => ["users:write"]],
+    collectionOperations: [
+        "post",
+        "forgotPassword" => [
+            "method" => "POST",
+            "path" => "/users/forgot_password",
+            "controller" => ForgotPassword::class,
+            "denormalization_context" => ["groups" => ["forgotPassword:write"]],
+            "openapi_context" => [
+                "summary" => "Sends an email to reset the password.",
+                "description" => "Get the User's email as body parameter and send a mail which contains a link to reset the password"
+            ]
+        ],
+        "resetPassword" => [
+            "method" => "POST",
+            "path" => "/users/reset_password",
+            "controller" => ResetPassword::class,
+            "denormalization_context" => ["groups" => ["resetPassword:write"]],
+            "openapi_context" => [
+                "summary" => "Resets the User's password.",
+                "requestBody" => [
+                        "description" => "The new password to set to the User and the hashed token generated when the User requested to reset his password",
+                        "content" => ["application/ld+json" => ["schema" => ["type" => "string", "example"=> ["password" => "string", "token"=> "string"]]]]
+                ],
+                "responses" => [
+                    "200"=>["description" => "Password changed successfully"],
+                    "401"=>["description" => "Token has expired"],
+                    "403"=>["description" => "Invalid body content"],
+                    "404"=>["description" => "ResetPassword resource not found"]
+                ]
+            ]
+        ]
+    ],
+    itemOperations: [
+        "get" => ["security" => "object == user"],
+        "put" => ["security" => "object == user"],
+        "delete" => ["security" => "object == user"]
+    ]
+)]
 class User implements UserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users:read", "customers:read", "invoices:read"})
      */
-    private $id;
+    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
-     * @Assert\Length(min=2, max=30)
-     */
-    private $firstname;
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["users:read", "users:write", "customers:read", "invoices:read"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 30)]
+    private ?string $firstname = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
-     * @Assert\Length(min=2, max=30)
-     */
-    private $lastname;
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["users:read", "users:write", "customers:read", "invoices:read"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 30)]
+    private ?string $lastname = null;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users:read", "customers:read", "invoices:read", "users:write", "forgotPassword:write"})
-     * @Assert\NotBlank
-     * @Assert\Email
-     */
-    private $email;
+    /** @ORM\Column(type="string", length=255, unique=true) */
+    #[Groups(["users:read", "users:write", "customers:read", "invoices:read", "forgotPassword:write"])]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private ?string $email = null;
 
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     * @Groups({"users:write", "resetPassword:write"})
-     * @Assert\Length(min=3, max=255)
-     */
-    private $password;
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["users:write", "resetPassword:write"])]
+    #[Assert\Length(min: 3, max: 255)]
+    private ?string $password = null;
 
-    /**
-     * @ORM\Column(type="json")
-     * @Groups({"users:read", "customers:read", "invoices:read", "users:write"})
-     */
-    private $roles = [];
+    /** @ORM\Column(type="json") */
+    #[Groups(["users:read", "users:write", "customers:read", "invoices:read"])]
+    private ?array $roles = [];
 
-    /**
-     * @ORM\Column(type="datetime")
-     * @Groups({"users:read", "customers:read", "invoices:read"})
-     * @Assert\Type(\DateTimeInterface::class)
-     */
-    private $createdAt;
+    /** @ORM\Column(type="datetime") */
+    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private ?DateTimeInterface $createdAt = null;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users:read", "customers:read", "invoices:read"})
-     * @Assert\Type(\DateTimeInterface::class)
-     */
-    private $updatedAt;
+    /** @ORM\Column(type="datetime", nullable=true) */
+    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private ?DateTimeInterface $updatedAt = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true)
-     * @ApiSubresource(maxDepth=1)
-     * @Groups({"users:read"})
-     */
-    private $customers;
+    /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true) */
+    #[ApiSubResource(maxDepth: 1)]
+    #[Groups(["users:read"])]
+    private ?Collection $customers = null;
 
     public function __construct()
     {
@@ -247,24 +224,24 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 

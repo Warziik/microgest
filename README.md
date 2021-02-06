@@ -1,4 +1,6 @@
 # MicroGest
+![Continuous Integration](https://github.com/Warziik/microgest/workflows/Continuous%20Integration/badge.svg?branch=master)
+
 Tableau de bord facilitant la comptabilité de sa micro-entreprise.
 
 ## Installation (environement de développement)

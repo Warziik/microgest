@@ -51,8 +51,8 @@ class InvoiceTest extends ApiTestCase
         static::createClient()->request(Request::METHOD_GET, "/api/invoices/18", ["auth_bearer" => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
 
-        //static::createClient()->request(Request::METHOD_GET, "/api/customers/12/invoices", ["auth_bearer" => $authToken]);
-        //$this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        static::createClient()->request(Request::METHOD_GET, "/api/customers/12/invoices", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**

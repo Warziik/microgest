@@ -2,15 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\ResetPassword;
 use App\Entity\User;
-use App\Notification\UserNotification;
-use App\Repository\ResetPasswordRepository;
+use App\Entity\ResetPassword;
 use App\Repository\UserRepository;
+use App\Notification\UserNotification;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\ResetPasswordRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @see App\OpenApi\ForgotPasswordOpenApi
+ */
 class ForgotPassword
 {
     public function __construct(

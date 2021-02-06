@@ -32,30 +32,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             "method" => "POST",
             "path" => "/users/forgot_password",
             "controller" => ForgotPassword::class,
-            "denormalization_context" => ["groups" => ["forgotPassword:write"]],
-            "openapi_context" => [
-                "summary" => "Sends an email to reset the password.",
-                "description" => "Get the User's email as body parameter and send a mail which contains a link to reset the password"
-            ]
+            "denormalization_context" => ["groups" => ["forgotPassword:write"]]
         ],
         "resetPassword" => [
             "method" => "POST",
             "path" => "/users/reset_password",
             "controller" => ResetPassword::class,
-            "denormalization_context" => ["groups" => ["resetPassword:write"]],
-            "openapi_context" => [
-                "summary" => "Resets the User's password.",
-                "requestBody" => [
-                        "description" => "The new password to set to the User and the hashed token generated when the User requested to reset his password",
-                        "content" => ["application/ld+json" => ["schema" => ["type" => "string", "example"=> ["password" => "string", "token"=> "string"]]]]
-                ],
-                "responses" => [
-                    "200"=>["description" => "Password changed successfully"],
-                    "401"=>["description" => "Token has expired"],
-                    "403"=>["description" => "Invalid body content"],
-                    "404"=>["description" => "ResetPassword resource not found"]
-                ]
-            ]
+            "denormalization_context" => ["groups" => ["resetPassword:write"]]
         ]
     ],
     itemOperations: [

@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Tests\AssertTrait;
 use App\Entity\Customer;
 use DateTime;
+use TypeError;
 
 /**
  * Unit tests
@@ -55,6 +56,16 @@ class InvoiceTest extends ApiTestCase
     {
         $this->assertHasErrors(0, $this->getEntity()->setSentAt(new DateTime()));
         $this->assertHasErrors(0, $this->getEntity()->setSentAt(null));
+    }
+
+    public function testChronoConstraints(): void
+    {
+        $this->expectException(TypeError::class);
+        $this->assertHasErrors(0, $this->getEntity()->setChrono("2021-0000"));
+
+        $this->assertHasErrors(1, $this->getEntity()->setChrono(null));
+        $this->assertHasErrors(1, $this->getEntity()->setChrono(""));
+        $this->assertHasErrors(1, $this->getEntity()->setChrono("invalid_chrono"));
     }
 
     public function testCustomerConstraints(): void

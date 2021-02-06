@@ -14,6 +14,9 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @see App\OpenApi\ResetPasswordOpenApi
+ */
 class ResetPassword
 {
     public function __construct(

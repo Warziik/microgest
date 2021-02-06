@@ -29,3 +29,22 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\OpenApi\ForgotPasswordOpenApi:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\ForgotPasswordOpenApi.inner' ]
+        autoconfigure: false
+
+    App\OpenApi\ResetPasswordOpenApi:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\ResetPasswordOpenApi.inner' ]
+        autoconfigure: false
+
+    App\OpenApi\CustomersSubresourceOpenApi:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\CustomersSubresourceOpenApi.inner' ]
+        autoconfigure: false
+    
+    App\OpenApi\InvoicesSubresourceOpenApi:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\InvoicesSubresourceOpenApi.inner' ]
+        autoconfigure: false

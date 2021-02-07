@@ -7,6 +7,7 @@ use App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\CreateInvoice;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,10 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     normalizationContext: ["groups" => ["invoices:read"]],
     denormalizationContext: ["groups" => ["invoices:write"]],
-    collectionOperations: ["post"],
+    collectionOperations: ["post" => ["controller" => CreateInvoice::class]],
     itemOperations: [
         "get" => ["security" => "object.getCustomer().getOwner() == user"],
-        "put" => ["security" => "object.getCustomer().getOwner() == user"],
+        "put" => ["security" => "object.getCustomer().getOwner() == user", "denormalization_context" => ["groups" => ["invoice:update"]]],
         "delete" => ["security" => "object.getCustomer().getOwner() == user"]
     ],
     subresourceOperations: [
@@ -41,13 +42,13 @@ class Invoice
     private ?int $id = null;
 
     /** @ORM\Column(type="float") */
-    #[Groups(["invoices:read", "invoices:write", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource"])]
     #[Assert\NotBlank()]
     #[Assert\Type(type: "numeric", message: "The amount must be a number.")]
     private ?float $amount = null;
     
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "invoices:write", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource"])]
     #[Assert\NotBlank]
     #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "The status must be of type 'NEW', 'SENT', 'PAID' or 'CANCELLED' only.")]
     private ?string $status = null;
@@ -61,12 +62,12 @@ class Invoice
     private ?Customer $customer = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 

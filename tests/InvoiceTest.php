@@ -122,6 +122,25 @@ class InvoiceTest extends ApiTestCase
     }
 
     /**
+     * Test create an Invoice for a Customer that the User don't own
+     */
+    public function testCreateInvoiceForCustomerYouDontOwn(): void
+    {
+        $authToken = $this->getAuthToken();
+        static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
+            "amount" => 2200,
+            "status" => "SENT",
+            "customer" => "/api/customers/18"
+        ]]);
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        $this->assertJsonContains([
+            "code" => Response::HTTP_UNAUTHORIZED,
+            "message" => "You cannot set an invoice for a customer you don't own."
+        ]);
+    }
+
+    /**
      * Test update an Invoice
      */
     public function testUpdateInvoice(): void

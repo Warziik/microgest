@@ -27,7 +27,7 @@ symfony console d:s:c
 php bin/phpunit
 # lance les tests unitaires et fonctionnels
 
-symfony console d:f:l
+symfony console d:f:l -n
 # génère les fausses données pour les entités doctrine (optionnel)
 ```
 N'oubliez pas de générer la clé publique et privée pour l'authentification JWT (voir [documentation officielle](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)).

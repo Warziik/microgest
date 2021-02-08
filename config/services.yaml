@@ -48,3 +48,8 @@ services:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@App\OpenApi\InvoicesSubresourceOpenApi.inner' ]
         autoconfigure: false
+
+    App\OpenApi\ConfirmAccountOpenApi:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@App\OpenApi\ConfirmAccountOpenApi.inner' ]
+        autoconfigure: false

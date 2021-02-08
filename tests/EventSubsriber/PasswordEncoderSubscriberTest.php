@@ -24,21 +24,19 @@ class PasswordEncoderSubscriberTest extends TestCase
      */
     public function testEncodePassword(): void
     {
-        $user = (new User())
-            ->setFirstname("test")
-            ->setLastname("test")
-            ->setEmail("test@test.fr")
-            ->setPassword("demo1234");
+        $user = $this->createMock(User::class);
+        $user->expects($this->once())->method("setPassword");
+        $user->expects($this->once())->method("getPassword")->willReturn("test");
 
         $passwordEncoder = $this->createMock(UserPasswordEncoderInterface::class);
         $passwordEncoder->expects($this->once())->method("encodePassword")->willReturn("foo");
-        $subscriber = new PasswordEncoderSubscriber($passwordEncoder);
 
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
         $event = new ViewEvent($kernel, $request, 1, $user);
 
+        $subscriber = new PasswordEncoderSubscriber($passwordEncoder);
         $subscriber->onKernelView($event);
     }
 }

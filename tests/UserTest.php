@@ -76,7 +76,6 @@ class UserTest extends ApiTestCase
             "firstname" => "NewFirstname"
         ]);
         $this->assertRegExp('~^/api/users/\d+$~', $response->toArray()['@id']);
-        $this->assertMatchesResourceItemJsonSchema(User::class);
     }
 
     /**

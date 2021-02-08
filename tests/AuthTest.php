@@ -62,7 +62,6 @@ class AuthTest extends ApiTestCase
         ]);
 
         $this->assertRegExp('~^/api/users/\d+$~', $response->toArray()['@id']);
-        $this->assertMatchesResourceItemJsonSchema(User::class);
     }
 
     public function testInvalidRegister(): void

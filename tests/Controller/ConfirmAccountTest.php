@@ -13,7 +13,7 @@ class ConfirmAccountTest extends ApiTestCase
 {
     use FixturesTrait;
 
-    const CONFIRM_ACCOUNT_URI = "/api/users/1/confirm_account";
+    const CONFIRM_ACCOUNT_URI = "/api/users/2/confirm_account";
 
     private ?EntityManagerInterface $em;
 
@@ -26,7 +26,7 @@ class ConfirmAccountTest extends ApiTestCase
 
     private function getUser(): User
     {
-        return $this->em->getRepository(User::class)->findOneBy(["email" => "testUser@localhost.dev"]);
+        return $this->em->getRepository(User::class)->findOneBy(["email" => "demoUser-0@localhost.dev"]);
     }
 
     public function testConfirmAccountRequest(): void

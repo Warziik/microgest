@@ -53,3 +53,7 @@ services:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@App\OpenApi\ConfirmAccountOpenApi.inner' ]
         autoconfigure: false
+
+    App\OpenApi\JwtOpenApi:
+        decorates: 'api_platform.openapi.factory'
+        autoconfigure: false

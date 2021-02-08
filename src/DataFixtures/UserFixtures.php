@@ -19,7 +19,8 @@ class UserFixtures extends Fixture
         $testUser->setFirstname("testUser-firstname")
             ->setLastname("testUser-lastname")
             ->setEmail("testUser@localhost.dev")
-            ->setPassword($this->passwordEncoder->encodePassword($testUser, "demo1234"));
+            ->setPassword($this->passwordEncoder->encodePassword($testUser, "demo1234"))
+            ->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
 
         $manager->persist($testUser);
         $this->addReference("testUser", $testUser);
@@ -29,7 +30,8 @@ class UserFixtures extends Fixture
             $user->setFirstname("FirstName-$i")
                 ->setLastname("LastName-$i")
                 ->setEmail("demoUser-$i@localhost.dev")
-                ->setPassword($this->passwordEncoder->encodePassword($user, "demo1234"));
+                ->setPassword($this->passwordEncoder->encodePassword($user, "demo1234"))
+                ->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
 
             $manager->persist($user);
             $this->addReference("user-$i", $user);

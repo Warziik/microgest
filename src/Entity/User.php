@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\ForgotPassword;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Controller\ConfirmAccount;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -44,7 +45,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     itemOperations: [
         "get" => ["security" => "object == user"],
         "put" => ["security" => "object == user"],
-        "delete" => ["security" => "object == user"]
+        "delete" => ["security" => "object == user"],
+        "confirmAccount" => [
+            "method" => "POST",
+            "path" => "/users/{id}/confirm_account",
+            "controller" => ConfirmAccount::class
+        ]
     ]
 )]
 class User implements UserInterface
@@ -77,6 +83,7 @@ class User implements UserInterface
 
     /** @ORM\Column(type="string", length=255) */
     #[Groups(["users:write", "resetPassword:write"])]
+    #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     private ?string $password = null;
 
@@ -99,9 +106,18 @@ class User implements UserInterface
     #[Groups(["users:read"])]
     private ?Collection $customers = null;
 
+    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[Groups(["users:read"])]
+    #[Assert\Length(min: 10, max: 255)]
+    private ?string $confirmationToken = null;
+
+    /** @ORM\Column(type="datetime", nullable=true) */
+    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private ?DateTimeInterface $confirmedAt = null;
+
     public function __construct()
     {
-        $this->setCreatedAt(new DateTime());
         $this->customers = new ArrayCollection();
     }
 
@@ -261,11 +277,39 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    public function getConfirmedAt(): ?\DateTimeInterface
+    {
+        return $this->confirmedAt;
+    }
+
+    public function setConfirmedAt(?\DateTimeInterface $confirmedAt): self
+    {
+        $this->confirmedAt = $confirmedAt;
+
+        return $this;
+    }
+
+    /** @ORM\PreUpdate */
     public function updateTimestamp(): void
     {
         $this->setUpdatedAt(new DateTime());
+    }
+
+    /** @ORM\PrePersist */
+    public function prePersist(): void
+    {
+        $this->setCreatedAt(new DateTime());
     }
 }

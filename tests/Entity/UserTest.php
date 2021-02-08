@@ -57,7 +57,15 @@ class UserTest extends ApiTestCase
     {
         $this->assertHasErrors(0, $this->getEntity()->setPassword("demo1234"));
 
-        $this->assertHasErrors(1, $this->getEntity()->setPassword(""));
+        $this->assertHasErrors(2, $this->getEntity()->setPassword(""));
         $this->assertHasErrors(1, $this->getEntity()->setPassword("1"));
+    }
+
+    public function testConfirmationTokenConstraints(): void
+    {
+        $this->assertHasErrors(0, $this->getEntity()->setConfirmationToken(sha1(random_bytes(rand(8, 10)))));
+        $this->assertHasErrors(0, $this->getEntity()->setConfirmationToken(null));
+
+        $this->assertHasErrors(1, $this->getEntity()->setConfirmationToken("test"));
     }
 }

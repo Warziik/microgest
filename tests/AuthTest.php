@@ -5,7 +5,6 @@ namespace App\Tests;
 use App\DataFixtures\UserFixtures;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +21,7 @@ class AuthTest extends ApiTestCase
     public function testLogin(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
-            "username" => "demoUser-0@localhost.dev",
+            "email" => "testUser@localhost.dev",
             "password" => "demo1234",
         ]]);
         $this->assertResponseIsSuccessful();
@@ -31,7 +30,7 @@ class AuthTest extends ApiTestCase
     public function testInvalidLogin(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
-            "username" => "invalidUser",
+            "email" => "invalid_email",
             "password" => "demo1234",
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
@@ -39,6 +38,20 @@ class AuthTest extends ApiTestCase
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
             'message' => 'Invalid credentials.'
+        ]);
+    }
+
+    public function testLoginWithoutConfirmingItsAccount(): void
+    {
+        static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
+            "email" => "demoUser-0@localhost.dev",
+            "password" => "demo1234",
+        ]]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseHeaderSame('content-type', 'application/json');
+        $this->assertJsonContains([
+            'code' => Response::HTTP_FORBIDDEN,
+            'message' => 'Unconfirmed account.'
         ]);
     }
 

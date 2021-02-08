@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -20,7 +21,8 @@ class UserFixtures extends Fixture
             ->setLastname("testUser-lastname")
             ->setEmail("testUser@localhost.dev")
             ->setPassword($this->passwordEncoder->encodePassword($testUser, "demo1234"))
-            ->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
+            ->setConfirmationToken(null)
+            ->setConfirmedAt(new DateTime());
 
         $manager->persist($testUser);
         $this->addReference("testUser", $testUser);

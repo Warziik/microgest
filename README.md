@@ -41,5 +41,10 @@ N'oubliez pas de générer la clé publique et privée pour l'authentification J
 ## Trello board
 Suivez l'avancement de l'application via le [projet trello](https://trello.com/b/EHAWSKCo).
 
+## UI Web design
+La maquette de l'interface web du projet en cours de création est [disponible ici](https://xd.adobe.com/view/2ec8201a-51b3-43f7-97d2-a955c6f965d2-7b9b/?fullscreen).
+
+Créée avec [Adobe XD](https://www.adobe.com/fr/products/xd.html).
+
 ## Licence
 Dépôt sous licence [MIT](https://choosealicense.com/licenses/mit/).

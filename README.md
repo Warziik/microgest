@@ -6,29 +6,29 @@ Tableau de bord facilitant la comptabilité de sa micro-entreprise.
 ## Installation (environement de développement)
 Exécuter les commandes ci-dessous à la racine du projet (prérequis [Docker](https://www.docker.com/) et [Docker-compose](https://docs.docker.com/compose/install/)).
 ```
-docker-compose build
-# construit les services
+docker-compose up -d --build
+# construit l'image php et lance les containers docker
 
-docker-compose up -d
-# lance les containers docker
-
-docker exec -ti php8-container bash
-# intéragit avec le container php
-
-composer install
+docker exec -ti php8-container composer install
 # installe les dépendances php
 
-symfony console d:d:c
+docker exec -ti php8-container symfony console d:d:c
 # crée la base de données mysql 'microgest'
 
-symfony console d:s:c
+docker exec -ti php8-container symfony console d:s:c
 # crée le schéma de la base de données
 
-php bin/phpunit
-# lance les tests unitaires et fonctionnels
-
-symfony console d:f:l -n
+docker exec -ti php8-container symfony console d:f:l -n
 # génère les fausses données pour les entités doctrine (optionnel)
+
+docker-compose run --rm node-service yarn install
+# installe les dépendances javascript
+
+docker-compose run --rm node-service yarn run dev
+# construit les assets
+
+docker exec -ti php8-container php bin/phpunit
+# lance les tests unitaires et fonctionnels
 ```
 N'oubliez pas de générer la clé publique et privée pour l'authentification JWT (voir [documentation officielle](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)).
 

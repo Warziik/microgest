@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Frontend extends AbstractController
 {
-    #[Route('/{reactRouting}', name: 'app', requirements: ['reactRouting' => '^(?!api).+'], defaults: ['reactRouting' => null])]
+    #[Route('/{reactRouting}', name: 'app', requirements: ['reactRouting' => '^(?!api|build).+'], defaults: ['reactRouting' => null])]
     public function index(): Response
     {
         return $this->render('app.html.twig');

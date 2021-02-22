@@ -28,7 +28,10 @@ docker-compose run --rm node-service yarn run dev
 # construit les assets
 
 docker exec -ti php8-container php bin/phpunit
-# lance les tests unitaires et fonctionnels
+# lance les tests PHP unitaires et fonctionnels
+
+docker-compose run --rm node-service yarn test
+# lance les tests JavaScript unitaires et fonctionnels
 ```
 N'oubliez pas de générer la clé publique et privée pour l'authentification JWT (voir [documentation officielle](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)).
 

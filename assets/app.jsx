@@ -1,5 +1,6 @@
-import "./scss/app.scss";
 import React from 'react';
-import * as ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
+import Router from './navigation/Router';
+import './styles/scss/app.scss';
 
-ReactDOM.render(<h1>Hello world!</h1>, document.getElementById("app"));
+ReactDOM.render(<Router />, document.getElementById("app"));

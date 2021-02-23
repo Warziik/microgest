@@ -1,7 +1,7 @@
 # MicroGest
 ![Continuous Integration](https://github.com/Warziik/microgest/workflows/Continuous%20Integration/badge.svg?branch=master)
 
-Tableau de bord facilitant la comptabilité de sa micro-entreprise.
+Tableau de bord facilitant la gestion des clients et des factures de sa micro-entreprise. 
 
 ## Installation (environement de développement)
 Exécuter les commandes ci-dessous à la racine du projet (prérequis [Docker](https://www.docker.com/) et [Docker-compose](https://docs.docker.com/compose/install/)).
@@ -24,7 +24,7 @@ docker exec -ti php8-container symfony console d:f:l -n
 docker-compose run --rm node-service yarn install
 # installe les dépendances javascript
 
-docker-compose run --rm node-service yarn run dev
+docker-compose run --rm node-service yarn dev
 # construit les assets
 
 docker exec -ti php8-container php bin/phpunit

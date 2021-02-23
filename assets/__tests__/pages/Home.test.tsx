@@ -3,7 +3,7 @@ import {render} from "@testing-library/react";
 import {screen} from "@testing-library/dom";
 import Home from "../../pages/Home";
 
-test("it should display the Home title", function() {
+test("it should display the Home title", () => {
     render(<Home />);
     const pageTitle = screen.getByText("Homepage");
     expect(pageTitle).toBeInTheDocument();

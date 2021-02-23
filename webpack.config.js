@@ -14,7 +14,7 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
-    .addEntry('app', './assets/app.jsx')
+    .addEntry('app', './assets/app.tsx')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     //.enableStimulusBridge('./assets/controllers.json')
@@ -33,7 +33,7 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     /*
-    Babel configuration in babel.config.js
+    Babel configuration in babel.config.json
 
     .configureBabel((config) => {
         config.plugins.push('@babel/plugin-proposal-class-properties');
@@ -43,11 +43,11 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
-    .enableReactPreset()
     */
 
+    .enableReactPreset()
     .enableSassLoader()
-    //.enableTypeScriptLoader()
+    .enableTypeScriptLoader()
 ;
 
 module.exports = Encore.getWebpackConfig();

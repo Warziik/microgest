@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on:
   push:
@@ -15,12 +15,15 @@ jobs:
       - name: Build the Docker Compose stack
         run: |-
           docker-compose pull --ignore-pull-failures
-          docker-compose build --pull
-          docker-compose run php8-service composer install -o -n
-          docker-compose up -d
-      - name: Generate JWT keys
+          docker-compose up -d --build
+          docker exec php8-container composer install -o -n
+          docker-compose run node-service yarn install
+      - name: PHP Tests
         run: |-
-          docker-compose exec -T php8-service openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096 -pass pass:test
-          docker-compose exec -T php8-service openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout -passin pass:test
-      - name: Tests
-        run: docker-compose exec -T php8-service php bin/phpunit
+          docker exec php8-container openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096 -pass pass:test
+          docker exec php8-container openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout -passin pass:test
+          docker exec php8-container php bin/phpunit
+      - name: ESlint
+        run: docker-compose run node-service yarn lint
+      - name: JavaScript Tests
+        run: docker-compose run node-service yarn test

@@ -1,5 +1,5 @@
 # MicroGest
-![Continuous Integration](https://github.com/Warziik/microgest/workflows/Continuous%20Integration/badge.svg?branch=master)
+[![CI](https://github.com/Warziik/microgest/actions/workflows/ci.yml/badge.svg)](https://github.com/Warziik/microgest/actions/workflows/ci.yml)
 
 Tableau de bord facilitant la gestion des clients et des factures de sa micro-entreprise. 
 

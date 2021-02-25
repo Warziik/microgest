@@ -6,34 +6,24 @@ Tableau de bord facilitant la gestion des clients et des factures de sa micro-en
 ## Installation (environement de développement)
 Exécuter les commandes ci-dessous à la racine du projet (prérequis [Docker](https://www.docker.com/) et [Docker-compose](https://docs.docker.com/compose/install/)).
 ```
-docker-compose up -d --build
-# construit l'image php et lance les containers docker
+make install
+# installe les dépendances PHP et JavaScript
 
-docker exec -ti php8-container composer install
-# installe les dépendances php
+make db
+# crée la base de données et son schéma
 
-docker exec -ti php8-container symfony console d:d:c
-# crée la base de données mysql 'microgest'
-
-docker exec -ti php8-container symfony console d:s:c
-# crée le schéma de la base de données
-
-docker exec -ti php8-container symfony console d:f:l -n
+make fixtures
 # génère les fausses données pour les entités doctrine (optionnel)
 
-docker-compose run --rm node-service yarn install
-# installe les dépendances javascript
+make jwt-keys
+# génère la clé publique et privée pour l'authentification JWT
 
-docker-compose run --rm node-service yarn dev
-# construit les assets
+make assets
+# construit les assets javascript
 
-docker exec -ti php8-container php bin/phpunit
-# lance les tests PHP unitaires et fonctionnels
-
-docker-compose run --rm node-service yarn test
-# lance les tests JavaScript unitaires et fonctionnels
+make test
+# lance les tests unitaires et fonctionnels
 ```
-N'oubliez pas de générer la clé publique et privée pour l'authentification JWT (voir [documentation officielle](https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md)).
 
 ## URLs de développement
 * Application Symfony: `http://localhost:8080`

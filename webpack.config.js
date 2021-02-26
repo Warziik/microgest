@@ -32,9 +32,6 @@ Encore
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    /*
-    Babel configuration in babel.config.json
-
     .configureBabel((config) => {
         config.plugins.push('@babel/plugin-proposal-class-properties');
     })
@@ -43,7 +40,6 @@ Encore
         config.useBuiltIns = 'usage';
         config.corejs = 3;
     })
-    */
 
     .enableReactPreset()
     .enableSassLoader()

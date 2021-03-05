@@ -1,0 +1,29 @@
+.alert {
+    padding: 2.4rem;
+    margin-bottom: 2.4rem;
+
+    font-weight: 600;
+    color: #FFF;
+    text-align: center;
+    border-radius: var(--radius);
+}
+
+.alert--error {
+    @extend .alert;
+    background-color: var(--error-color);
+}
+
+.alert--success {
+    @extend .alert;
+    background-color: var(--success-color);
+}
+
+.alert--warning {
+    @extend .alert;
+    background-color: var(--warning-color);
+}
+
+.alert--info {
+    @extend .alert;
+    background-color: var(--info-color);
+}

@@ -3,8 +3,37 @@
     --font-family: "Nunito", sans-serif;
     --default-font-size: 1.6rem;
 
-    // BORDER
+    // BORDER RADIUS
     --radius: 10px;
 
     // COLORS
+    --secondary-color: #97005c;
+    --secondary-color-2: #{rgba(#97005c, .70)};
+    --secondary-color-3: #{rgba(#97005c, .30)};
+    --secondary-color-4: #{rgba(#97005c, .10)};
+
+    --primary-color: #005c97;
+    --primary-color-2: #{rgba(#005c97, .70)};
+    --primary-color-3: #{rgba(#005c97, .30)};
+    --primary-color-4: #{rgba(#005c97, .10)};
+
+    --tertiary-color: #2c3e50;
+    --tertiary-color-2: #{rgba(#2c3e50, .70)};
+    --tertiary-color-3: #{rgba(#2c3e50, .30)};
+    --tertiary-color-4: #{rgba(#2c3e50, .10)};
+    --tertiary-color-5: #{rgba(#2c3e50, .01)};
+
+    --error-color: #C54B4B;
+    --warning-color: #C5714B;
+    --info-color: #4B9FC5;
+    --success-color: #4BC5A0;
+
+    --body-background: #FFF;
+    --alt-body-background: var(--tertiary-color-5);
+
+    --input-background: var(--tertiary-color-5);
+    --input-border: var(--tertiary-color-4);
+    
+    --text-color: #000;
+    --alt-text-color: var(--tertiary-color);
 }

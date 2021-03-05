@@ -1,0 +1,46 @@
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.6rem 2.4rem;
+
+    color: #FFF;
+    font-family: inherit;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    background: #000;
+
+    svg {
+        height: 1.6rem;
+        max-width: 2rem;
+        margin-right: 1.6rem;
+
+        fill: currentColor;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: lighten(#000, 80%);
+    }
+}
+
+.btn--primary {
+    @extend .btn;
+    background-color: var(--primary-color);
+}
+
+.btn--secondary {
+    @extend .btn;
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+
+    &:disabled {
+        background: none;
+        border-color: lighten(#000, 80%);
+        color: lighten(#000, 80%);
+    }
+}

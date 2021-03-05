@@ -1,0 +1,78 @@
+.form {
+    &__horizontal {
+        display: flex;
+        column-gap: 2.4rem;
+    }
+
+    &__group {
+        width: 100%;
+        margin-bottom: 2.4rem;
+    }
+
+    &__rightIcon {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        input {
+            padding-right: 6.4rem;
+        }
+
+        button {
+            position: absolute;
+            right: 1.6rem;
+            height: 2rem;
+
+            border: none;
+            cursor: pointer;
+            
+            background: none;
+            svg {
+                max-width: 1.6rem;
+                max-height: 1.6rem;
+
+                fill: var(--tertiary-color-2);
+            }
+
+            &:hover svg {
+                fill: var(--tertiary-color);
+            }
+        }
+    }
+
+    &--invalid {
+        input {
+            border-color: var(--error-color);
+        }
+
+        &-message {
+            display: block;
+            margin-top: .8rem;
+
+            color: var(--error-color);
+        }
+    }
+
+    &__label {
+        display: block;
+        margin-bottom: 1.6rem;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 1.6rem;
+
+        color: var(--text-color);
+        border-radius: var(--radius);
+        border: 1px solid var(--input-border);
+
+        background-color: var(--input-background);
+
+        transition: box-shadow .3s ease-in-out;
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 .3rem 2rem rgba(0, 0, 0, .16);
+        }
+    }
+}

@@ -26,7 +26,7 @@ class ConfirmAccountTest extends ApiTestCase
 
     private function getUser(): User
     {
-        return $this->em->getRepository(User::class)->findOneBy(["email" => "demoUser-0@localhost.dev"]);
+        return $this->em->getRepository(User::class)->findOneBy(["id" => 2]);
     }
 
     public function testConfirmAccountRequest(): void

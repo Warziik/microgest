@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Customer;
 use App\DataFixtures\UserFixtures;
 use Doctrine\Persistence\ObjectManager;
@@ -12,25 +13,19 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $testCustomer = new Customer();
-        $testCustomer->setFirstname("testCustomer-firstname")
-            ->setLastname("testCustomer-lastname")
-            ->setEmail("testCustomer@localhost.dev")
-            ->setCompany("")
-            ->setOwner($this->getReference("testUser"));
-        $manager->persist($testCustomer);
-        $this->addReference("testCustomer", $testCustomer);
+        $faker = Factory::create("fr_FR");
 
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i <= 200; $i++) {
             $customer = (new Customer())
-                ->setFirstname("firstname-$i")
-                ->setLastname("lastname-$i")
-                ->setEmail("demoCustomer-$i@localhost.dev")
-                ->setCompany("CustomerCompany-$i")
-                ->setOwner($this->getReference("user-" . rand(0, 49)));
-
+                ->setFirstname($faker->firstName)
+                ->setLastname($faker->lastName)
+                ->setEmail($faker->email)
+                ->setCompany($i === 0 ? "" : $faker->company)
+                ->setCreatedAt($faker->dateTimeBetween("-9 days", "now"))
+                ->setOwner($i === 0 ? $this->getReference("testUser") : $this->getReference("user-" . rand(1, 50)));
+                
             $manager->persist($customer);
-            $this->addReference("customer-$i", $customer);
+            $i === 0 ? $this->addReference("testCustomer", $customer) : $this->addReference("customer-$i", $customer);
         }
 
         $manager->flush();

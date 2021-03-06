@@ -2,25 +2,24 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Invoice;
-use DateTime;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
 
 class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $statuses = ["NEW", "SENT", "PAID", "CANCELLED"];
+        $faker = Factory::create("fr_FR");
 
         $testInvoice = (new Invoice())
             ->setChrono(date('Y') . "-0001")
-            ->setAmount(rand(200, 4234))
-            ->setStatus($statuses[rand(0, 3)])
-            ->setSentAt(new DateTime())
+            ->setAmount($faker->randomFloat(2, 350, 9999))
+            ->setStatus("SENT")
+            ->setSentAt($faker->dateTimeBetween("-4 days", "now"))
             ->setCustomer($this->getReference("testCustomer"));
-        $testInvoice->setPaidAt($testInvoice->getStatus() === "PAID" ? new DateTime() : null);
 
         $manager->persist($testInvoice);
 
@@ -28,11 +27,11 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 300; $i++) {
             $invoice = (new Invoice())
                 ->setChrono(date('Y') . "-" . str_pad($chrono, 4, "0", STR_PAD_LEFT))
-                ->setAmount(rand(200, 4234))
-                ->setStatus($statuses[rand(0, 3)])
-                ->setSentAt(new DateTime())
-                ->setCustomer($this->getReference("customer-" . rand(0, 199)));
-            $invoice->setPaidAt($invoice->getStatus() === "PAID" ? new DateTime() : null);
+                ->setAmount($faker->randomFloat(2, 350, 9999))
+                ->setStatus($faker->randomElement(["NEW", "SENT", "PAID", "CANCELLED"]))
+                ->setCustomer($this->getReference("customer-" . rand(1, 200)));
+            $invoice->setSentAt($invoice->getStatus() === "SENT" ? $faker->dateTimeBetween("-6 days", "now") : null);
+            $invoice->setPaidAt($invoice->getStatus() === "PAID" ? $faker->dateTimeBetween("-1 day", "now") : null);
 
             $manager->persist($invoice);
             $chrono++;

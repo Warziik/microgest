@@ -3,9 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
@@ -16,27 +16,30 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $testUser = new User();
-        $testUser->setFirstname("testUser-firstname")
-            ->setLastname("testUser-lastname")
-            ->setEmail("testUser@localhost.dev")
-            ->setPassword($this->passwordEncoder->encodePassword($testUser, "demo1234"))
-            ->setConfirmationToken(null)
-            ->setConfirmedAt(new DateTime());
+        $faker = Factory::create("fr_FR");
 
-        $manager->persist($testUser);
-        $this->addReference("testUser", $testUser);
-
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i <= 50; $i++) {
             $user = new User();
-            $user->setFirstname("FirstName-$i")
-                ->setLastname("LastName-$i")
-                ->setEmail("demoUser-$i@localhost.dev")
+            $user->setFirstname($faker->firstName)
+                ->setLastname($faker->lastName)
+                ->setEmail($faker->email)
                 ->setPassword($this->passwordEncoder->encodePassword($user, "demo1234"))
-                ->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
+                ->setCreatedAt($faker->dateTimeBetween("-2 weeks", "now"))
+                ->setConfirmationToken(null)
+                ->setConfirmedAt($faker->dateTimeBetween("-12 days", "now"));
 
+            if ($i === 0) {
+                $user->setEmail("testUser@localhost.dev");
+            }
+            if ($i === 1) {
+                $user->setEmail("demoUser-$i@localhost.dev");
+                $user->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
+                $user->setConfirmedAt(null);
+            }
+            
             $manager->persist($user);
-            $this->addReference("user-$i", $user);
+
+            $i === 0 ? $this->addReference("testUser", $user) : $this->addReference("user-$i", $user);
         }
 
         $manager->flush();

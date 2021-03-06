@@ -44,7 +44,7 @@ class AuthTest extends ApiTestCase
     public function testLoginWithoutConfirmingItsAccount(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
-            "email" => "demoUser-0@localhost.dev",
+            "email" => "demoUser-1@localhost.dev",
             "password" => "demo1234",
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);

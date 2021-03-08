@@ -2,12 +2,15 @@ import React, {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {register as createUser} from '../services/AuthService';
 import Button from './Button';
 import PasswordInput from './form/PasswordInput';
 import TextInput from './form/TextInput';
 import { User } from '../types/User';
 import { Violation } from '../types/Violation';
+
+type Props = {
+    createUser: ({firstname, lastname, email, password}: User) => Promise<[boolean, Record<string, unknown>]>;
+}
 
 type FormData = {
     firstname: string;
@@ -17,8 +20,8 @@ type FormData = {
     passwordConfirm: string;
 }
 
-const RegisterForm = () => {
-    const schema: yup.ObjectSchema<any> = yup.object().shape({
+const RegisterForm = ({createUser}: Props) => {
+    const schema: yup.AnyObjectSchema = yup.object().shape({
         firstname: 
             yup.string()
             .min(3, "Le prénom doit contenir au minimum 3 caractères.")
@@ -57,15 +60,15 @@ const RegisterForm = () => {
 
     const onSubmit = handleSubmit(({firstname, lastname, email, password}) => {
         createUser({firstname, lastname, email, password})
-            .then((value: Array<any>) => {
+            .then((value: [boolean, Record<string, unknown>]) => {
                 const isSuccessfull: boolean = value[0];
-                const resposneData: User | any = value[1];
+                const responseData: User | any = value[1];
                 if (isSuccessfull) {
                     setIsSubmittedSuccessfully(true);
                     reset();
                 } else {
-                    if (Object.prototype.hasOwnProperty.call(resposneData, "violations")) {
-                        resposneData.violations.forEach((violation: Violation) => {
+                    if (Object.prototype.hasOwnProperty.call(responseData, "violations")) {
+                        responseData.violations.forEach((violation: Violation) => {
                             const invalidProperty: any = violation.propertyPath;
                             setError(invalidProperty, {
                                 type: "manual",
@@ -75,6 +78,7 @@ const RegisterForm = () => {
                     }
                 }
             })
+
     })
 
     return <>

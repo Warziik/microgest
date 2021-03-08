@@ -3,7 +3,7 @@ import { User } from "../types/User";
 
 const headers: Headers = new Headers({"Content-Type": "application/json", "Accept": "application/ld+json"});
 
-async function fetchRequest(uri: string, bodyParams: Object, method: string = "POST"): Promise<Array<any>> {
+async function fetchRequest(uri: string, bodyParams: Object, method: string = "POST"): Promise<[boolean, Record<string, unknown>]> {
     const request: Request = new Request(uri, {
         method: method,
         body: JSON.stringify(bodyParams),
@@ -24,7 +24,7 @@ async function fetchRequest(uri: string, bodyParams: Object, method: string = "P
  * 
  * @param data The data provided by the User in the registration form
  */
-async function register(data: User): Promise<Array<any>> {
+async function register(data: User): Promise<[boolean, Record<string, unknown>]> {
     return fetchRequest(USERS_URI, data);
 }
 

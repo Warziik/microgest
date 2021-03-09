@@ -3,7 +3,7 @@ import { User } from "../types/User";
 
 const headers: Headers = new Headers({"Content-Type": "application/json", "Accept": "application/ld+json"});
 
-async function fetchRequest(uri: string, bodyParams: Object, method: string = "POST"): Promise<[boolean, Record<string, unknown>]> {
+async function fetchRequest(uri: string, bodyParams: any, method = "POST"): Promise<[boolean, Record<string, unknown>]> {  
     const request: Request = new Request(uri, {
         method: method,
         body: JSON.stringify(bodyParams),
@@ -12,7 +12,7 @@ async function fetchRequest(uri: string, bodyParams: Object, method: string = "P
 
     const response: any = await fetch(request)
         .then(response => response)
-        .catch(err => console.error);
+        .catch(err => console.error(err));
 
     const responseData = await response.json();
 
@@ -28,4 +28,14 @@ async function register(data: User): Promise<[boolean, Record<string, unknown>]>
     return fetchRequest(USERS_URI, data);
 }
 
-export {register};
+/**
+ * Send a POST request to confirm the User account.
+ * 
+ * @param id The User id
+ * @param token The User account confirmation token
+ */
+async function confirmAccount(id: number, token: string): Promise<[boolean, Record<string, unknown>]> {
+    return fetchRequest(`${USERS_URI}/${id}/confirm_account`, {token});
+}
+
+export {register, confirmAccount};

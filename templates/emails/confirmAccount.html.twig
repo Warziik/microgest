@@ -1,6 +1,4 @@
 <h1>Hello {{ user.firstname }}</h1>
 <p>Here is the link to confirm your account:</p>
 
-TOKEN CONFIRMATION = {{ user.confirmationToken }}
-
-<p><a href="#">Confirm my account</a></p>
+<p><a href="http://localhost:8080/user/{{ user.id }}/confirm/{{ user.confirmationToken }}">Confirm my account</a></p>

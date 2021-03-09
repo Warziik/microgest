@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref } from 'react';
 import { FieldError } from 'react-hook-form';
 
 type Props = {
@@ -8,12 +8,12 @@ type Props = {
     error: FieldError | undefined;
 }
 
-const TextInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
-    return <div className={`form__group ${props.error ? "form--invalid" : ""}`}>
-        {props.label && <label htmlFor={props.name} className="form__label">{props.label}</label>}
-        <input ref={ref} type={props.type ?? "text"} id={props.name} name={props.name} className="form__input" />
-        {props.error && <p role="alert" className="form--invalid-message">{props.error.message}</p>}
+const TextInput = (({type = "text", label, name, error}: Props, ref: Ref<HTMLInputElement>) => {
+    return <div className={`form__group ${error ? "form--invalid" : ""}`}>
+        {label && <label htmlFor={name} className="form__label">{label}</label>}
+        <input ref={ref} type={type} id={name} name={name} className="form__input" />
+        {error && <p role="alert" className="form--invalid-message">{error.message}</p>}
     </div>
 })
 
-export default TextInput;
+export default React.forwardRef(TextInput);

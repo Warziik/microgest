@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Ref, useState} from 'react';
 import { FieldError } from 'react-hook-form';
 import Icon from '../Icon';
 
@@ -8,7 +8,7 @@ type Props = {
     error: FieldError | undefined;
 }
 
-const PasswordInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
+const PasswordInput = (({label, name, error}: Props, ref: Ref<HTMLInputElement>) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -16,16 +16,16 @@ const PasswordInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => 
         setShowPassword(p => !p);
     }
 
-    return <div className={`form__group ${props.error ? "form--invalid" : ""}`}>
-        {props.label && <label htmlFor={props.name} className="form__label">{props.label}</label>}
+    return <div className={`form__group ${error ? "form--invalid" : ""}`}>
+        {label && <label htmlFor={name} className="form__label">{label}</label>}
         <div className="form__rightIcon">
-            <input ref={ref} type={showPassword ? "text" : "password"} id={props.name} name={props.name} className="form__input" />
+            <input ref={ref} type={showPassword ? "text" : "password"} id={name} name={name} className="form__input" />
             <button onClick={togglePasswordVisibility}>
                 <Icon name={showPassword ? "eye-slash" : "eye"} />
             </button>
         </div>
-        {props.error && <p role="alert" className="form--invalid-message">{props.error.message}</p>}
+        {error && <p role="alert" className="form--invalid-message">{error.message}</p>}
     </div>
 })
 
-export default PasswordInput;
+export default React.forwardRef(PasswordInput);

@@ -48,7 +48,7 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress",
         "test": "npx jest",
-        "lint": "npx eslint assets/**/*.tsx"
+        "lint": "npx eslint --ext .tsx,.ts assets/"
     },
     "private": true,
     "devDependencies": {

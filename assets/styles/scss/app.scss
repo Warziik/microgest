@@ -5,13 +5,16 @@
 @import "base/reset";
 @import "base/base";
 @import "base/typography";
+@import "base/animations";
 
 /* LAYOUT */
 
 /* PAGES */
 @import "pages/auth";
+@import "pages/confirmAccount";
 
 /* COMPONENTS */
 @import "components/alert";
 @import "components/button";
 @import "components/form";
+@import "components/spinner";

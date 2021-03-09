@@ -1,0 +1,12 @@
+.confirmAccount {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__content {
+        padding: 2.4rem;
+
+        box-shadow: 0 0 3rem rgba(#000, .05);
+    }
+}

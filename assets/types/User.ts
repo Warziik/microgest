@@ -10,7 +10,7 @@ export interface User {
     password?: string;
     createdAt?: string;
     updatedAt?: string;
-    customers?: Array<Object>;
+    customers?: Array<Record<string, unknown>>;
     confirmationToken?: string;
     confirmedAt?: string;
 }

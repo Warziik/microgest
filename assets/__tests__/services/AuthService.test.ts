@@ -26,4 +26,9 @@ describe("AuthService", () => {
         fetchMock.mockResponse(JSON.stringify({violations}));
         expect(await AuthService.register(userRegistrationCredentails)).toStrictEqual([true, {violations}]);
     })
+
+    it("should confirm the User's account", async () => {
+        fetchMock.mockResponse(JSON.stringify({code: 200, message: "Account confirmed successfully."}));
+        expect(await AuthService.confirmAccount(1, "randomToken")).toStrictEqual([true, {code: 200, message: "Account confirmed successfully."}]);
+    })
 })

@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, screen} from "@testing-library/react";
-import Auth from '../../pages/Auth';
+import Auth from '../../../pages/auth/Auth';
 
 describe("Auth page", () => {
     it("should display the page title", () => {

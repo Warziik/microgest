@@ -3,8 +3,8 @@ export interface User {
     "@id"?: string;
     "@type"?: string;
     id?: number;
-    firstname: string;
-    lastname: string;
+    firstname?: string;
+    lastname?: string;
     email: string;
     roles?: Array<string>;
     password?: string;

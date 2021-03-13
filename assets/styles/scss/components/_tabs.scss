@@ -1,0 +1,29 @@
+.tabs__list {
+    display: flex;
+}
+
+.tab__panel {
+    margin-top: 2.4rem;
+
+    &[aria-hidden="true"] {
+        display: none;
+    }
+}
+
+.tab__title {
+    display: inline-block;
+    padding: 3.2rem 8rem;
+
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    color: var(--text-color);
+    text-decoration: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &--active, &:hover {
+        border-bottom: 2px solid var(--primary-color);
+    }
+}

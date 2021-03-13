@@ -1,9 +1,10 @@
-import { USERS_URI } from "../config/config";
+import { AUTH_URI, USERS_URI } from "../config/config";
 import { User } from "../types/User";
+import { Violation } from "../types/Violation";
 
-const headers: Headers = new Headers({"Content-Type": "application/json", "Accept": "application/ld+json"});
+const headers: Headers = new Headers({ "Content-Type": "application/json", "Accept": "application/ld+json" });
 
-async function fetchRequest(uri: string, bodyParams: any, method = "POST"): Promise<[boolean, Record<string, unknown>]> {  
+async function fetchRequest(uri: string, bodyParams: any, method = "POST"): Promise<[boolean, Record<string, unknown>]> {
     const request: Request = new Request(uri, {
         method: method,
         body: JSON.stringify(bodyParams),
@@ -24,7 +25,7 @@ async function fetchRequest(uri: string, bodyParams: any, method = "POST"): Prom
  * 
  * @param data The data provided by the User in the registration form
  */
-async function register(data: User): Promise<[boolean, Record<string, unknown>]> {
+async function signup(data: User): Promise<[boolean, Record<string, any | Violation>]> {
     return fetchRequest(USERS_URI, data);
 }
 
@@ -35,7 +36,17 @@ async function register(data: User): Promise<[boolean, Record<string, unknown>]>
  * @param token The User account confirmation token
  */
 async function confirmAccount(id: number, token: string): Promise<[boolean, Record<string, unknown>]> {
-    return fetchRequest(`${USERS_URI}/${id}/confirm_account`, {token});
+    return fetchRequest(`${USERS_URI}/${id}/confirm_account`, { token });
 }
 
-export {register, confirmAccount};
+/**
+ * Authenticate the User with the credentials provided.
+ * 
+ * @param email The User's email
+ * @param password The User's password
+ */
+async function signin(email: string, password: string): Promise<[boolean, Record<string, any | Violation>]> {
+    return fetchRequest(AUTH_URI, { email, password })
+}
+
+export { signup, confirmAccount, signin };

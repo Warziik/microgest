@@ -8,10 +8,10 @@ type Props = {
     error: FieldError | undefined;
 }
 
-const TextInput = (({type = "text", label, name, error}: Props, ref: Ref<HTMLInputElement>) => {
+const TextInput = (({ type = "text", label, name, error }: Props, ref: Ref<HTMLInputElement>) => {
     return <div className={`form__group ${error ? "form--invalid" : ""}`}>
         {label && <label htmlFor={name} className="form__label">{label}</label>}
-        <input ref={ref} type={type} id={name} name={name} className="form__input" />
+        <input ref={ref} aria-invalid={error ? "true" : "false"} type={type} id={name} name={name} className="form__input" />
         {error && <p role="alert" className="form--invalid-message">{error.message}</p>}
     </div>
 })

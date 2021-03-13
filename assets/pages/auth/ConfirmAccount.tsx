@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { Redirect, RouteComponentProps } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import { confirmAccount } from "../../services/AuthService";
 
@@ -8,40 +8,40 @@ type MatchParams = {
     token: string;
 }
 
-const ConfirmAccount = ({match, history}: RouteComponentProps<MatchParams>) => {
-    const [isConfirming, setIsConfirming] = useState(true);
-    const id: number = parseInt(match.params.id);
-    const token: string = match.params.token;
+const ConfirmAccount = () => {
+    const params = useParams<MatchParams>();
+    const history = useHistory();
 
-    if (Number.isNaN(id)) {
-        console.log("Invalid User identifier.");
-        history.push("/");
-    }
+    const id: number = parseInt(params.id);
+    const token: string = params.token;
 
     useEffect(() => {
-        confirmAccount(id, token)
-            .then((value: [boolean, Record<string, unknown>]) => {
-                const isSuccessfull: boolean = value[0];
-                const resposneData: Record<string, unknown> = value[1];
-                setIsConfirming(false);
-                if (isSuccessfull) {
-                    console.log(resposneData.message);
+        if (Number.isNaN(id)) {
+            console.log("Invalid User identifier.");
+            history.push("/connexion");
+        } else {
+            (async function () {
+                const [isSuccess, data] = await confirmAccount(id, token);
+                if (isSuccess) {
+                    console.log(data.message);
                 } else {
-                    if (Object.prototype.hasOwnProperty.call(resposneData, "message")) {
-                        console.log(resposneData.message);
+                    if (Object.prototype.hasOwnProperty.call(data, "message")) {
+                        console.log(data.message);
                     } else {
                         console.log("Une erreur inattendue s'est produite, veuillez réessayer plus tard.");
                     }
                 }
-            })
-    }, [id, token])
+                history.push("/connexion");
+            })()
+        }
+    }, [id, token, history])
 
-    return isConfirming ? <div className="confirmAccount">
+    return <div className="confirmAccount">
         <div className="confirmAccount__content">
             <h2>Confirmation de votre compte...</h2>
             <Spinner />
         </div>
-    </div> : <Redirect to="/" push />
+    </div>
 }
 
 export default ConfirmAccount;

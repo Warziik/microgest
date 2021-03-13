@@ -2,9 +2,11 @@ import React from 'react';
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import LoginForm from '../../../components/form/LoginForm';
 
+const mockHistoryPush = jest.fn();
+
 jest.mock('react-router', () => ({
     useHistory: () => ({
-        push: jest.fn(),
+        push: mockHistoryPush,
     }),
 }));
 
@@ -33,10 +35,15 @@ describe("Login form", () => {
         fireEvent.submit(screen.getByTestId("button"));
 
         await waitFor(() => expect(screen.queryAllByRole("alert")).toHaveLength(0));
+
         expect(mockSuccessCallback).toHaveBeenCalledTimes(1);
         expect(mockSuccessCallback).toHaveBeenCalledWith("testUser@localhost.dev", "demo1234");
+
         expect(emailInput.value).toBe("");
         expect(passwordInput.value).toBe("");
+
+        expect(mockHistoryPush).toHaveBeenCalledTimes(1);
+        expect(mockHistoryPush).toHaveBeenCalledWith("/");
     })
 
     it("should return invalid credentials error", async () => {

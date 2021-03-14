@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "../../components/Button";
 import PasswordInput from "../../components/form/PasswordInput";
-import { resetPassword } from "../../services/AuthService";
+import { resetPassword } from "../../services/UserService";
 
 type MatchParams = {
     token: string;

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
-import { confirmAccount } from "../../services/AuthService";
+import { confirmAccount } from "../../services/UserService";
 
 type MatchParams = {
     id: string;

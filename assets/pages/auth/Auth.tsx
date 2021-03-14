@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { signup, signin } from "../../services/AuthService";
+import { signin } from "../../services/AuthService";
 import RegisterForm from '../../components/form/RegisterForm';
 import Tabs from '../../components/tab/Tabs';
 import Tab from '../../components/tab/Tab';
 import LoginForm from '../../components/form/LoginForm';
 import { useLocation } from 'react-router';
+import { signup } from '../../services/UserService';
 
 export default function Auth() {
     const { pathname } = useLocation();

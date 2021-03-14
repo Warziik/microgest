@@ -1,10 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import LoginForm from '../../../components/form/LoginForm';
+import { MemoryRouter } from 'react-router';
 
 const mockHistoryPush = jest.fn();
 
 jest.mock('react-router', () => ({
+    ...jest.requireActual("react-router") as Record<string, unknown>,
     useHistory: () => ({
         push: mockHistoryPush,
     }),
@@ -16,7 +18,9 @@ describe("Login form", () => {
     const mockUnconfirmedAccountCallback = jest.fn().mockResolvedValue([false, { code: 400, message: "Unconfirmed account." }]);
 
     it("should display required fields error", async () => {
-        render(<LoginForm login={mockSuccessCallback} />);
+        render(<MemoryRouter>
+            <LoginForm login={mockSuccessCallback} />
+        </MemoryRouter>);
 
         fireEvent.submit(screen.getByTestId("button"));
 
@@ -25,7 +29,9 @@ describe("Login form", () => {
     })
 
     it("should submit the form without errors", async () => {
-        render(<LoginForm login={mockSuccessCallback} />);
+        render(<MemoryRouter>
+            <LoginForm login={mockSuccessCallback} />
+        </MemoryRouter>);
 
         const emailInput: any = screen.getByRole("textbox", { name: /email/i });
         const passwordInput: any = screen.getByLabelText("Mot de passe");
@@ -47,7 +53,9 @@ describe("Login form", () => {
     })
 
     it("should return invalid credentials error", async () => {
-        render(<LoginForm login={mockInvalidCredentialsCallback} />);
+        render(<MemoryRouter>
+            <LoginForm login={mockInvalidCredentialsCallback} />
+        </MemoryRouter>);
 
         const emailInput: any = screen.getByRole("textbox", { name: /email/i });
         const passwordInput: any = screen.getByLabelText("Mot de passe");
@@ -66,7 +74,9 @@ describe("Login form", () => {
     })
 
     it("should return unconfirmed account error", async () => {
-        render(<LoginForm login={mockUnconfirmedAccountCallback} />);
+        render(<MemoryRouter>
+            <LoginForm login={mockUnconfirmedAccountCallback} />
+        </MemoryRouter>);
 
         const emailInput: any = screen.getByRole("textbox", { name: /email/i });
         const passwordInput: any = screen.getByLabelText("Mot de passe");

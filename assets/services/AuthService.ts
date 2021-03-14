@@ -49,4 +49,13 @@ async function signin(email: string, password: string): Promise<[boolean, Record
     return fetchRequest(AUTH_URI, { email, password })
 }
 
-export { signup, confirmAccount, signin };
+/**
+ * Send an email to the specified email address (if its related to an existing User) in order to reset the User's password.
+ * 
+ * @param email The User's email
+ */
+async function forgotPassword(email: string): Promise<[boolean, Record<string, any>]> {
+    return fetchRequest(`${USERS_URI}/forgot_password`, { email });
+}
+
+export { signup, confirmAccount, signin, forgotPassword };

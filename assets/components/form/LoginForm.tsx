@@ -7,6 +7,7 @@ import PasswordInput from "../../components/form/PasswordInput";
 import TextInput from "../../components/form/TextInput";
 import { useHistory } from "react-router";
 import { Violation } from "../../types/Violation";
+import { Link } from "react-router-dom";
 
 type Props = {
     login: (email: string, password: string) => Promise<[boolean, Record<string, any | Violation>]>;
@@ -67,9 +68,11 @@ export default function LoginForm({ login }: Props) {
         {customAlert && <div data-testid="alert-server" className={`alert--${customAlert.type}`}>
             <p>{customAlert.message}</p>
         </div>}
+
         <form className="form" onSubmit={onSubmit}>
             <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
             <PasswordInput ref={register} error={errors.password} name="password" label="Mot de passe" />
+            <Link to="/mot-de-passe-oublie">Mot de passe oublié</Link>
             <Button isDisabled={isSubmitting} icon="unlock">Se connecter</Button>
         </form>
     </>

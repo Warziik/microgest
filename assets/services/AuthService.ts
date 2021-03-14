@@ -58,4 +58,14 @@ async function forgotPassword(email: string): Promise<[boolean, Record<string, a
     return fetchRequest(`${USERS_URI}/forgot_password`, { email });
 }
 
-export { signup, confirmAccount, signin, forgotPassword };
+/**
+ * Reset the User's password.
+ * 
+ * @param password The new User's password
+ * @param token The User's token generated when he requested to change his password.
+ */
+async function resetPassword(password: string, token: string): Promise<[boolean, Record<string, any>]> {
+    return fetchRequest(`${USERS_URI}/reset_password`, { password, token });
+}
+
+export { signup, confirmAccount, signin, forgotPassword, resetPassword };

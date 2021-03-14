@@ -8,7 +8,7 @@ type MatchParams = {
     token: string;
 }
 
-const ConfirmAccount = () => {
+export default function ConfirmAccount() {
     const params = useParams<MatchParams>();
     const history = useHistory();
 
@@ -43,5 +43,3 @@ const ConfirmAccount = () => {
         </div>
     </div>
 }
-
-export default ConfirmAccount;

@@ -12,6 +12,7 @@
     --secondary-color-3: #{rgba(#97005c, .30)};
     --secondary-color-4: #{rgba(#97005c, .10)};
 
+    --primary-color-darker: darken(#005c97, 30%);
     --primary-color: #005c97;
     --primary-color-2: #{rgba(#005c97, .70)};
     --primary-color-3: #{rgba(#005c97, .30)};
@@ -33,7 +34,7 @@
 
     --input-background: var(--tertiary-color-5);
     --input-border: var(--tertiary-color-4);
-    
+
     --text-color: #000;
     --alt-text-color: var(--tertiary-color);
 }

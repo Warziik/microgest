@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "../../components/Button";
 import TextInput from "../../components/form/TextInput";
 import { useHistory } from "react-router";
-import { forgotPassword } from "../../services/AuthService";
+import { forgotPassword } from "../../services/UserService";
 
 type FormData = {
     email: string;

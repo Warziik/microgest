@@ -4,7 +4,7 @@ type Props = {
     name: string;
 }
 
-const Icon = ({name}: Props) => {
+const Icon = ({ name }: Props) => {
     return <svg>
         <use xlinkHref={`../sprite.svg#icon-${name}`} />
     </svg>

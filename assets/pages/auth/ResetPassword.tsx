@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "../../components/Button";
 import PasswordInput from "../../components/form/PasswordInput";
 import { resetPassword } from "../../services/UserService";
+import { useToast } from "../../hooks/useToast";
 
 type MatchParams = {
     token: string;
@@ -18,8 +19,8 @@ type FormData = {
 
 export default function ResetPassword() {
     const { token } = useParams<MatchParams>();
+    const toast = useToast();
     const history = useHistory();
-    const [customError, setCustomError] = useState<string>();
 
     const schema: yup.AnyObjectSchema = yup.object().shape({
         password:
@@ -44,13 +45,13 @@ export default function ResetPassword() {
         const [isSuccess, data] = await resetPassword(password, token);
 
         if (isSuccess) {
-            console.log("Votre mot de passe a bien été mis à jour.");
+            toast("success", "Votre mot de passe a bien été mis à jour.");
             history.push("/");
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "message")) {
-                setCustomError(data.message);
+                toast("error", data.message);
             } else {
-                setCustomError("Une erreur inattendue s'est produite, veuillez réessayer plus tard.");
+                toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
             }
         }
     })
@@ -58,7 +59,6 @@ export default function ResetPassword() {
     return <div className="resetPassword">
         <h1>Réinitialisation de votre mot de passe</h1>
         <div className="resetPassword__content">
-            {customError && <div className="alert--error">{customError}</div>}
             <form className="form" onSubmit={onSubmit}>
                 <PasswordInput ref={register} error={errors.password} name="password" label="Nouveau mot de passe" />
                 <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre nouveau mot de passe" />

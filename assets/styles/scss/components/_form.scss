@@ -25,8 +25,9 @@
 
             border: none;
             cursor: pointer;
-            
+
             background: none;
+
             svg {
                 max-width: 1.6rem;
                 max-height: 1.6rem;
@@ -72,7 +73,7 @@
 
         &:focus {
             outline: none;
-            box-shadow: 0 .3rem 2rem rgba(0, 0, 0, .16);
+            box-shadow: 1px 2px 10px var(--tertiary-color-4);
         }
     }
 }

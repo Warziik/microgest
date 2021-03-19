@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
+import { useToast } from "../../hooks/useToast";
 import { confirmAccount } from "../../services/UserService";
 
 type MatchParams = {
@@ -9,6 +10,7 @@ type MatchParams = {
 }
 
 export default function ConfirmAccount() {
+    const toast = useToast();
     const params = useParams<MatchParams>();
     const history = useHistory();
 
@@ -17,24 +19,26 @@ export default function ConfirmAccount() {
 
     useEffect(() => {
         if (Number.isNaN(id)) {
-            console.log("Invalid User identifier.");
+            toast("error", "Identifiant utilisateur invalide.");
             history.push("/connexion");
         } else {
             (async function () {
                 const [isSuccess, data] = await confirmAccount(id, token);
                 if (isSuccess) {
-                    console.log(data.message);
+                    const message: any = data.message;
+                    toast("success", message);
                 } else {
                     if (Object.prototype.hasOwnProperty.call(data, "message")) {
-                        console.log(data.message);
+                        const message: any = data.message;
+                        toast("error", message);
                     } else {
-                        console.log("Une erreur inattendue s'est produite, veuillez réessayer plus tard.");
+                        toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
                     }
                 }
                 history.push("/connexion");
             })()
         }
-    }, [id, token, history])
+    }, [id, token, history, toast])
 
     return <div className="confirmAccount">
         <div className="confirmAccount__content">

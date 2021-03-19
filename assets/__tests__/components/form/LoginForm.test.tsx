@@ -33,7 +33,7 @@ describe("Login form", () => {
             <LoginForm login={mockSuccessCallback} />
         </MemoryRouter>);
 
-        const emailInput: any = screen.getByRole("textbox", { name: /email/i });
+        const emailInput: any = screen.getByLabelText("Adresse email");
         const passwordInput: any = screen.getByLabelText("Mot de passe");
 
         fireEvent.input(emailInput, { target: { value: "testUser@localhost.dev" } });
@@ -57,7 +57,7 @@ describe("Login form", () => {
             <LoginForm login={mockInvalidCredentialsCallback} />
         </MemoryRouter>);
 
-        const emailInput: any = screen.getByRole("textbox", { name: /email/i });
+        const emailInput: any = screen.getByLabelText("Adresse email");
         const passwordInput: any = screen.getByLabelText("Mot de passe");
 
         fireEvent.input(emailInput, { target: { value: "invalid_email@localhost.dev" } });
@@ -69,8 +69,6 @@ describe("Login form", () => {
 
         expect(mockInvalidCredentialsCallback).toHaveBeenCalled();
         expect(mockInvalidCredentialsCallback).toHaveBeenCalledWith("invalid_email@localhost.dev", "demo1234");
-        expect(screen.getByTestId("alert-server")).toBeInTheDocument();
-        expect(screen.getByTestId("alert-server").className).toBe("alert--error");
     })
 
     it("should return unconfirmed account error", async () => {
@@ -78,7 +76,7 @@ describe("Login form", () => {
             <LoginForm login={mockUnconfirmedAccountCallback} />
         </MemoryRouter>);
 
-        const emailInput: any = screen.getByRole("textbox", { name: /email/i });
+        const emailInput: any = screen.getByLabelText("Adresse email");
         const passwordInput: any = screen.getByLabelText("Mot de passe");
 
         fireEvent.input(emailInput, { target: { value: "unconfirmedUser@localhost.dev" } });
@@ -92,7 +90,5 @@ describe("Login form", () => {
         expect(mockUnconfirmedAccountCallback).toHaveBeenCalledWith("unconfirmedUser@localhost.dev", "demo1234");
         expect(emailInput.value).toBe("");
         expect(passwordInput.value).toBe("");
-        expect(screen.getByTestId("alert-server")).toBeInTheDocument();
-        expect(screen.getByTestId("alert-server").className).toBe("alert--warning");
     })
 })

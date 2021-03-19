@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,25 +8,27 @@ import TextInput from "../../components/form/TextInput";
 import { useHistory } from "react-router";
 import { Violation } from "../../types/Violation";
 import { Link } from "react-router-dom";
+import { useToast } from "../../hooks/useToast";
 
 type Props = {
     login: (email: string, password: string) => Promise<[boolean, Record<string, any | Violation>]>;
 }
 
 type FormData = {
-    email: string;
-    password: string;
+    emailLogin: string;
+    passwordLogin: string;
 }
 
 export default function LoginForm({ login }: Props) {
+    const toast = useToast();
     const history = useHistory();
 
     const schema: yup.AnyObjectSchema = yup.object().shape({
-        email:
+        emailLogin:
             yup.string()
                 .email("Le format de l'adresse email est invalide.")
                 .required("Ce champ est requis."),
-        password:
+        passwordLogin:
             yup.string()
                 .required("Ce champ est requis.")
     });
@@ -39,41 +41,30 @@ export default function LoginForm({ login }: Props) {
         reset
     } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
 
-    const [customAlert, setCustomAlert] = useState<{ type: "error" | "warning", message: string } | null>();
-
-    const onSubmit = handleSubmit(async ({ email, password }) => {
-        const [isSuccess, data] = await login(email, password);
+    const onSubmit = handleSubmit(async ({ emailLogin, passwordLogin }) => {
+        const [isSuccess, data] = await login(emailLogin, passwordLogin);
         if (isSuccess) {
-            console.log("Vous êtes connecté.", data.token);
-            setCustomAlert(null);
+            toast("success", "Vous êtes connecté.");
             reset();
-
-            // TODO: Notify the User that he is logged
             history.push("/"); // Redirect to dashboard
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "message")) {
                 if (data.code === 401) {
-                    setCustomAlert({ type: "error", message: data.message }); // Invalid credentials.
+                    toast("error", data.message);
                 } else {
-                    setCustomAlert({ type: "warning", message: data.message }); // Unconfirmed account.
+                    toast("warning", data.message);
                     reset();
                 }
             } else {
-                setCustomAlert({ type: "error", message: "Une erreur inattendue s'est produite, veuillez réessayer plus tard." });
+                toast("error", "Une erreur inattendue s'est produite, veuillez réessayer plus tard.");
             }
         }
     })
 
-    return <>
-        {customAlert && <div data-testid="alert-server" className={`alert--${customAlert.type}`}>
-            <p>{customAlert.message}</p>
-        </div>}
-
-        <form className="form" onSubmit={onSubmit}>
-            <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
-            <PasswordInput ref={register} error={errors.password} name="password" label="Mot de passe" />
-            <Link to="/mot-de-passe-oublie">Mot de passe oublié</Link>
-            <Button isDisabled={isSubmitting} icon="unlock">Se connecter</Button>
-        </form>
-    </>
+    return <form className="form" onSubmit={onSubmit}>
+        <TextInput ref={register} error={errors.emailLogin} type="email" name="emailLogin" label="Adresse email" />
+        <PasswordInput ref={register} error={errors.passwordLogin} name="passwordLogin" label="Mot de passe" />
+        <Link to="/mot-de-passe-oublie">Mot de passe oublié</Link>
+        <Button isDisabled={isSubmitting} icon="unlock">Se connecter</Button>
+    </form>;
 }

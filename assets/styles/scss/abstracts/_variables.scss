@@ -3,9 +3,6 @@
     --font-family: "Nunito", sans-serif;
     --default-font-size: 1.6rem;
 
-    // BORDER
-    --radius: 10px;
-
     // COLORS
     --secondary-color: #97005c;
     --secondary-color-2: #{rgba(#97005c, .70)};
@@ -29,12 +26,16 @@
     --info-color: #4B9FC5;
     --success-color: #4BC5A0;
 
-    --body-background: #FFF;
-    --alt-body-background: var(--tertiary-color-5);
+    --content-background: #FFF;
+    --body-background: var(--tertiary-color-5);
 
     --input-background: var(--tertiary-color-5);
     --input-border: var(--tertiary-color-4);
 
     --text-color: #000;
     --alt-text-color: var(--tertiary-color);
+
+    // OTHER
+    --radius: 10px;
+    --box-shadow: 1px 10px 20px var(--tertiary-color-4);
 }

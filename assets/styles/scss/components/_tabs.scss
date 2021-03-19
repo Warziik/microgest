@@ -1,5 +1,6 @@
 .tabs__list {
     display: flex;
+    height: 8rem;
 }
 
 .tab__panel {
@@ -11,8 +12,12 @@
 }
 
 .tab__title {
+    height: 100%;
     display: inline-block;
     padding: 3.2rem 8rem;
+
+    display: flex;
+    align-items: center;
 
     font-family: inherit;
     font-size: inherit;
@@ -23,7 +28,8 @@
     background: none;
     cursor: pointer;
 
-    &--active, &:hover {
+    &--active,
+    &:hover {
         border-bottom: 2px solid var(--primary-color);
     }
 }

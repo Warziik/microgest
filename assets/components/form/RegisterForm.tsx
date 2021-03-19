@@ -7,6 +7,7 @@ import PasswordInput from './PasswordInput';
 import TextInput from './TextInput';
 import { User } from '../../types/User';
 import { Violation } from '../../types/Violation';
+import { useToast } from '../../hooks/useToast';
 
 type Props = {
     createUser: ({ firstname, lastname, email, password }: User) => Promise<[boolean, Record<string, any | Violation>]>;
@@ -21,6 +22,8 @@ type FormData = {
 }
 
 export default function RegisterForm({ createUser }: Props) {
+    const toast = useToast();
+
     const schema: yup.AnyObjectSchema = yup.object().shape({
         firstname:
             yup.string()
@@ -50,7 +53,7 @@ export default function RegisterForm({ createUser }: Props) {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting, isSubmitSuccessful },
+        formState: { isSubmitting },
         errors,
         setError,
         reset
@@ -60,6 +63,7 @@ export default function RegisterForm({ createUser }: Props) {
         const [isSuccess, data] = await createUser({ firstname, lastname, email, password });
 
         if (isSuccess) {
+            toast("success", "Un mail de confirmation a été envoyé à l&apos;adresse email spécifiée.");
             reset();
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "violations")) {
@@ -74,20 +78,14 @@ export default function RegisterForm({ createUser }: Props) {
         }
     });
 
-    return <>
-        {isSubmitSuccessful && <div className="alert--success">
-            <p>Un mail de confirmation a été envoyé à l&apos;adresse email spécifiée.</p>
-        </div>}
-        <form className="form" onSubmit={onSubmit}>
-            <div className="form__horizontal">
-                <TextInput ref={register} error={errors.firstname} name="firstname" label="Prénom" />
-                <TextInput ref={register} error={errors.lastname} name="lastname" label="Nom de famille" />
-            </div>
-            <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
-            <PasswordInput ref={register} error={errors.password} name="password" label="Mot de passe" />
-            <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre mot de passe" />
-
-            <Button isDisabled={isSubmitting} icon="user-plus">Créer mon compte</Button>
-        </form>
-    </>;
+    return <form className="form" onSubmit={onSubmit}>
+        <div className="form__horizontal">
+            <TextInput ref={register} error={errors.firstname} name="firstname" label="Prénom" />
+            <TextInput ref={register} error={errors.lastname} name="lastname" label="Nom de famille" />
+        </div>
+        <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
+        <PasswordInput ref={register} error={errors.password} name="password" label="Mot de passe" />
+        <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre mot de passe" />
+        <Button isDisabled={isSubmitting} icon="user-plus">Créer mon compte</Button>
+    </form>;
 }

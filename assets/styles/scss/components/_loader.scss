@@ -1,4 +1,4 @@
-.spinner {
+.loader {
     margin-top: 2.4rem;
 
     &--center {
@@ -7,8 +7,8 @@
     }
 }
 
-.spinner--circle {
-    @extend .spinner;
+.loader--circle {
+    @extend .loader;
     width: 5rem;
     height: 5rem;
 

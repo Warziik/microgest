@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "../../components/Button";
+import { Button } from "../../components/Button";
 import PasswordInput from "../../components/form/PasswordInput";
 import { resetPassword } from "../../services/UserService";
 import { useToast } from "../../hooks/useToast";
@@ -63,7 +63,7 @@ export default function ResetPassword() {
                 <PasswordInput ref={register} error={errors.password} name="password" label="Nouveau mot de passe" />
                 <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre nouveau mot de passe" />
 
-                <Button isDisabled={isSubmitting}>Sauvegarder</Button>
+                <Button isLoading={isSubmitting}>Sauvegarder</Button>
             </form>
         </div>
     </div>

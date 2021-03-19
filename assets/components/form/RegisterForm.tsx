@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Button from '../Button';
+import { Button } from '../Button';
 import PasswordInput from './PasswordInput';
 import TextInput from './TextInput';
 import { User } from '../../types/User';
@@ -86,6 +86,6 @@ export default function RegisterForm({ createUser }: Props) {
         <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
         <PasswordInput ref={register} error={errors.password} name="password" label="Mot de passe" />
         <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre mot de passe" />
-        <Button isDisabled={isSubmitting} icon="user-plus">Créer mon compte</Button>
+        <Button isLoading={isSubmitting} icon="user-plus">Créer mon compte</Button>
     </form>;
 }

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "../../components/Button";
+import { Button } from "../../components/Button";
 import TextInput from "../../components/form/TextInput";
 import { useHistory } from "react-router";
 import { forgotPassword } from "../../services/UserService";
@@ -59,7 +59,7 @@ export default function ForgotPassword() {
             <p className="forgotPassword__description">Un mail contenant un lien de réinitialisation de mot de passe vous sera envoyé à l&apos;adresse email spécifiée ci-dessous si celle-ci est liée à un compte utilisateur existant.</p>
             <form className="form">
                 <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
-                <Button isDisabled={isSubmitting} icon="send">Envoyer</Button>
+                <Button isLoading={isSubmitting} icon="send">Envoyer</Button>
             </form>
         </div>
     </div>

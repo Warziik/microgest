@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Spinner from "../../components/Spinner";
+import { Loader } from "../../components/Loader";
 import { useToast } from "../../hooks/useToast";
 import { confirmAccount } from "../../services/UserService";
 
@@ -43,7 +43,7 @@ export default function ConfirmAccount() {
     return <div className="confirmAccount">
         <div className="confirmAccount__content">
             <h2>Confirmation de votre compte...</h2>
-            <Spinner />
+            <Loader />
         </div>
     </div>
 }

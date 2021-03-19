@@ -26,7 +26,8 @@
 
     &:disabled {
         cursor: not-allowed;
-        background-color: lighten(#000, 80%);
+        color: var(--primary-color);
+        background-color: var(--input-background);
     }
 }
 

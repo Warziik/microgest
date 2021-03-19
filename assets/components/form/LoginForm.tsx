@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "../../components/Button";
+import { Button } from "../../components/Button";
 import PasswordInput from "../../components/form/PasswordInput";
 import TextInput from "../../components/form/TextInput";
 import { useHistory } from "react-router";
@@ -65,6 +65,6 @@ export default function LoginForm({ login }: Props) {
         <TextInput ref={register} error={errors.emailLogin} type="email" name="emailLogin" label="Adresse email" />
         <PasswordInput ref={register} error={errors.passwordLogin} name="passwordLogin" label="Mot de passe" />
         <Link to="/mot-de-passe-oublie">Mot de passe oublié</Link>
-        <Button isDisabled={isSubmitting} icon="unlock">Se connecter</Button>
+        <Button isLoading={isSubmitting} icon="unlock">Se connecter</Button>
     </form>;
 }

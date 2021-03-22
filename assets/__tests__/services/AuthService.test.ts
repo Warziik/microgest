@@ -1,4 +1,4 @@
-import * as AuthService from "../../services/AuthService";
+import { authenticate } from "../../services/AuthService";
 import fetchMock from "jest-fetch-mock";
 import { User } from "../../types/User";
 
@@ -12,6 +12,6 @@ describe("AuthService", () => {
 
     it("should login the User", async () => {
         fetchMock.mockResponse(JSON.stringify(userLoginCredentials));
-        expect(await AuthService.signin("testUser@localhost.dev", "demo1234")).toStrictEqual([true, userLoginCredentials]);
+        expect(await authenticate("testUser@localhost.dev", "demo1234")).toStrictEqual([true, userLoginCredentials]);
     })
 })

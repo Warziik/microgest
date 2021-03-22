@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ToastContainer from './components/toast/ToastContainer';
+import { AuthContextProvider } from './contexts/AuthContext';
 import { ToastContextProvider } from './contexts/ToastContext';
-import Router from './navigation/Router';
+import { Router } from './navigation/Router';
 import './styles/scss/app.scss';
 
 ReactDOM.render(
-    <ToastContextProvider>
-        <Router />
-        <ToastContainer />
-    </ToastContextProvider>, document.getElementById("app"));
+    <AuthContextProvider>
+        <ToastContextProvider>
+            <Router />
+            <ToastContainer />
+        </ToastContextProvider>
+    </AuthContextProvider>
+    , document.getElementById("app"));

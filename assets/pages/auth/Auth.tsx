@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { signin } from "../../services/AuthService";
 import RegisterForm from '../../components/form/RegisterForm';
 import Tabs from '../../components/tab/Tabs';
 import Tab from '../../components/tab/Tab';
 import LoginForm from '../../components/form/LoginForm';
 import { useLocation } from 'react-router';
 import { signup } from '../../services/UserService';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Auth() {
     const { pathname } = useLocation();
-
+    const { login } = useAuth();
     const registerRef = useRef(null);
     const loginRef = useRef(null);
 
@@ -33,7 +33,7 @@ export default function Auth() {
                     <RegisterForm createUser={signup} />
                 </Tab>
                 <Tab title={LOGIN_TITLE} url={LOGIN_PATH} tabRef={loginRef}>
-                    <LoginForm login={signin} />
+                    <LoginForm login={login} />
                 </Tab>
             </Tabs>
         </div>

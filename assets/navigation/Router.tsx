@@ -6,18 +6,20 @@ import ForgotPassword from '../pages/auth/ForgotPassword';
 import ResetPassword from '../pages/auth/ResetPassword';
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
 
-const Router = () => {
+export function Router() {
     return <BrowserRouter>
         <Switch>
-            <Route path="/reinitialisation-mot-de-passe/:token" component={ResetPassword} />
-            <Route path="/mot-de-passe-oublie" component={ForgotPassword} />
-            <Route path="/user/:id/confirm/:token" component={ConfirmAccount} />
-            <Route path={["/inscription", "/connexion"]} component={Auth} />
-            <Route exact path="/" component={Home} />
+            <PrivateRoute exact path="/" component={Home} />
+
+            <PublicRoute path="/reinitialisation-mot-de-passe/:token" component={ResetPassword} />
+            <PublicRoute path="/mot-de-passe-oublie" component={ForgotPassword} />
+            <PublicRoute path="/user/:id/confirm/:token" component={ConfirmAccount} />
+            <PublicRoute path={["/inscription", "/connexion"]} component={Auth} />
+
             <Route component={NotFound} />
         </Switch>
     </BrowserRouter>
 }
-
-export default Router;

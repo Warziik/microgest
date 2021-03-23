@@ -1,4 +1,5 @@
 <?php
+
 namespace App\OpenApi;
 
 use ArrayObject;
@@ -8,14 +9,16 @@ use ApiPlatform\Core\OpenApi\Model\Operation;
 use ApiPlatform\Core\OpenApi\Model\RequestBody;
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 
-final class JwtOpenApi implements OpenApiFactoryInterface {
+final class JwtOpenApi implements OpenApiFactoryInterface
+{
     const OPERATION_PATH = "/api/authentication_token";
-    
+
     public function __construct(private OpenApiFactoryInterface $decorated)
     {
     }
 
-    public function __invoke(array $context = []): OpenApi {
+    public function __invoke(array $context = []): OpenApi
+    {
         $openApi = ($this->decorated)($context);
 
         $pathItem = new PathItem(
@@ -61,7 +64,7 @@ final class JwtOpenApi implements OpenApiFactoryInterface {
                         ],
                     ],
                     '401' => [
-                        'description' => 'Invalid credentials'
+                        'description' => 'Invalid credentials. | Unconfirmed account.'
                     ]
                 ]
             )

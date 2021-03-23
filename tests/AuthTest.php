@@ -17,7 +17,7 @@ class AuthTest extends ApiTestCase
         parent::setUp();
         $this->loadFixtures([UserFixtures::class]);
     }
-    
+
     public function testLogin(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
@@ -47,10 +47,10 @@ class AuthTest extends ApiTestCase
             "email" => "demoUser-1@localhost.dev",
             "password" => "demo1234",
         ]]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertResponseHeaderSame('content-type', 'application/json');
         $this->assertJsonContains([
-            'code' => Response::HTTP_FORBIDDEN,
+            'code' => Response::HTTP_UNAUTHORIZED,
             'message' => 'Unconfirmed account.'
         ]);
     }

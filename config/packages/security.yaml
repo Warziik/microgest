@@ -23,10 +23,11 @@ security:
             pattern:  ^/api/authentication_token
             stateless: true
             anonymous: true
+            user_checker: App\Security\UserChecker
             json_login:
                 check_path:               /api/authentication_token
                 username_path:            email
-                success_handler:          app.jwt_success_handler
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
         api:
             pattern:   ^/api

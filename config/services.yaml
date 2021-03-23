@@ -57,7 +57,3 @@ services:
     App\OpenApi\JwtOpenApi:
         decorates: 'api_platform.openapi.factory'
         autoconfigure: false
-
-    app.jwt_success_handler:
-        class: App\Security\JwtSuccessHandler
-        parent: lexik_jwt_authentication.handler.authentication_success

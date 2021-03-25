@@ -1,8 +1,8 @@
+import { AUTH_REFRESH_TOKEN_URI } from "../config/config";
 import MemoryJwt from "./memoryJwt";
 
 export class DataAccess {
     private static defaultHeaders: Headers = new Headers({
-        "Content-Type": "application/json",
         "Accept": "application/ld+json"
     });
 
@@ -12,7 +12,17 @@ export class DataAccess {
     public static async request(endpoint: string, requestParams: RequestInit): Promise<[boolean, Record<string, any>]> {
         const jwtToken = MemoryJwt.getToken();
         if (jwtToken) {
-            this.defaultHeaders.append("Authorization", `Bearer ${jwtToken}`);
+            if (!this.defaultHeaders.has("Authorization")) {
+                this.defaultHeaders.append("Authorization", `Bearer ${jwtToken}`);
+            }
+        } else {
+            this.defaultHeaders.delete("Authorization");
+        }
+
+        if (endpoint === AUTH_REFRESH_TOKEN_URI) {
+            this.defaultHeaders.delete("Content-Type");
+        } else if (!this.defaultHeaders.has("Content-Type") || this.defaultHeaders.get("Content-Type") !== "application/json") {
+            this.defaultHeaders.append("Content-Type", "application/json");
         }
 
         const request: Request = new Request(

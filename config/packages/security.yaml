@@ -24,11 +24,16 @@ security:
             stateless: true
             anonymous: true
             user_checker: App\Security\UserChecker
+            methods: [POST]
             json_login:
                 check_path:               /api/authentication_token
                 username_path:            email
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+        authentication_refresh:
+            pattern:  ^/api/authentication_token/refresh
+            stateless: true
+            anonymous: true
         api:
             pattern:   ^/api
             stateless: true

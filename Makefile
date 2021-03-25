@@ -73,12 +73,12 @@ fixtures: ##@database Load the data fixtures.
 ## TESTS AND CODE QUALITY
 ## ----------------------------------------------------------------
 .PHONY: test
-test: cache-clear ##@tests Execute all the tests.
+test: ##@tests Execute all the tests.
 	$(PHP_CONTAINER) php bin/phpunit
 	$(NODE_CONTAINER) yarn test
 
 .PHONY: test-php
-test-php: cache-clear ##@tests Execute the PHP tests.
+test-php: ##@tests Execute the PHP tests.
 	$(PHP_CONTAINER) php bin/phpunit
 
 .PHONY: test-js

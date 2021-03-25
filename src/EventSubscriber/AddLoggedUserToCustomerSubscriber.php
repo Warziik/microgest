@@ -2,7 +2,6 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Invoice;
 use App\Entity\Customer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;

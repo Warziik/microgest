@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\EventSubsriber;
+namespace App\Tests\EventSubscriber;
 
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;

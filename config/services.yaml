@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.jwt_refresh_token_cookie_name: '%env(JWT_REFRESH_COOKIE_NAME)%'
 
 services:
     # default configuration for services in *this* file
@@ -57,3 +58,13 @@ services:
     App\OpenApi\JwtOpenApi:
         decorates: 'api_platform.openapi.factory'
         autoconfigure: false
+
+    App\EventSubscriber\Auth\AuthenticationSuccessSubscriber:
+        arguments: [
+            '%gesdinet_jwt_refresh_token.ttl%',
+            '%gesdinet_jwt_refresh_token.token_parameter_name%',
+            '%app.jwt_refresh_token_cookie_name%'
+        ]
+
+    App\EventSubscriber\Auth\RefreshJwtTokenSubscriber:
+        arguments: ['%gesdinet_jwt_refresh_token.token_parameter_name%', '%app.jwt_refresh_token_cookie_name%']

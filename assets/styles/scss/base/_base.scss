@@ -21,3 +21,10 @@ a {
         border-color: var(--primary-color-darker);
     }
 }
+
+.defaultLoading {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

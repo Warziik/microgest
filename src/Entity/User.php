@@ -103,7 +103,7 @@ class User implements UserInterface
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 
-    /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true) */
+    /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true, cascade={"persist"}) */
     #[ApiSubResource(maxDepth: 1)]
     #[Groups(["users:read"])]
     private ?Collection $customers = null;
@@ -312,6 +312,8 @@ class User implements UserInterface
     /** @ORM\PrePersist */
     public function prePersist(): void
     {
-        $this->setCreatedAt(new DateTime());
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt(new DateTime());
+        }
     }
 }

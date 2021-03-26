@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -36,32 +37,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Delete all the unconfirmed accounts of the database.
+     */
+    public function clearUnconfirmedAccounts(DateTime $dateTime): array
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        $unconfirmedAccounts = $this->createQueryBuilder('u')
+            ->where("u.createdAt < :dateTime")
+            ->setParameter("dateTime", $dateTime)
+            ->andWhere("u.confirmedAt IS NULL")
             ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+            ->getResult();
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if (!empty($unconfirmedAccounts)) {
+            foreach ($unconfirmedAccounts as $unconfirmedAccount) {
+                $this->_em->remove($unconfirmedAccount);
+                $this->_em->flush();
+            }
+
+            return [true, $unconfirmedAccounts];
+        }
+
+        return [false, []];
     }
-    */
 }

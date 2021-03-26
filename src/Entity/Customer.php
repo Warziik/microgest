@@ -88,7 +88,7 @@ class Customer
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 
-    /** @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true) */
+    /** @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true, cascade={"persist"}) */
     #[Groups(["customers:read"])]
     #[ApiSubresource]
     private ?Collection $invoices = null;

@@ -59,10 +59,9 @@ cache-clear: ##@project Clear the cache.
 ## DATABASE
 ## ----------------------------------------------------------------
 .PHONY: db
-db: ##@database Create the database and its schema.
+db: ##@database Create the database and run the migrations.
 	$(PHP_CONTAINER) symfony console d:d:c --if-not-exists
-	$(PHP_CONTAINER) symfony console d:s:d --force
-	$(PHP_CONTAINER) symfony console d:s:c
+	$(PHP_CONTAINER) symfony console d:m:m --no-interaction
 
 .PHONY: fixtures
 fixtures: ##@database Load the data fixtures.

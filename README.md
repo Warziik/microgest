@@ -10,7 +10,7 @@ make install
 # installe les dépendances PHP et JavaScript
 
 make db
-# crée la base de données et son schéma
+# crée la base de données et exécute les migrations
 
 make fixtures
 # génère les fausses données pour les entités doctrine (optionnel)

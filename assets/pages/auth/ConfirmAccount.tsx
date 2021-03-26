@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Loader } from "../../components/Loader";
 import { useToast } from "../../hooks/useToast";
@@ -17,28 +17,29 @@ export default function ConfirmAccount() {
     const id: number = parseInt(params.id);
     const token: string = params.token;
 
+    const confirmUserAccount = useCallback(async () => {
+        const [isSuccess, data] = await confirmAccount(id, token);
+        if (isSuccess) {
+            const message: any = data.message;
+            toast("success", message);
+        } else {
+            if (Object.prototype.hasOwnProperty.call(data, "message")) {
+                const message: any = data.message;
+                toast("error", message);
+            } else {
+                toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+            }
+        }
+    }, [id, token, toast]);
+
     useEffect(() => {
         if (Number.isNaN(id)) {
             toast("error", "Identifiant utilisateur invalide.");
-            history.push("/connexion");
         } else {
-            (async function () {
-                const [isSuccess, data] = await confirmAccount(id, token);
-                if (isSuccess) {
-                    const message: any = data.message;
-                    toast("success", message);
-                } else {
-                    if (Object.prototype.hasOwnProperty.call(data, "message")) {
-                        const message: any = data.message;
-                        toast("error", message);
-                    } else {
-                        toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
-                    }
-                }
-                history.push("/connexion");
-            })()
+            confirmUserAccount();
         }
-    }, [id, token, history, toast])
+        history.push("/connexion");
+    }, [confirmUserAccount, id, toast, history]);
 
     return <div className="confirmAccount">
         <div className="confirmAccount__content">

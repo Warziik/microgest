@@ -1,4 +1,5 @@
 <?php
+
 namespace App\EventSubscriber;
 
 use App\Entity\User;
@@ -18,23 +19,41 @@ class SendConfirmEmailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ["onKernelView", EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => ['onPreWrite', EventPriorities::PRE_WRITE],
+            KernelEvents::VIEW => ["onPostWrite", EventPriorities::POST_WRITE]
         ];
     }
 
     /**
-     * Send a confirm account email to the User's email address before persisting in database
+     * Set a confirmation token to the User before sending the confirmation email.
+     */
+    public function onPreWrite(ViewEvent $event)
+    {
+        if ($this->isGoodRequest($event)) {
+            $event->getControllerResult()->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
+        }
+    }
+
+    /**
+     * Send a confirm account email to the User's email address after persisting the User in database.
      * 
      * @param ViewEvent $event
      */
-    public function onKernelView(ViewEvent $event)
+    public function onPostWrite(ViewEvent $event)
+    {
+        if ($this->isGoodRequest($event)) {
+            $this->userNotification->sendConfirmAccountEmail($event->getControllerResult());
+        }
+    }
+
+    private function isGoodRequest(ViewEvent $event): bool
     {
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
         if ($entity instanceof User && $method === Request::METHOD_POST) {
-            $entity->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
-            $this->userNotification->sendConfirmAccountEmail($entity);
+            return true;
         }
+        return false;
     }
 }

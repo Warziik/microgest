@@ -24,35 +24,37 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks
  */
 #[UniqueEntity(fields: ["email"], message: "This email address is already in use.")]
-#[ApiResource(
-    normalizationContext: ["groups" => ["users:read"]],
-    denormalizationContext: ["groups" => ["users:write"]],
-    collectionOperations: [
-        "post",
-        "forgotPassword" => [
-            "method" => "POST",
-            "path" => "/users/forgot_password",
-            "controller" => ForgotPassword::class,
-            "denormalization_context" => ["groups" => ["forgotPassword:write"]]
+#[
+    ApiResource(
+        normalizationContext: ["groups" => ["users:read"]],
+        denormalizationContext: ["groups" => ["users:write"]],
+        collectionOperations: [
+            "post",
+            "forgotPassword" => [
+                "method" => "POST",
+                "path" => "/users/forgot_password",
+                "controller" => ForgotPassword::class,
+                "denormalization_context" => ["groups" => ["forgotPassword:write"]]
+            ],
+            "resetPassword" => [
+                "method" => "POST",
+                "path" => "/users/reset_password",
+                "controller" => ResetPassword::class,
+                "denormalization_context" => ["groups" => ["resetPassword:write"]]
+            ]
         ],
-        "resetPassword" => [
-            "method" => "POST",
-            "path" => "/users/reset_password",
-            "controller" => ResetPassword::class,
-            "denormalization_context" => ["groups" => ["resetPassword:write"]]
+        itemOperations: [
+            "get" => ["security" => "object == user"],
+            "put" => ["security" => "object == user"],
+            "delete" => ["security" => "object == user"],
+            "confirmAccount" => [
+                "method" => "POST",
+                "path" => "/users/{id}/confirm_account",
+                "controller" => ConfirmAccount::class
+            ]
         ]
-    ],
-    itemOperations: [
-        "get" => ["security" => "object == user"],
-        "put" => ["security" => "object == user"],
-        "delete" => ["security" => "object == user"],
-        "confirmAccount" => [
-            "method" => "POST",
-            "path" => "/users/{id}/confirm_account",
-            "controller" => ConfirmAccount::class
-        ]
-    ]
-)]
+    )
+]
 class User implements UserInterface
 {
     /**

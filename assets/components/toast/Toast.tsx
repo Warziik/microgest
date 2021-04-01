@@ -9,43 +9,39 @@ type Props = {
     deleteToast: (id: string) => void;
 }
 
+// TODO: Set values for aria-valuemin aria-valuemax aria-valuenow
 export default function Toast({ data, position, autoDeleteTimeout, deleteToast }: Props) {
-    const [isRunning] = useState(true);
+    const [isRunning, setIsRunning] = useState<boolean>(true);
+
+    const [remainingTime, setRemainingTime] = useState<number>(autoDeleteTimeout);
+    const [startTime, setStartTime] = useState<number>(Date.now());
 
     const style: React.CSSProperties = {
         animationDuration: `${autoDeleteTimeout}ms`,
         animationPlayState: isRunning ? "running" : "paused"
     }
 
-    //let startTime = Date.now();
     useEffect(() => {
-        /*
-        let timer: NodeJS.Timeout;
-
-        timer = setTimeout(() => {
+        const timerId = setTimeout(() => {
             deleteToast(data.id);
-        }, autoDeleteTimeout);
-
-        console.log("DEFAULT TIMEOUT VALUE", autoDeleteTimeout);
+        }, remainingTime);
 
         if (!isRunning) {
-            clearTimeout(timer);
-            autoDeleteTimeout = (Date.now() - startTime) * 1000;
-
-            timer = setTimeout(() => {
-                deleteToast(data.id);
-            }, autoDeleteTimeout);
+            clearTimeout(timerId);
         }
-        */
 
-        const timer = setTimeout(() => {
-            deleteToast(data.id);
-        }, autoDeleteTimeout);
+        return () => clearTimeout(timerId);
+    })
 
-        return () => clearTimeout(timer);
-    });
+    const handleMouseEnter = () => {
+        setRemainingTime(rt => rt -= Date.now() - startTime)
+        setIsRunning(false);
+    }
 
-    //const handleMouseOver = () => setIsRunning(r => !r);
+    const handleMouseLeave = () => {
+        setStartTime(Date.now());
+        setIsRunning(true);
+    }
 
     const typeIcon: Record<string, string> = {
         success: "check",
@@ -54,7 +50,13 @@ export default function Toast({ data, position, autoDeleteTimeout, deleteToast }
         info: "info"
     };
 
-    return <div key={data.id} role="status" className={`toast toast--${data.type} toast--${position}`}>
+    return <div
+        key={data.id}
+        role="status"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={`toast toast--${data.type} toast--${position}`}
+    >
         <button className="toast__close" onClick={() => deleteToast(data.id)}><Icon name="close" /></button>
         <div className="toast__content">
             <div className="toast__content-icon"><Icon name={typeIcon[data.type]} /></div>
@@ -62,9 +64,6 @@ export default function Toast({ data, position, autoDeleteTimeout, deleteToast }
         </div>
         <span
             role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={0}
             style={style}
             className="toast__progressbar"
         ></span>

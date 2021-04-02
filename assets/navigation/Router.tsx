@@ -13,7 +13,6 @@ export function Router() {
     return <BrowserRouter>
         <Switch>
             <PrivateRoute exact path="/" component={Home} />
-
             <PublicRoute path="/reinitialisation-mot-de-passe/:token" component={ResetPassword} />
             <PublicRoute path="/mot-de-passe-oublie" component={ForgotPassword} />
             <PublicRoute path="/user/:id/confirm/:token" component={ConfirmAccount} />

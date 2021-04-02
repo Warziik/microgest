@@ -78,7 +78,7 @@ export default function RegisterForm({ createUser }: Props) {
         }
     });
 
-    return <form className="form" onSubmit={onSubmit}>
+    return <form className="form registerForm" onSubmit={onSubmit}>
         <div className="form__horizontal">
             <TextInput ref={register} error={errors.firstname} name="firstname" label="Prénom" />
             <TextInput ref={register} error={errors.lastname} name="lastname" label="Nom de famille" />

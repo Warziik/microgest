@@ -4,38 +4,27 @@
     --default-font-size: 1.6rem;
 
     // COLORS
-    --secondary-color: #97005c;
-    --secondary-color-2: #{rgba(#97005c, .70)};
-    --secondary-color-3: #{rgba(#97005c, .30)};
-    --secondary-color-4: #{rgba(#97005c, .10)};
+    --primary-color: #4c6ef5;
+    --primary-color-darker: #161e41;
+    --primary-color-lighter: rgba(#4c6ef5, .1);
 
-    --primary-color-darker: darken(#005c97, 30%);
-    --primary-color: #005c97;
-    --primary-color-2: #{rgba(#005c97, .70)};
-    --primary-color-3: #{rgba(#005c97, .30)};
-    --primary-color-4: #{rgba(#005c97, .10)};
-
-    --tertiary-color: #2c3e50;
-    --tertiary-color-2: #{rgba(#2c3e50, .70)};
-    --tertiary-color-3: #{rgba(#2c3e50, .30)};
-    --tertiary-color-4: #{rgba(#2c3e50, .10)};
-    --tertiary-color-5: #{rgba(#2c3e50, .01)};
-
-    --error-color: #C54B4B;
-    --warning-color: #C5714B;
-    --info-color: #4B9FC5;
-    --success-color: #4BC5A0;
+    --error-color: #ff4d35;
+    --warning-color: #ffb600;
+    --info-color: #00b6ff;
+    --success-color: #4bc5a0;
 
     --content-background: #FFF;
-    --body-background: var(--tertiary-color-5);
-
-    --input-background: var(--tertiary-color-5);
-    --input-border: var(--tertiary-color-4);
+    --body-background: #f8f9fa;
 
     --text-color: #000;
-    --alt-text-color: var(--tertiary-color);
+    --hr-color: #dee2e6;
+    --paragraph-color: #343a40;
+
+    --input-background: var(--body-background);
+    --input-box-shadow: 0 0 10px rgba(76, 110, 245, .25);
 
     // OTHER
     --radius: 10px;
-    --box-shadow: 1px 10px 20px var(--tertiary-color-4);
+    --border-color: #ced4da;
+    --box-shadow: 1px 7px 20px rgba(0, 0, 0, .16);
 }

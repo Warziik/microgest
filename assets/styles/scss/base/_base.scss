@@ -6,7 +6,7 @@ html {
     background-color: var(--body-background);
 }
 
-a {
+.link {
     display: inline-block;
     margin-bottom: 1.6rem;
     padding-bottom: .6rem;
@@ -27,4 +27,24 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.container {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: [sidebar-start] 24.8rem [sidebar-end main-start] 1fr [main-end];
+    grid-template-rows: [header-start] 9.6rem [header-end main-start] 1fr [main-end];
+}
+
+.main {
+    grid-column: main-start / main-end;
+    grid-row: main-start / main-end;
+    padding: 2.4rem;
+}
+
+hr {
+    margin: 2.4rem auto;
+    width: 100%;
+    border-top: 1px solid var(--border-color);
+    border-radius: 5px;
 }

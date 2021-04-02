@@ -7,6 +7,6 @@
     &__content {
         padding: 2.4rem;
 
-        box-shadow: 0 0 3rem rgba(#000, .05);
+        box-shadow: var(--box-shadow);
     }
 }

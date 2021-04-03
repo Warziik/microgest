@@ -43,13 +43,13 @@ export function AuthContextProvider({ children }: Props) {
                 lastname: decodedToken.lastname,
                 email: decodedToken.username
             });
-            setIsAuthenticated(a => !a);
+            setIsAuthenticated(true);
+            setIsWorking(false);
 
             setTimeout(() => {
                 refreshAuthToken();
             }, (expiresIn * 1000) - 500);
         }
-        setIsWorking(w => !w);
     }, []);
 
     MemoryJwt.init(setIsAuthenticated);
@@ -60,10 +60,7 @@ export function AuthContextProvider({ children }: Props) {
 
     return <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, userData, setUserData }}>
         {isWorking ? <div className="defaultLoading">
-            <div className="defaultLoading__content">
-                <h1>Microgest</h1>
-                <Loader />
-            </div>
+            <Loader />
         </div> : children}
     </AuthContext.Provider>
 }

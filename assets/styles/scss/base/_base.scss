@@ -33,7 +33,7 @@ html {
     height: 100vh;
     display: grid;
     grid-template-columns: [sidebar-start] 24.8rem [sidebar-end main-start] 1fr [main-end];
-    grid-template-rows: [header-start] 9.6rem [header-end main-start] 1fr [main-end];
+    grid-template-rows: [topbar-start] 9.6rem [topbar-end main-start] 1fr [main-end];
 }
 
 .main {
@@ -47,4 +47,9 @@ hr {
     width: 100%;
     border-top: 1px solid var(--border-color);
     border-radius: 5px;
+}
+
+::selection {
+    background: var(--primary-color);
+    color: #FFF;
 }

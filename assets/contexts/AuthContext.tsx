@@ -4,7 +4,7 @@ import MemoryJwt from "../utils/memoryJwt";
 import { refreshToken } from "../services/AuthService";
 import { Loader } from "../components/Loader";
 import jwtDecode from "jwt-decode";
-import { JwtToken } from "../types/jwtToken";
+import { JwtToken } from "../types/JwtToken";
 
 type InitialType = {
     isAuthenticated: boolean;
@@ -14,7 +14,7 @@ type InitialType = {
 }
 
 export const AuthContext = createContext<InitialType>({
-    userData: {},
+    userData: { id: 0, firstname: "", lastname: "", email: "" },
     setUserData: (value: SetStateAction<User>) => value,
     isAuthenticated: false,
     setIsAuthenticated: (value: SetStateAction<boolean>) => value
@@ -27,7 +27,7 @@ type Props = {
 export function AuthContextProvider({ children }: Props) {
     const [isWorking, setIsWorking] = useState<boolean>(true);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(MemoryJwt.getToken() !== null);
-    const [userData, setUserData] = useState<User>({});
+    const [userData, setUserData] = useState<User>({ id: 0, firstname: "", lastname: "", email: "" });
 
     const refreshAuthToken = useCallback(async () => {
         const [isSuccess, data] = await refreshToken();

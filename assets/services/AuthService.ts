@@ -1,4 +1,4 @@
-import { AUTH_REFRESH_TOKEN_URI, AUTH_REVOKE_REFRESH_TOKEN_URI, AUTH_URI } from "../config/config";
+import { AUTH_REFRESH_TOKEN_URI, AUTH_REVOKE_REFRESH_TOKEN_URI, AUTH_URI } from "../config/entrypoints";
 import { Violation } from "../types/Violation";
 import { DataAccess } from "../utils/dataAccess";
 

@@ -13,6 +13,8 @@ export function Topbar() {
         switch (location.pathname) {
             case "/":
                 return "Vue d'ensemble";
+            case "/clients":
+                return "Mes clients";
         }
     }
 

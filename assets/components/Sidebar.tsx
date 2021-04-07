@@ -17,13 +17,13 @@ export function Sidebar() {
                 </span>
                 <NavLink to="/">Vue d&apos;ensemble</NavLink>
             </li>
-            {/*
-            <li className="sidebar__nav-item">
+            <li className={`sidebar__nav-item ${getActiveClassName("/clients")}`}>
                 <span className="sidebar__nav-item-icon">
                     <Icon name="users" />
                 </span>
-                <NavLink to="/">Mes clients</NavLink>
+                <NavLink to="/clients">Mes clients</NavLink>
             </li>
+            {/*
             <li className="sidebar__nav-item">
                 <span className="sidebar__nav-item-icon">
                     <Icon name="invoice" />

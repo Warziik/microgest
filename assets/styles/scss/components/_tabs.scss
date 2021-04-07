@@ -28,8 +28,10 @@
     background: none;
     cursor: pointer;
 
+    transition: color .3s ease-in, border-bottom .1s ease-in;
     &--active,
     &:hover {
+        color: var(--primary-color);
         border-bottom: 2px solid var(--primary-color);
     }
 }

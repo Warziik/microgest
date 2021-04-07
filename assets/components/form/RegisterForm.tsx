@@ -5,12 +5,12 @@ import * as yup from 'yup';
 import { Button } from '../Button';
 import PasswordInput from './PasswordInput';
 import TextInput from './TextInput';
-import { User } from '../../types/User';
 import { Violation } from '../../types/Violation';
 import { useToast } from '../../hooks/useToast';
+import { SignupData } from '../../types/User';
 
 type Props = {
-    createUser: ({ firstname, lastname, email, password }: User) => Promise<[boolean, Record<string, any | Violation>]>;
+    createUser: ({ firstname, lastname, email, password }: SignupData) => Promise<[boolean, Record<string, any | Violation>]>;
 }
 
 type FormData = {

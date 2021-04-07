@@ -2,7 +2,7 @@ import jwtDecode from "jwt-decode";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { authenticate, revokeRefreshToken } from "../services/AuthService";
-import { JwtToken } from "../types/jwtToken";
+import { JwtToken } from "../types/JwtToken";
 import { Violation } from "../types/Violation";
 import MemoryJwt from "../utils/memoryJwt";
 

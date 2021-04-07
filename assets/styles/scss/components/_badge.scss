@@ -1,0 +1,15 @@
+.badge {
+    display: inline-block;
+    padding: 1rem 1.6rem;
+    border-radius: var(--radius);
+    background-color: black;
+    color: white;
+    font-weight: 700;
+}
+
+.badge--success {
+    @extend .badge;
+
+    color: var(--success-color);
+    background-color: #{rgba(var(--success-color), 1)};
+}

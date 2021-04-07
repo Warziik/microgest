@@ -1,12 +1,11 @@
 import * as UserService from "../../services/UserService";
 import fetchMock from "jest-fetch-mock";
-import { User } from "../../types/User";
 import { Violation } from "../../types/Violation";
 
 fetchMock.enableMocks();
 
 describe("AuthService", () => {
-    const userRegistrationCredentails: User = {
+    const userRegistrationCredentails = {
         firstname: "Demo",
         lastname: "User",
         email: "demoUser@localhost.dev",

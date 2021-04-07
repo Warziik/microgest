@@ -1,5 +1,5 @@
-import { USERS_URI } from "../config/config";
-import { User } from "../types/User";
+import { USERS_URI } from "../config/entrypoints";
+import { SignupData } from "../types/User";
 import { Violation } from "../types/Violation";
 import { DataAccess } from "../utils/dataAccess";
 
@@ -8,7 +8,7 @@ import { DataAccess } from "../utils/dataAccess";
  * 
  * @param data The data provided by the User in the registration form
  */
-function signup(data: User): Promise<[boolean, Record<string, any | Violation>]> {
+function signup(data: SignupData): Promise<[boolean, Record<string, any | Violation>]> {
     return DataAccess.request(USERS_URI, {
         method: "POST",
         body: JSON.stringify(data)

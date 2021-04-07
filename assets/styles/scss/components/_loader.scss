@@ -12,10 +12,10 @@
     width: 5rem;
     height: 5rem;
 
-    border: .5rem solid var(--primary-color-4);
+    border: .5rem solid rgba(76, 110, 245, .25);
     border-radius: 50%;
-    border-top-color: var(--primary-color-2);
-    border-bottom-color: var(--primary-color-2);
+    border-top-color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
 
     animation: rotate-spinner 5s linear infinite;
 }

@@ -1,4 +1,4 @@
-import { AUTH_REFRESH_TOKEN_URI } from "../config/config";
+import { AUTH_REFRESH_TOKEN_URI } from "../config/entrypoints";
 import MemoryJwt from "./memoryJwt";
 
 export class DataAccess {

@@ -1,15 +1,37 @@
 .badge {
     display: inline-block;
-    padding: 1rem 1.6rem;
+    padding: .8rem 1.6rem;
     border-radius: var(--radius);
     background-color: black;
     color: white;
     font-weight: 700;
-}
+    text-transform: lowercase;
 
-.badge--success {
-    @extend .badge;
+    &::first-letter {
+        text-transform: uppercase;
+    }
 
-    color: var(--success-color);
-    background-color: #{rgba(var(--success-color), 1)};
+    &--success, &--info, &--warning, &--error {
+        @extend .badge;
+    }
+
+    &--success {
+        color: var(--success-color);
+        background-color: rgba(#4bc5a0, .1);
+    }
+
+    &--info {
+        color: var(--info-color);
+        background-color: rgba(#00b6ff, .1);
+    }
+
+    &--warning {
+        color: var(--warning-color);
+        background-color: rgba(#ffb600, .1);
+    }
+
+    &--error {
+        color: var(--error-color);
+        background-color: rgba(#ff4d35, .1);
+    }
 }

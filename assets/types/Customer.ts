@@ -13,4 +13,5 @@ export interface Customer {
     createdAt: string;
     updatedAt: string;
     invoices?: Array<Record<string, any>>
+    lastInvoice: { "@id": string, "@type": string, id: number, chrono: string, status: string };
 }

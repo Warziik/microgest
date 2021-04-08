@@ -99,6 +99,15 @@ class Customer
         $this->invoices = new ArrayCollection();
     }
 
+    /* Returns the last Invoice of the Customer for the UI */
+    #[Groups(["users_customers_subresource"])]
+    public function getLastInvoice() {
+        if (!$this->invoices->isEmpty()) {
+            return $this->invoices->last();
+        }
+        return null;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

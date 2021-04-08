@@ -38,7 +38,7 @@ class Invoice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["invoices:read", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource"])]
     private ?int $id = null;
 
     /** @ORM\Column(type="float") */
@@ -48,7 +48,7 @@ class Invoice
     private ?float $amount = null;
     
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "users_customers_subresource"])]
     #[Assert\NotBlank]
     #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "The status must be of type 'NEW', 'SENT', 'PAID' or 'CANCELLED' only.")]
     private ?string $status = null;
@@ -72,7 +72,7 @@ class Invoice
     private ?DateTimeInterface $paidAt = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "customers_invoices_subresource"])]
+    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource"])]
     private ?string $chrono = null;
 
     public function getId(): ?int

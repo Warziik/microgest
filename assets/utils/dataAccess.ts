@@ -10,13 +10,11 @@ export class DataAccess {
      * Send a HTTP request to the API.
      */
     public static async request(endpoint: string, requestParams: RequestInit): Promise<[boolean, Record<string, any>]> {
+        this.defaultHeaders.delete("Authorization");
+
         const jwtToken = MemoryJwt.getToken();
         if (jwtToken) {
-            if (!this.defaultHeaders.has("Authorization")) {
-                this.defaultHeaders.append("Authorization", `Bearer ${jwtToken}`);
-            }
-        } else {
-            this.defaultHeaders.delete("Authorization");
+            this.defaultHeaders.append("Authorization", `Bearer ${jwtToken}`);
         }
 
         if (endpoint === AUTH_REFRESH_TOKEN_URI) {

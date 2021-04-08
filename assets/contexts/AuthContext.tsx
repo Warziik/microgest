@@ -44,12 +44,12 @@ export function AuthContextProvider({ children }: Props) {
                 email: decodedToken.username
             });
             setIsAuthenticated(true);
-            setIsWorking(false);
 
             setTimeout(() => {
                 refreshAuthToken();
             }, (expiresIn * 1000) - 500);
         }
+        setIsWorking(false);
     }, []);
 
     MemoryJwt.init(setIsAuthenticated);

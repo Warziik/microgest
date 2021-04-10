@@ -20,8 +20,10 @@
     --hr-color: #dee2e6;
     --paragraph-color: #343a40;
 
-    --input-background: var(--body-background);
+    --input-background: rgba(22, 30, 65, .01);
     --input-box-shadow: 0 0 10px rgba(76, 110, 245, .25);
+
+    --modal-background: rgba(22, 30, 65, .5);
 
     // OTHER
     --radius: 10px;

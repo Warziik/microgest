@@ -2,9 +2,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Button } from '../Button';
-import PasswordInput from './PasswordInput';
-import TextInput from './TextInput';
+import { Button } from '../../components/Button';
+import PasswordInput from '../../components/form/PasswordInput';
+import TextInput from '../../components/form/TextInput';
 import { Violation } from '../../types/Violation';
 import { useToast } from '../../hooks/useToast';
 import { SignupData } from '../../types/User';
@@ -21,7 +21,7 @@ type FormData = {
     passwordConfirm: string;
 }
 
-export default function RegisterForm({ createUser }: Props) {
+export function RegisterForm({ createUser }: Props) {
     const toast = useToast();
 
     const schema: yup.AnyObjectSchema = yup.object().shape({

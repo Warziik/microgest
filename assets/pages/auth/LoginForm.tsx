@@ -19,7 +19,7 @@ type FormData = {
     passwordLogin: string;
 }
 
-export default function LoginForm({ login }: Props) {
+export function LoginForm({ login }: Props) {
     const toast = useToast();
     const history = useHistory();
 

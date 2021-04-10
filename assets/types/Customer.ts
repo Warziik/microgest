@@ -15,3 +15,10 @@ export interface Customer {
     invoices?: Array<Record<string, any>>
     lastInvoice: { "@id": string, "@type": string, id: number, chrono: string, status: string };
 }
+
+export interface AddCustomerData {
+    firstname: string;
+    lastname: string;
+    email: string;
+    company: string;
+}

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import RegisterForm from '../../components/form/RegisterForm';
+import { RegisterForm } from './RegisterForm';
 import Tabs from '../../components/tab/Tabs';
 import Tab from '../../components/tab/Tab';
-import LoginForm from '../../components/form/LoginForm';
+import { LoginForm } from './LoginForm';
 import { useLocation } from 'react-router';
 import { signup } from '../../services/UserService';
 import { useAuth } from '../../hooks/useAuth';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref } from 'react';
 import Icon from './Icon';
 
 type Props = {
@@ -9,11 +9,15 @@ type Props = {
     onClick?(event: React.MouseEvent<HTMLButtonElement>): void;
 }
 
-export function Button({ className = "btn--primary", icon, isLoading = false, onClick, children }: Props) {
-    return <button data-testid="button" disabled={isLoading} onClick={onClick} className={className}>
+const Button = React.forwardRef(({ className = "btn--primary", icon, isLoading = false, onClick, children }: Props, ref: Ref<HTMLButtonElement>) => {
+    return <button data-testid="button" ref={ref} disabled={isLoading} onClick={onClick} className={className}>
         {isLoading && "Chargement..." || <>
             {icon && <Icon name={icon} />}
             {children}
         </>}
     </button>
-}
+});
+
+Button.displayName = "Button";
+
+export { Button };

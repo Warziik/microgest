@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/Button";
 import Icon from "../../components/Icon";
@@ -6,12 +6,15 @@ import { useAuth } from "../../hooks/useAuth";
 import { fetchAllCustomers } from "../../services/CustomerService";
 import { Customer } from "../../types/Customer";
 import { Badge } from "../../components/Badge";
-
+import { Modal } from "../../components/Modal";
+import { AddCustomerForm } from "./AddCustomerForm";
 import dayjs from "dayjs";
 
 export function Customers() {
     const { userData } = useAuth();
     const [customers, setCustomers] = useState<Customer[]>([]);
+    const [showAddCustomerModal, setShowAddCustomerModal] = useState<boolean>(false);
+    const openAddCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         document.title = "Mes clients - Microgest";
@@ -41,25 +44,34 @@ export function Customers() {
         }
     }
 
-    const handleAddCustomerBtn = () => {
-        console.log("handle add customer btn clicked.");
+    const addCustomer = (customer: Customer) => setCustomers([...customers, customer]);
+
+    const closeAddCustomerModal = () => {
+        setShowAddCustomerModal(false);
+        openAddCustomerModalBtn.current?.focus();
     }
 
-    const handleFilterBtn = () => {
-        console.log("handle filter btn clicked.");
-    }
+    const openAddCustomerModal = () => setShowAddCustomerModal(true);
 
-    const handleEditBtn = () => {
-        console.log("handle edit btn clicked.");
-    }
+    const handleFilterBtn = () => console.log("handle filter btn clicked.");
 
-    return <section className="customers">
+    const handleEditBtn = () => console.log("handle edit btn clicked.");
+
+    return <main className="customers">
+        <Modal
+            isOpen={showAddCustomerModal}
+            onClose={closeAddCustomerModal}
+            title="Ajouter un client"
+            className="addCustomerModal"
+        >
+            <AddCustomerForm addCustomer={addCustomer} />
+        </Modal>
         <div className="customers__ctas">
-            <Button icon="add" onClick={handleAddCustomerBtn}>Ajouter un client</Button>
+            <Button icon="add" onClick={openAddCustomerModal} ref={openAddCustomerModalBtn}>Ajouter un client</Button>
             <Button className="btn--secondary" icon="filter" onClick={handleFilterBtn}>Filtrer</Button>
             {/* TODO: Pagination */}
         </div>
-        <main className="customers__list">
+        <section className="customers__list">
             {customers.map((customer: Customer) => (
                 <article className="customers__item" key={customer.id}>
                     <header className="customers__item-header">
@@ -93,6 +105,6 @@ export function Customers() {
                     </footer>
                 </article>
             )) || <p>Vous n&lsquo;avez ajouté aucun client pour le moment.</p>}
-        </main>
-    </section>
+        </section>
+    </main>
 }

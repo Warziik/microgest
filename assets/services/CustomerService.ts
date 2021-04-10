@@ -1,6 +1,6 @@
-import { USERS_URI } from "../config/entrypoints";
+import { CUSTOMERS_URI, USERS_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
-import { Customer } from "../types/Customer";
+import { AddCustomerData, Customer } from "../types/Customer";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { DataAccess } from "../utils/dataAccess";
 
@@ -9,10 +9,20 @@ import { DataAccess } from "../utils/dataAccess";
  * 
  * @param id The User's id
  */
-function fetchAllCustomers(id: number): Promise<[boolean, Collection<Customer> | ErrorResponse]> {
+export function fetchAllCustomers(id: number): Promise<[boolean, Collection<Customer> | ErrorResponse]> {
     return DataAccess.request(`${USERS_URI}/${id}/customers`, {
         method: "GET"
     });
 }
 
-export { fetchAllCustomers };
+/**
+ * Send a POST request to create a new Customer for the logged User.
+ * 
+ * @param data The Customer data
+ */
+export function createCustomer(data: AddCustomerData): Promise<any> {
+    return DataAccess.request(CUSTOMERS_URI, {
+        method: "POST",
+        body: JSON.stringify(data)
+    })
+}

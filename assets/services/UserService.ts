@@ -8,7 +8,7 @@ import { DataAccess } from "../utils/dataAccess";
  * 
  * @param data The data provided by the User in the registration form
  */
-function signup(data: SignupData): Promise<[boolean, Record<string, any | Violation>]> {
+export function signup(data: SignupData): Promise<[boolean, Record<string, any | Violation>]> {
     return DataAccess.request(USERS_URI, {
         method: "POST",
         body: JSON.stringify(data)
@@ -21,7 +21,7 @@ function signup(data: SignupData): Promise<[boolean, Record<string, any | Violat
  * @param id The User id
  * @param token The User account confirmation token
  */
-function confirmAccount(id: number, token: string): Promise<[boolean, Record<string, unknown>]> {
+export function confirmAccount(id: number, token: string): Promise<[boolean, Record<string, unknown>]> {
     return DataAccess.request(`${USERS_URI}/${id}/confirm_account`, {
         method: "POST",
         body: JSON.stringify({ token })
@@ -33,7 +33,7 @@ function confirmAccount(id: number, token: string): Promise<[boolean, Record<str
  * 
  * @param email The User's email
  */
-function forgotPassword(email: string): Promise<[boolean, Record<string, any>]> {
+export function forgotPassword(email: string): Promise<[boolean, Record<string, any>]> {
     return DataAccess.request(`${USERS_URI}/forgot_password`, {
         method: "POST",
         body: JSON.stringify({ email })
@@ -46,11 +46,9 @@ function forgotPassword(email: string): Promise<[boolean, Record<string, any>]> 
  * @param password The new User's password
  * @param token The User's token generated when he requested to change his password.
  */
-function resetPassword(password: string, token: string): Promise<[boolean, Record<string, any>]> {
+export function resetPassword(password: string, token: string): Promise<[boolean, Record<string, any>]> {
     return DataAccess.request(`${USERS_URI}/reset_password`, {
         method: "POST",
         body: JSON.stringify({ password, token })
     });
 }
-
-export { signup, confirmAccount, forgotPassword, resetPassword };

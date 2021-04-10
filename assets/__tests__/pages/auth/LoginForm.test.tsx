@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
-import LoginForm from '../../../components/form/LoginForm';
+import { LoginForm } from '../../../pages/auth/LoginForm';
 import { MemoryRouter } from 'react-router';
 
 const mockHistoryPush = jest.fn();

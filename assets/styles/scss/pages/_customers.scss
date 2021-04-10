@@ -34,6 +34,7 @@
                 align-self: flex-end;
                 grid-area: 1 / 2 / 2 / 2;
                 font-size: 2.4rem;
+                color: var(--primary-color-darker);
             }
             p {
                 grid-area: 2 / 2 / -1 / -1;
@@ -45,6 +46,7 @@
                 font-size: 1.6rem;
                 font-weight: 700;
                 margin-bottom: .8rem;
+                color: var(--primary-color-darker);
             }
     
             &-addedDate, &-company {
@@ -97,5 +99,17 @@
                 }
             }
         }
+    }
+}
+
+.addCustomerModal {
+    .modal__content {
+        width: 52rem;
+    }
+}
+
+.addCustomerForm {
+    button {
+        margin: 0 auto;
     }
 }

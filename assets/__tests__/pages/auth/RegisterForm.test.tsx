@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import RegisterForm from '../../../components/form/RegisterForm';
+import { RegisterForm } from '../../../pages/auth/RegisterForm';
 
 describe("Registration form", () => {
     const mockCreateUser = jest.fn().mockResolvedValue([true, {}]);

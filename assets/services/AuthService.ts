@@ -8,7 +8,7 @@ import { DataAccess } from "../utils/dataAccess";
  * @param email The User's email
  * @param password The User's password
  */
-function authenticate(email: string, password: string): Promise<[boolean, Record<string, any | Violation>]> {
+export function authenticate(email: string, password: string): Promise<[boolean, Record<string, any | Violation>]> {
     return DataAccess.request(AUTH_URI, {
         method: "POST",
         body: JSON.stringify({ email, password })
@@ -20,12 +20,13 @@ function authenticate(email: string, password: string): Promise<[boolean, Record
  * The API will get the refresh token stored in a httponly cookie and
  * returns a new JWT token.
  */
-function refreshToken() {
+export function refreshToken() {
     return DataAccess.request(AUTH_REFRESH_TOKEN_URI, { method: "POST" });
 }
 
-function revokeRefreshToken() {
+/**
+ * The Auth Context will call this URL 500ms before the jwt token expires to get a new one.
+ */
+export function revokeRefreshToken() {
     return DataAccess.request(AUTH_REVOKE_REFRESH_TOKEN_URI, { method: "POST" });
 }
-
-export { authenticate, refreshToken, revokeRefreshToken };

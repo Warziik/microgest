@@ -31,7 +31,7 @@ export default function TabTitle({
         if (updateUrl) replace(updateUrl);
     }
 
-    const handleKeyUp = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
         e.preventDefault();
 
         if (e.key === "ArrowLeft") {
@@ -56,7 +56,7 @@ export default function TabTitle({
             tabIndex={activeTab === index ? 0 : -1}
             className={`tab__title ${activeTab === index ? "tab__title--active" : ""}`}
             onClick={handleClick}
-            onKeyUp={handleKeyUp}
+            onKeyDown={handleKeyDown}
             ref={tabRef}
         >
             {title}

@@ -8,7 +8,7 @@ type Props = {
     index: number;
     tabsLength: number;
     activeTab: number;
-    changeTabSelection: (lastTab: number, nextTab: number) => void;
+    changeTabSelection: (lastTab: number, nextTab: number, direction: "left" | "right") => void;
     tabRef: Ref<HTMLAnchorElement>;
 }
 
@@ -37,12 +37,12 @@ export default function TabTitle({
         if (e.key === "ArrowLeft") {
             const last = tabsLength - 1;
             const next = activeTab - 1;
-            changeTabSelection(last, next);
+            changeTabSelection(last, next, "left");
         }
         if (e.key === "ArrowRight") {
             const last = tabsLength - 1;
             const next = activeTab + 1;
-            changeTabSelection(last, next);
+            changeTabSelection(last, next, "right");
         }
     }
 

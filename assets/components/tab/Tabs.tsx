@@ -11,12 +11,12 @@ export default function Tabs({ defaultActiveTab, children }: Props) {
     const [activeTab, setActiveTab] = useState(defaultActiveTab ?? 0);
     const { replace } = useHistory();
 
-    const changeTabSelection = (lastTab: number, nextTab: number) => {
+    const changeTabSelection = (lastTab: number, nextTab: number, direction: "left" | "right") => {
         const firstTab = 0;
         let tabToSelect: number;
-        if (activeTab === lastTab) {
+        if (direction === "right" && activeTab === lastTab) {
             tabToSelect = firstTab;
-        } else if (activeTab === firstTab) {
+        } else if (direction === "left" && activeTab === firstTab) {
             tabToSelect = lastTab;
         } else {
             tabToSelect = nextTab;

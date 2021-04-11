@@ -42,6 +42,7 @@ export function useAuth() {
         login,
         logout,
         isAuthenticated,
-        userData
+        userData,
+        setUserData
     }
 }

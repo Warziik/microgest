@@ -9,7 +9,7 @@ export class DataAccess {
     /**
      * Send a HTTP request to the API.
      */
-    public static async request(endpoint: string, requestParams: RequestInit): Promise<[boolean, Record<string, any>]> {
+    public static async request(endpoint: string, requestParams: RequestInit): Promise<[boolean, any]> {
         this.defaultHeaders.delete("Authorization");
 
         const jwtToken = MemoryJwt.getToken();

@@ -42,6 +42,10 @@
             }
         }
 
+        &-settings--active svg {
+            fill: var(--primary-color);
+        }
+
         &-notifications {
             position: relative;
 

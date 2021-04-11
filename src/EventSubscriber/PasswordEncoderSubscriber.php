@@ -25,7 +25,7 @@ final class PasswordEncoderSubscriber implements EventSubscriberInterface
 
     /**
      * Encode the password before persisting in database if the entity is an instance of User
-     * and the request's method is POST
+     * and the request's method is POST or PUT
      * 
      * @param ViewEvent $event
      */
@@ -34,7 +34,7 @@ final class PasswordEncoderSubscriber implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if ($entity instanceof User && $method === Request::METHOD_POST) {
+        if ($entity instanceof User && ($method === Request::METHOD_POST || $method === Request::METHOD_PUT)) {
             $entity->setPassword($this->passwordEncoder->encodePassword($entity, $entity->getPassword()));
         }
     }

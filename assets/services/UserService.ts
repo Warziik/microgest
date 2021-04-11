@@ -1,5 +1,6 @@
 import { USERS_URI } from "../config/entrypoints";
-import { SignupData } from "../types/User";
+import { ErrorResponse } from "../types/ErrorResponse";
+import { SignupData, User } from "../types/User";
 import { Violation } from "../types/Violation";
 import { DataAccess } from "../utils/dataAccess";
 
@@ -18,8 +19,8 @@ export function signup(data: SignupData): Promise<[boolean, Record<string, any |
 /**
  * Send a POST request to confirm the User account.
  * 
- * @param id The User id
- * @param token The User account confirmation token
+ * @param id The User's id
+ * @param token The User's account confirmation token
  */
 export function confirmAccount(id: number, token: string): Promise<[boolean, Record<string, unknown>]> {
     return DataAccess.request(`${USERS_URI}/${id}/confirm_account`, {
@@ -50,5 +51,18 @@ export function resetPassword(password: string, token: string): Promise<[boolean
     return DataAccess.request(`${USERS_URI}/reset_password`, {
         method: "POST",
         body: JSON.stringify({ password, token })
+    });
+}
+
+/**
+ * Send a PUT request to update the logged User's data.
+ * 
+ * @param id The User's id
+ * @param data The new data provided in the form
+ */
+export function updateUser(id: number, data: Record<string, string>): Promise<[boolean, User | ErrorResponse]> {
+    return DataAccess.request(`${USERS_URI}/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data)
     });
 }

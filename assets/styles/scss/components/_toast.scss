@@ -6,29 +6,45 @@
     &--top-right {
         top: 1.2rem;
         right: 1.2rem;
-        transition: transform .6s ease-in-out;
-        animation: toast-in-right .3s;
+        &-enter {
+            animation: toast-in-right .3s;
+        }
+        &-leave {
+            animation: toast-in-right-leave .3s;
+        }
     }
 
     &--top-left {
         top: 1.2rem;
         left: 1.2rem;
-        transition: transform .6s ease-in;
-        animation: toast-in-left .3s;
+        &-enter {
+            animation: toast-in-left .3s;
+        }
+        &-leave {
+            animation: toast-in-left-leave .3s;
+        }
     }
 
     &--bottom-right {
         bottom: 1.2rem;
         right: 1.2rem;
-        transition: transform .6s ease-in-out;
-        animation: toast-in-right .3s;
+        &-enter {
+            animation: toast-in-right .3s;
+        }
+        &-leave {
+            animation: toast-in-right-leave .3s;
+        }
     }
 
     &--bottom-left {
         bottom: 1.2rem;
         left: 1.2rem;
-        transition: transform .6s ease-in;
-        animation: toast-in-left .3s;
+        &-enter {
+            animation: toast-in-left .3s;
+        }
+        &-leave {
+            animation: toast-in-left-leave .3s;
+        }
     }
 }
 
@@ -112,7 +128,6 @@
 
     &--success {
         background: radial-gradient(ellipse at bottom left, var(--success-color), #379478);
-
         .toast__content {
             &-icon svg {
                 fill: var(--success-color);

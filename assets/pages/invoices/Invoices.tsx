@@ -5,6 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { Invoice } from "../../types/Invoice";
 import { fetchAllInvoicesOfUser } from "../../services/InvoiceService";
 import dayjs from "dayjs";
+import { Collection } from "../../types/Collection";
 
 export function Invoices() {
     const { userData } = useAuth();
@@ -16,7 +17,7 @@ export function Invoices() {
 
     useEffect(() => {
         fetchAllInvoicesOfUser(userData.id)
-            .then((values: [boolean, Invoice | any]) => {
+            .then((values: [boolean, Collection<Invoice> | any]) => {
                 const [isSuccess, data] = values;
                 if (isSuccess) setInvoices(data["allInvoices"]);
             });

@@ -45,15 +45,17 @@ export function AddCustomerForm({ addCustomer }: Props) {
         handleSubmit,
         formState: { isSubmitting },
         errors,
-        setError
+        setError,
+        reset
     } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
 
     const onSubmit = handleSubmit(async ({ firstname, lastname, email, company }) => {
         const [isSuccess, data] = await createCustomer({ firstname, lastname, email, company });
 
         if (isSuccess) {
-            addCustomer(data);
+            reset();
             toast("success", "Le nouveau client a bien été ajouté.");
+            addCustomer(data);
             onClose();
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "violations")) {

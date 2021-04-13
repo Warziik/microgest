@@ -9,6 +9,7 @@ import { Badge } from "../../components/Badge";
 import { Modal } from "../../components/Modal";
 import { AddCustomerForm } from "./AddCustomerForm";
 import dayjs from "dayjs";
+import { Collection } from "../../types/Collection";
 
 export function Customers() {
     const { userData } = useAuth();
@@ -22,9 +23,8 @@ export function Customers() {
 
     useEffect(() => {
         fetchAllCustomers(userData.id)
-            .then((values: any) => {
+            .then((values: [boolean, Collection<Customer>] | any) => {
                 const [isSuccess, data] = values;
-
                 if (isSuccess) setCustomers(data["hydra:member"]);
             });
     }, [userData.id]);

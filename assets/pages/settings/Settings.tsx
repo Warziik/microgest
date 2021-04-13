@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import Tab from "../../components/tab/Tab";
 import Tabs from "../../components/tab/Tabs";
-import { GeneralInformations } from "./GeneralInformations";
-import { Security } from "./Security";
+import { GeneralInformationsForm } from "./GeneralInformationsForm";
+import { SecurityForm } from "./SecurityForm";
 
 export function Settings() {
     const { pathname } = useLocation();
@@ -33,10 +33,10 @@ export function Settings() {
     return <div className="settings">
         <Tabs defaultActiveTab={getDefaultTab()}>
             <Tab title={DEFAULT_TITLE} url={DEFAULT_PATH} tabRef={generalInformationsRef}>
-                <GeneralInformations />
+                <GeneralInformationsForm />
             </Tab>
             <Tab title={SECURITY_TITLE} url={SECURITY_PATH} tabRef={securityRef}>
-                <Security />
+                <SecurityForm />
             </Tab>
         </Tabs>
     </div>

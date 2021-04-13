@@ -20,7 +20,7 @@ function isErrorResponse(response: ErrorResponse | User): response is ErrorRespo
     return (response as ErrorResponse).violations !== undefined;
 }
 
-export function Security() {
+export function SecurityForm() {
     const { userData } = useAuth();
     const toast = useToast();
 

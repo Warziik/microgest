@@ -20,7 +20,7 @@ function isErrorResponse(response: ErrorResponse | User): response is ErrorRespo
     return (response as ErrorResponse).violations !== undefined;
 }
 
-export function GeneralInformations() {
+export function GeneralInformationsForm() {
     const { userData, setUserData } = useAuth();
     const toast = useToast();
     const schema: yup.AnyObjectSchema = yup.object().shape({

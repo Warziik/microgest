@@ -1,3 +1,4 @@
+import { Invoice } from "./Invoice";
 import { User } from "./User";
 
 export interface Customer {
@@ -12,8 +13,8 @@ export interface Customer {
     owner?: User;
     createdAt: string;
     updatedAt: string;
-    invoices?: Array<Record<string, any>>
-    lastInvoice: { "@id": string, "@type": string, id: number, chrono: string, status: string };
+    invoices?: Invoice[];
+    lastInvoice: Invoice;
 }
 
 export interface AddCustomerData {

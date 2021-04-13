@@ -44,17 +44,17 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["customers:read", "users_customers_subresource"])]
+    #[Groups(["customers:read", "users_customers_subresource", "user_get_invoices:read"])]
     private ?int $id = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "user_get_invoices:read"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $firstname = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "user_get_invoices:read"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $lastname = null;

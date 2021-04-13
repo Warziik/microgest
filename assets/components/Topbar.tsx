@@ -15,6 +15,8 @@ export function Topbar() {
                 return "Vue d'ensemble";
             case "/clients":
                 return "Mes clients";
+            case "/factures":
+                return "Mes factures";
             case "/paramètres":
                 return "Mes Paramètres";
             case "/paramètres/sécurité":

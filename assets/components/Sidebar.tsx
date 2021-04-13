@@ -23,13 +23,13 @@ export function Sidebar() {
                 </span>
                 <NavLink to="/clients">Mes clients</NavLink>
             </li>
-            {/*
-            <li className="sidebar__nav-item">
+            <li className={`sidebar__nav-item ${getActiveClassName("/factures")}`}>
                 <span className="sidebar__nav-item-icon">
                     <Icon name="invoice" />
                 </span>
-                <NavLink to="/">Mes factures</NavLink>
+                <NavLink to="/factures">Mes factures</NavLink>
             </li>
+            {/*
             <li className="sidebar__nav-item">
                 <span className="sidebar__nav-item-icon">
                     <Icon name="help" />

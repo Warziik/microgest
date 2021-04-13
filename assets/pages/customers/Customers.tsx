@@ -29,21 +29,6 @@ export function Customers() {
             });
     }, [userData.id]);
 
-    const getBadgeOptions = (type: string): any => {
-        switch (type) {
-            case "NEW":
-                return ["info", "Nouveau"];
-            case "SENT":
-                return ["warning", "Envoyé"];
-            case "PAID":
-                return ["success", "Payé"];
-            case "CANCELLED":
-                return ["error", "Annulé"];
-            default:
-                return [];
-        }
-    }
-
     const addCustomer = (customer: Customer) => setCustomers([...customers, customer]);
 
     const closeAddCustomerModal = () => {
@@ -92,7 +77,7 @@ export function Customers() {
                             <h4>Dernière facture</h4>
                             {customer.lastInvoice && <>
                                 <Link to="/">{customer.lastInvoice.chrono}</Link>
-                                <Badge type={getBadgeOptions(customer.lastInvoice.status)[0]} message={getBadgeOptions(customer.lastInvoice.status)[1]} />
+                                <Badge status={customer.lastInvoice.status} />
                             </> || "-"}
                         </div>
                     </div>

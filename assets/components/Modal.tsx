@@ -52,6 +52,10 @@ export function Modal({ isOpen = false, onClose, title, className, children }: P
         }
     }
 
+    const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!modalRef.current?.contains(e.target as Node)) onClose();
+    }
+
     return createPortal(<div
         className={`modal ${className ?? ""}`.trim()}
         aria-labelledby="modalTitle"
@@ -60,6 +64,7 @@ export function Modal({ isOpen = false, onClose, title, className, children }: P
         role="dialog"
         style={{ visibility: isOpen ? "visible" : "hidden" }}
         onAnimationEnd={onAnimationEnd}
+        onClick={handleClickOutside}
     >
         <div className="modal__content" ref={modalRef}>
             <button className="modal__close" onClick={onClose} aria-label="Fermer">

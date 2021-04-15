@@ -7,7 +7,7 @@ export class DataAccess {
     });
 
     /**
-     * Send a HTTP request to the API.
+     * Sends a HTTP request to the Backend Symfony API.
      */
     public static async request(endpoint: string, requestParams: RequestInit): Promise<[boolean, any]> {
         this.defaultHeaders.delete("Authorization");
@@ -28,9 +28,9 @@ export class DataAccess {
             { ...requestParams, headers: this.defaultHeaders }
         );
 
-        const response: Response | any = await fetch(request)
+        const response: Response = await fetch(request)
             .then(response => response)
-            .catch(err => console.error(err));
+            .catch(err => err);
 
         const responseData: Record<string, any> = await response.json();
 

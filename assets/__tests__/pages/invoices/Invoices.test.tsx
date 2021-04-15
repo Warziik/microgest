@@ -8,7 +8,7 @@ import { act } from 'react-dom/test-utils';
 
 fetchMock.enableMocks();
 fetchMock.mockResponse(JSON.stringify({
-    "allInvoices": [
+    "hydra:member": [
         {
             id: 1,
             chrono: "2021-0001",
@@ -44,7 +44,7 @@ describe("Invoices Page", () => {
             render(<MemoryRouter>
                 <Invoices />
             </MemoryRouter>);
-        })
+        });
     });
 
     it("should display the page title", () => {

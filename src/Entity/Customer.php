@@ -21,22 +21,24 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks
  */
 #[UniqueEntity(fields: ["email"], message: "This email address is already in use.")]
-#[ApiResource(
-    normalizationContext: ["groups" => ["customers:read"]],
-    denormalizationContext: ["groups" => ["customers:write"]],
-    collectionOperations: ["post"],
-    itemOperations: [
-        "get" => ["security" => "object.getOwner() == user"],
-        "put" => ["security" => "object.getOwner() == user"],
-        "delete" => ["security" => "object.getOwner() == user"]
-    ],
-    subresourceOperations: [
-        "api_users_customers_get_subresource" => [
-            "security" => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
-            "normalization_context" => ["groups" => ["users_customers_subresource"]]
-        ]
-    ],
-)]
+#[
+    ApiResource(
+        normalizationContext: ["groups" => ["customers:read"]],
+        denormalizationContext: ["groups" => ["customers:write"]],
+        collectionOperations: ["post"],
+        itemOperations: [
+            "get" => ["security" => "object.getOwner() == user"],
+            "put" => ["security" => "object.getOwner() == user"],
+            "delete" => ["security" => "object.getOwner() == user"]
+        ],
+        subresourceOperations: [
+            "api_users_customers_get_subresource" => [
+                "security" => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
+                "normalization_context" => ["groups" => ["users_customers_subresource"]]
+            ]
+        ],
+    )
+]
 class Customer
 {
     /**
@@ -44,17 +46,17 @@ class Customer
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["customers:read", "users_customers_subresource", "user_get_invoices:read"])]
+    #[Groups(["customers:read", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
     private ?int $id = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "user_get_invoices:read"])]
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $firstname = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "user_get_invoices:read"])]
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $lastname = null;
@@ -101,7 +103,8 @@ class Customer
 
     /* Returns the last Invoice of the Customer for the UI */
     #[Groups(["users_customers_subresource"])]
-    public function getLastInvoice() {
+    public function getLastInvoice()
+    {
         if (!$this->invoices->isEmpty()) {
             return $this->invoices->last();
         }

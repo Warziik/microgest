@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests;
 
 use App\Entity\Invoice;
@@ -16,7 +17,30 @@ class InvoiceTest extends ApiTestCase
     use AssertTrait;
 
     /**
-     * Test get an Invoice
+     * Test get all Invoices of the logged User.
+     */
+    public function testGetAllInvoices(): void
+    {
+        $authToken = $this->getAuthToken();
+
+        static::createClient()->request(Request::METHOD_GET, "/api/invoices", ["auth_bearer" => $authToken]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertJsonContains([
+            "@id" => "/api/invoices"
+        ]);
+    }
+
+    /**
+     * Test get all Invoices without being logged.
+     */
+    public function testGetAllInvoicseWithoutAuthorization(): void
+    {
+        static::createClient()->request(Request::METHOD_GET, "/api/invoices");
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * Test get an Invoice.
      */
     public function testGetInvoice(): void
     {
@@ -88,7 +112,6 @@ class InvoiceTest extends ApiTestCase
             "status" => "SENT"
         ]);
         $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
-        $this->assertMatchesResourceItemJsonSchema(Invoice::class);
     }
 
     /**
@@ -113,12 +136,14 @@ class InvoiceTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
         static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
-            "amount" => 2200,
-            "sentAt" => "2021-01-09",
-            "customer" => "/api/customers/1"
+            "amount" => 2200
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertJsonEquals([
+            "code" => Response::HTTP_UNPROCESSABLE_ENTITY,
+            "message" => "A customer must be provided."
+        ]);
     }
 
     /**
@@ -159,7 +184,6 @@ class InvoiceTest extends ApiTestCase
             "amount" => 150
         ]);
         $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
-        $this->assertMatchesResourceItemJsonSchema(Invoice::class);
     }
 
     /**

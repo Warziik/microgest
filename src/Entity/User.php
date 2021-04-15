@@ -51,12 +51,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 "method" => "POST",
                 "path" => "/users/{id}/confirm_account",
                 "controller" => ConfirmAccount::class
-            ],
-            "getAllInvoices" => [
-                "security" => "object == user",
-                "method" => "GET",
-                "path" => "/users/{id}/all_invoices",
-                "normalization_context" => ["groups" => ["user_get_invoices:read"]]
             ]
         ]
     )
@@ -127,17 +121,6 @@ class User implements UserInterface
     public function __construct()
     {
         $this->customers = new ArrayCollection();
-    }
-
-    #[Groups(["user_get_invoices:read"])]
-    public function getAllInvoices() {
-        $totalInvoices = [];
-        foreach ($this->getCustomers() as $customer) {
-            foreach ($customer->getInvoices() as $invoice) {
-                $totalInvoices[] = $invoice;
-            }
-        }
-        return $totalInvoices;
     }
 
     public function getId(): ?int

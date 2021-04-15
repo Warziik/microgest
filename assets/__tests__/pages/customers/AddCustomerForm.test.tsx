@@ -7,7 +7,7 @@ fetchMock.enableMocks();
 fetchMock.mockResponse(JSON.stringify([true, {}]));
 
 describe("Add Customer form", () => {
-    const mockCreateCustomer = jest.fn().mockResolvedValue(true);
+    const mockCreateCustomer = jest.fn();
 
     beforeEach(() => {
         render(<AddCustomerForm addCustomer={mockCreateCustomer} />);

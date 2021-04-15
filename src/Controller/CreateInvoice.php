@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Invoice;
@@ -7,7 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
 
-class CreateInvoice {
+class CreateInvoice
+{
     public function __construct(private Security $security, private CustomerRepository $customerRepository)
     {
     }
@@ -19,6 +21,10 @@ class CreateInvoice {
     {
         $user = $this->security->getUser();
         $userCustomers = $this->customerRepository->findBy(["owner" => $user]);
+
+        if (is_null($data->getCustomer())) {
+            return new JsonResponse(["code" => Response::HTTP_UNPROCESSABLE_ENTITY, "message" => "A customer must be provided."], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         if (!in_array($data->getCustomer(), $userCustomers)) {
             return new JsonResponse(["code" => Response::HTTP_UNAUTHORIZED, "message" => "You cannot set an invoice for a customer you don't own."], Response::HTTP_UNAUTHORIZED);

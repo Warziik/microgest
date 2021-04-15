@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { createCustomer } from "../../services/CustomerService";
 import { Violation } from "../../types/Violation";
 import { ModalContext } from "../../components/Modal";
+import { ErrorResponse } from "../../types/ErrorResponse";
 
 type Props = {
     addCustomer: (customer: Customer) => void;
@@ -55,13 +56,13 @@ export function AddCustomerForm({ addCustomer }: Props) {
         if (isSuccess) {
             reset();
             toast("success", "Le nouveau client a bien été ajouté.");
-            addCustomer(data);
+            addCustomer(data as Customer);
             onClose();
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "violations")) {
-                data.violations.forEach((violation: Violation) => {
-                    const invalidProperty: any = violation.propertyPath;
-                    setError(invalidProperty, {
+                const response = data as ErrorResponse;
+                response.violations?.forEach((violation: Violation) => {
+                    setError(violation.propertyPath as keyof FormData, {
                         type: "manual",
                         message: violation.message
                     });

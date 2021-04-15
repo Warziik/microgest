@@ -2,35 +2,43 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use DateTimeInterface;
 use App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateInvoice;
+use App\Controller\GetInvoices;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  * @ORM\Table(name="invoices")
+ * @ORM\HasLifecycleCallbacks
  */
-#[ApiResource(
-    normalizationContext: ["groups" => ["invoices:read"]],
-    denormalizationContext: ["groups" => ["invoices:write"]],
-    collectionOperations: ["post" => ["controller" => CreateInvoice::class]],
-    itemOperations: [
-        "get" => ["security" => "object.getCustomer().getOwner() == user"],
-        "put" => ["security" => "object.getCustomer().getOwner() == user", "denormalization_context" => ["groups" => ["invoice:update"]]],
-        "delete" => ["security" => "object.getCustomer().getOwner() == user"]
-    ],
-    subresourceOperations: [
-        "api_customers_invoices_get_subresource" => [
-            "security" => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
-            "normalization_context" => ["groups" => ["customers_invoices_subresource"]]
+#[
+    ApiResource(
+        normalizationContext: ["groups" => ["invoices:read"]],
+        denormalizationContext: ["groups" => ["invoices:write"]],
+        collectionOperations: [
+            "get" => ["controller" => GetInvoices::class, "normalization_context" => ["groups" => ["allInvoices:read"]]],
+            "post" => ["controller" => CreateInvoice::class]
+        ],
+        itemOperations: [
+            "get" => ["security" => "object.getCustomer().getOwner() == user"],
+            "put" => ["security" => "object.getCustomer().getOwner() == user", "denormalization_context" => ["groups" => ["invoice:update"]]],
+            "delete" => ["security" => "object.getCustomer().getOwner() == user"]
+        ],
+        subresourceOperations: [
+            "api_customers_invoices_get_subresource" => [
+                "security" => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
+                "normalization_context" => ["groups" => ["customers_invoices_subresource"]]
+            ]
         ]
-    ]
-)]
+    )
+]
 class Invoice
 {
     /**
@@ -38,41 +46,40 @@ class Invoice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource", "user_get_invoices:read"])]
+    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read"])]
     private ?int $id = null;
 
     /** @ORM\Column(type="float") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "user_get_invoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read"])]
     #[Assert\NotBlank()]
-    #[Assert\Type(type: "numeric", message: "The amount must be a number.")]
+    #[Assert\Type(type: "numeric", message: "Le montant doit être un nombre.")]
     private ?float $amount = null;
-    
+
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "users_customers_subresource", "user_get_invoices:read"])]
-    #[Assert\NotBlank]
-    #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "The status must be of type 'NEW', 'SENT', 'PAID' or 'CANCELLED' only.")]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "Le statut doit être de type 'NEW', 'SENT', 'PAID' ou 'CANCELLED'.")]
     private ?string $status = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(["invoices:read", "invoices:write", "user_get_invoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "allInvoices:read"])]
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "user_get_invoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "user_get_invoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource", "user_get_invoices:read"])]
+    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read"])]
     private ?string $chrono = null;
 
     public function getId(): ?int
@@ -150,5 +157,13 @@ class Invoice
         $this->chrono = $chrono;
 
         return $this;
+    }
+
+    /** @ORM\PrePersist */
+    public function prePersist(): void
+    {
+        if ($this->getStatus() === null) {
+            $this->setStatus("NEW");
+        }
     }
 }

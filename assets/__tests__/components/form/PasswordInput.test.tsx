@@ -1,38 +1,43 @@
 import React from 'react';
-import {render, fireEvent, act} from "@testing-library/react";
+import {render, fireEvent, screen} from "@testing-library/react";
 import PasswordInput from '../../../components/form/PasswordInput';
 
-describe("Password input", () => {
+describe("Password Input", () => {
     it("should render a password input", () => {
-        render(<PasswordInput name="password" error={undefined} />);
+        render(<PasswordInput name="password" label="Mot de passe" error={undefined} />);
 
-        const input: HTMLInputElement | null = document.querySelector("input.form__input");
+        const input: HTMLElement = screen.getByLabelText("Mot de passe");
 
         expect(input).toBeInTheDocument();
-        expect(input?.getAttribute("type")).toBe("password");
-    })
+        expect(input?.tagName).toBe("INPUT");
+        expect(input).toHaveAttribute("type", "password");
+        expect(input).toHaveAttribute("name", "password");
+    });
 
     it("should render a password input with a label", () => {
         render(<PasswordInput name="password" label="Mot de passe" error={undefined} />);
 
-        const label: Element | null = document.querySelector("label.form__label");
+        const label: HTMLElement = screen.getByText("Mot de passe");
 
         expect(label).toBeInTheDocument();
-        expect(label?.textContent).toBe("Mot de passe");
-    })
+        expect(label.tagName).toBe("LABEL");
+    });
 
-    it("should toggle password visibility", async () => {
-        render(<PasswordInput name="password" error={undefined} />);
+    it("should toggle password visibility", () => {
+        render(<PasswordInput name="password" label="Mot de passe" error={undefined} />);
 
-        const input: HTMLInputElement | null = document.querySelector("input.form__input");
-        const actionBtn: Element | any = document.querySelector("button");
+        const input: HTMLElement = screen.getByLabelText("Mot de passe");
+        const actionBtn: HTMLElement = screen.getByRole("button");
 
-        await act(async () => {
-            fireEvent.click(actionBtn);
-        });
+        fireEvent.click(actionBtn);
 
         expect(input).toBeInTheDocument();
         expect(actionBtn).toBeInTheDocument();
-        expect(input?.getAttribute("type")).toBe("text");
-    })
-})
+        expect(input).toHaveAttribute("type", "text");
+
+        fireEvent.click(actionBtn);
+        expect(input).toHaveAttribute("type", "password");
+        
+        expect(input).toHaveAttribute("name", "password");
+    });
+});

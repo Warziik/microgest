@@ -23,7 +23,7 @@ export function Customers() {
 
     useEffect(() => {
         fetchAllCustomers(userData.id)
-            .then((values: [boolean, Collection<Customer>] | any) => {
+            .then((values: [boolean, Collection<Customer>]) => {
                 const [isSuccess, data] = values;
                 if (isSuccess) setCustomers(data["hydra:member"]);
             });
@@ -42,7 +42,7 @@ export function Customers() {
 
     const handleEditBtn = () => console.log("handle edit btn clicked.");
 
-    return <main className="customers">
+    return <div className="customers">
         <Modal
             isOpen={showAddCustomerModal}
             onClose={closeAddCustomerModal}
@@ -56,7 +56,7 @@ export function Customers() {
             <Button className="btn--secondary" icon="filter" onClick={handleFilterBtn}>Filtrer</Button>
             {/* TODO: Pagination */}
         </div>
-        <section className="customers__list">
+        <div className="customers__list">
             {customers.map((customer: Customer) => (
                 <article className="customers__item" key={customer.id}>
                     <header className="customers__item-header">
@@ -90,6 +90,6 @@ export function Customers() {
                     </footer>
                 </article>
             )) || <p>Vous n&lsquo;avez ajouté aucun client pour le moment.</p>}
-        </section>
-    </main>
+        </div>
+    </div>
 }

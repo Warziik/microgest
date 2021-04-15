@@ -3,9 +3,9 @@ import fetchMock from "jest-fetch-mock";
 
 fetchMock.enableMocks();
 
-describe("InvoiceService", () => {
+describe("Invoice Service", () => {
     const allInvoicesData = {
-        "allInvoices": [
+        "hydra:member": [
             {
                 id: 1,
                 chrono: "2021-0001",
@@ -35,8 +35,27 @@ describe("InvoiceService", () => {
         ]
     };
 
-    it("should returns all the Invoices", async () => {
+    const invoiceData = {
+        id: 3,
+        chrono: "2021-0003",
+        amount: 716,
+        status: "NEW",
+        customer: {
+            id: 1,
+            firstname: "Foo",
+            lastname: "Bar"
+        },
+        sentAt: "2021-03-26T11:48:18+00:00",
+        paidAt: null
+    }
+
+    it("should returns all the Invoices of the logged User", async () => {
         fetchMock.mockResponse(JSON.stringify(allInvoicesData));
-        expect(await InvoiceService.fetchAllInvoicesOfUser(1)).toStrictEqual([true, allInvoicesData]);
+        expect(await InvoiceService.fetchAllInvoicesOfUser()).toStrictEqual([true, allInvoicesData]);
+    });
+
+    it("should create an Invoice", async () => {
+        fetchMock.mockResponse(JSON.stringify(invoiceData));
+        expect(await InvoiceService.createInvoice(1, 1)).toStrictEqual([true, invoiceData]);
     });
 });

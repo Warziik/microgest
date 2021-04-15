@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
 {
-    const OPERATION_PATH = "/api/users/{id}/all_invoices";
+    const OPERATION_PATH = "/api/invoices";
 
     public function __construct(private OpenApiFactoryInterface $decorated)
     {

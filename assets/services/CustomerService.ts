@@ -9,7 +9,7 @@ import { DataAccess } from "../utils/dataAccess";
  * 
  * @param id The User's id
  */
-export function fetchAllCustomers(id: number): Promise<[boolean, Collection<Customer> | ErrorResponse]> {
+export function fetchAllCustomers(id: number): Promise<[boolean, Collection<Customer>]> {
     return DataAccess.request(`${USERS_URI}/${id}/customers`, {
         method: "GET"
     });
@@ -20,7 +20,7 @@ export function fetchAllCustomers(id: number): Promise<[boolean, Collection<Cust
  * 
  * @param data The Customer data
  */
-export function createCustomer(data: AddCustomerData): Promise<any> {
+export function createCustomer(data: AddCustomerData): Promise<[boolean, Customer | ErrorResponse]> {
     return DataAccess.request(CUSTOMERS_URI, {
         method: "POST",
         body: JSON.stringify(data)

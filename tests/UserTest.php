@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests;
 
 use App\Entity\User;
@@ -157,19 +158,5 @@ class UserTest extends ApiTestCase
 
         static::createClient()->request(Request::METHOD_DELETE, "/api/users/99999", ["auth_bearer" => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-    }
-
-    public function testGetAllInvoicesOfUser(): void {
-        $authToken = $this->getAuthToken();
-        static::createClient()->request(Request::METHOD_GET, "/api/users/1/all_invoices", ["auth_bearer" => $authToken]);
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testGetAllInvoicesOfAnotherUser(): void {
-        $authToken = $this->getAuthToken();
-        static::createClient()->request(Request::METHOD_GET, "/api/users/8/all_invoices", ["auth_bearer" => $authToken]);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 }

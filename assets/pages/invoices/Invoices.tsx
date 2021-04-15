@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "../../components/Badge";
 import { useAuth } from "../../hooks/useAuth";
@@ -6,24 +6,63 @@ import { Invoice } from "../../types/Invoice";
 import { fetchAllInvoicesOfUser } from "../../services/InvoiceService";
 import dayjs from "dayjs";
 import { Collection } from "../../types/Collection";
+import { Modal } from "../../components/Modal";
+import { CreateInvoiceForm } from "./CreateInvoiceForm";
+import { Button } from "../../components/Button";
 
 export function Invoices() {
     const { userData } = useAuth();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
+    const [showCreateInvoiceModal, setShowCreateInvoiceModal] = useState<boolean>(false);
+    const openCreateInvoiceModalBtn = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         document.title = "Mes factures - Microgest";
     }, [])
 
-    useEffect(() => {
-        fetchAllInvoicesOfUser(userData.id)
+    const fetchInvoices = useCallback(() => {
+        fetchAllInvoicesOfUser()
             .then((values: [boolean, Collection<Invoice> | any]) => {
                 const [isSuccess, data] = values;
-                if (isSuccess) setInvoices(data["allInvoices"]);
+                if (isSuccess) {
+                    setInvoices(data["hydra:member"].sort((a: Invoice, b: Invoice) => {
+                        if (a.chrono < b.chrono){
+                            return -1;
+                        }
+                        if ( a.chrono > b.chrono){
+                            return 1;
+                        }
+                        return 0;
+                    }));
+                }
             });
-    }, [userData.id]);
+    }, []);
+
+    useEffect(() => {
+        fetchInvoices();
+    }, [fetchInvoices]);
+
+    const addInvoice = (invoice: Invoice) => setInvoices([...invoices, invoice]);
+
+    const closeCreateInvoiceModal = () => {
+        setShowCreateInvoiceModal(false);
+        openCreateInvoiceModalBtn.current?.focus();
+    }
+
+    const openCreateInvoiceModal = () => setShowCreateInvoiceModal(true);
 
     return <div className="invoices">
+        <Modal
+            isOpen={showCreateInvoiceModal}
+            onClose={closeCreateInvoiceModal}
+            title="Nouvelle facture"
+            className="createInvoiceModal"
+        >
+            <CreateInvoiceForm addInvoice={addInvoice} userId={userData.id} />
+        </Modal>
+        <div className="invoices__ctas">
+            <Button onClick={openCreateInvoiceModal} ref={openCreateInvoiceModalBtn} icon="add">Créer une nouvelle facture</Button>
+        </div>
         <div className="invoices__list">
             <table className="table">
                 <thead>

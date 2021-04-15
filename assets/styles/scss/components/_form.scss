@@ -1,78 +1,89 @@
 .form {
-    &__horizontal {
-        display: flex;
-        column-gap: 2.4rem;
+  &__horizontal {
+    display: flex;
+    column-gap: 2.4rem;
+  }
+
+  &__group {
+    width: 100%;
+    margin-bottom: 1.6rem;
+  }
+
+  &__rightIcon {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    input {
+      padding-right: 6.4rem;
     }
 
-    &__group {
-        width: 100%;
-        margin-bottom: 1.6rem;
+    button {
+      position: absolute;
+      right: 1.6rem;
+      height: 2rem;
+
+      border: none;
+      cursor: pointer;
+
+      background: none;
+
+      svg {
+        max-width: 1.6rem;
+        max-height: 1.6rem;
+
+        fill: var(--primary-color-darker);
+      }
+    }
+  }
+
+  &--invalid {
+    input {
+      border-color: var(--error-color);
     }
 
-    &__rightIcon {
-        display: flex;
-        align-items: center;
-        position: relative;
-
-        input {
-            padding-right: 6.4rem;
-        }
-
-        button {
-            position: absolute;
-            right: 1.6rem;
-            height: 2rem;
-
-            border: none;
-            cursor: pointer;
-
-            background: none;
-
-            svg {
-                max-width: 1.6rem;
-                max-height: 1.6rem;
-
-                fill: var(--primary-color-darker);
-            }
-        }
+    &-message {
+      color: var(--error-color);
     }
+  }
 
-    &--invalid {
-        input {
-            border-color: var(--error-color);
-        }
+  &--invalid-message,
+  &__info {
+    margin-top: 0.8rem;
+    line-height: 1;
+  }
 
-        &-message {
-            display: block;
-            margin-top: .8rem;
-            line-height: 1;
+  &__info {
+    color: var(--secondary-paragraph-color);
+  }
 
-            color: var(--error-color);
-        }
+  &__label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    color: var(--primary-color-darker);
+  }
+
+  &__input {
+    width: 100%;
+    padding: 1.6rem;
+
+    color: var(--text-color);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+
+    background-color: var(--content-background);
+
+    transition: all 0.3s ease-in;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: var(--input-box-shadow);
     }
+  }
 
-    &__label {
-        display: block;
-        margin-bottom: .8rem;
-        color: var(--primary-color-darker);
-    }
-
-    &__input {
-        width: 100%;
-        padding: 1.6rem;
-
-        color: var(--text-color);
-        border-radius: var(--radius);
-        border: 0.5px solid var(--border-color);
-
-        background-color: var(--input-background);
-
-        transition: all .3s ease-in;
-
-        &:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: var(--input-box-shadow);
-        }
-    }
+  &__select select {
+    @extend .form__input;
+  }
 }

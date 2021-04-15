@@ -42,7 +42,6 @@ class InvoiceTest extends ApiTestCase
     {
         $this->assertHasErrors(0, $this->getEntity()->setStatus("PAID"));
 
-        $this->assertHasErrors(1, $this->getEntity()->setStatus(null));
         $this->assertHasErrors(1, $this->getEntity()->setStatus("invalid_status"));
     }
 

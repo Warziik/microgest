@@ -68,8 +68,8 @@ export function CreateInvoiceForm({addInvoice, userId}: Props) {
         amount: 0
     } });
 
-    const onSubmit = handleSubmit(async ({ customer, amount }) => {
-        const [isSuccess, data] = await createInvoice(customer, amount);
+    const onSubmit = handleSubmit(async ({ customer, service, amount }) => {
+        const [isSuccess, data] = await createInvoice(customer, service, amount);
         if (isSuccess) {
             reset();
             toast("success", "La nouvelle facture a bien été créée.");

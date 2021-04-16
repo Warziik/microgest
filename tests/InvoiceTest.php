@@ -99,6 +99,7 @@ class InvoiceTest extends ApiTestCase
         $response = static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
             "amount" => 2200,
             "status" => "SENT",
+            "service" => "Website creation",
             "sentAt" => "2021-01-09 20:15:13",
             "customer" => "/api/customers/1"
         ]]);
@@ -109,7 +110,8 @@ class InvoiceTest extends ApiTestCase
             "@context" => "/api/contexts/Invoice",
             "@type" => "Invoice",
             "amount" => 2200,
-            "status" => "SENT"
+            "status" => "SENT",
+            "service" => "Website creation"
         ]);
         $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
     }

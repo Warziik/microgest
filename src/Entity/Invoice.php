@@ -46,17 +46,17 @@ class Invoice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read", "users_customers_subresource"])]
     private ?int $id = null;
 
     /** @ORM\Column(type="float") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank()]
     #[Assert\Type(type: "numeric", message: "Le montant doit être un nombre.")]
     private ?float $amount = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "Le statut doit être de type 'NEW', 'SENT', 'PAID' ou 'CANCELLED'.")]
     private ?string $status = null;
 
@@ -69,18 +69,24 @@ class Invoice
     private ?Customer $customer = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource", "allInvoices:read"])]
     private ?string $chrono = null;
+
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "users_customers_subresource", "allInvoices:read"])]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 5, max: 255)]
+    private ?string $service = null;
 
     public function getId(): ?int
     {
@@ -155,6 +161,18 @@ class Invoice
     public function setChrono(string $chrono): self
     {
         $this->chrono = $chrono;
+
+        return $this;
+    }
+
+    public function getService(): ?string
+    {
+        return $this->service;
+    }
+
+    public function setService(string $service): self
+    {
+        $this->service = $service;
 
         return $this;
     }

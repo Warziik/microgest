@@ -25,6 +25,7 @@ class InvoiceTest extends ApiTestCase
     {
         return (new Invoice())
             ->setAmount(rand(200, 5000))
+            ->setService("Website creation")
             ->setStatus("NEW")
             ->setCustomer(new Customer());
     }
@@ -55,6 +56,14 @@ class InvoiceTest extends ApiTestCase
     {
         $this->assertHasErrors(0, $this->getEntity()->setSentAt(new DateTime()));
         $this->assertHasErrors(0, $this->getEntity()->setSentAt(null));
+    }
+
+    public function testServiceConstraints(): void
+    {
+        $this->assertHasErrors(0, $this->getEntity()->setService("Website creation"));
+
+        $this->assertHasErrors(2, $this->getEntity()->setService(""));
+        $this->assertHasErrors(1, $this->getEntity()->setService("f"));
     }
 
     public function testChronoConstraints(): void

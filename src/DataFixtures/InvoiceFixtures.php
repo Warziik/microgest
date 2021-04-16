@@ -17,6 +17,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
         $testInvoice = (new Invoice())
             ->setChrono(date('Y') . "-0001")
             ->setAmount($faker->randomFloat(2, 350, 9999))
+            ->setService($faker->sentence(3))
             ->setStatus("SENT")
             ->setSentAt($faker->dateTimeBetween("-4 days", "now"))
             ->setCustomer($this->getReference("testCustomer"));
@@ -28,6 +29,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
             $invoice = (new Invoice())
                 ->setChrono(date('Y') . "-" . str_pad($chrono, 4, "0", STR_PAD_LEFT))
                 ->setAmount($faker->randomFloat(2, 350, 9999))
+                ->setService($faker->sentence(3))
                 ->setStatus($faker->randomElement(["NEW", "SENT", "PAID", "CANCELLED"]))
                 ->setCustomer($this->getReference("customer-" . rand(1, 200)));
             $invoice->setSentAt($invoice->getStatus() === "SENT" ? $faker->dateTimeBetween("-6 days", "now") : null);

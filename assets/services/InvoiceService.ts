@@ -19,13 +19,15 @@ export function fetchAllInvoicesOfUser(): Promise<[boolean, Collection<Invoice> 
  * Send a POST request to create a new Invoice. 
  * 
  * @param customerId The Customer's id
+ * @param service The type of service made for the Customer (ex: a website)
  * @param amount The amount of the Invoice
  */
-export function createInvoice(customerId: number, amount: number): Promise<[boolean, Invoice | ErrorResponse]> {
+export function createInvoice(customerId: number, service: string, amount: number): Promise<[boolean, Invoice | ErrorResponse]> {
     return DataAccess.request(INVOICES_URI, {
         method: "POST",
         body: JSON.stringify({
-            amount: amount,
+            amount,
+            service,
             customer: `/api/customers/${customerId}`
         })
     });

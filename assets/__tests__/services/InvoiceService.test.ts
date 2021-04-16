@@ -56,6 +56,6 @@ describe("Invoice Service", () => {
 
     it("should create an Invoice", async () => {
         fetchMock.mockResponse(JSON.stringify(invoiceData));
-        expect(await InvoiceService.createInvoice(1, 1)).toStrictEqual([true, invoiceData]);
+        expect(await InvoiceService.createInvoice(1, "test", 1)).toStrictEqual([true, invoiceData]);
     });
 });

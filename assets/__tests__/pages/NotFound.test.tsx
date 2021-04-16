@@ -1,16 +1,19 @@
-import { render as rtlRender, screen } from "@testing-library/react";
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { Router } from "../../navigation/Router";
-
-const render = (ui: JSX.Element, { route = '/' } = {}) => {
-    window.history.pushState({}, 'Test page', route)
-
-    return rtlRender(ui, { wrapper: BrowserRouter })
-}
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
+import { NotFound } from "../../pages/NotFound";
 
 test("render not found page", () => {
-    render(<Router />, { route: "/random" });
+    render(<MemoryRouter>
+        <NotFound />
+    </MemoryRouter>);
 
-    expect(screen.getByText("La page demandée n'a pu être trouvée.")).toBeInTheDocument();
+    const title: HTMLElement = screen.getByText("404 Page introuvable");
+    const description: HTMLElement = screen.getByText("La page demandée n'a pu être trouvée.");
+
+    expect(title).toBeInTheDocument();
+    expect(title.tagName).toBe("H1");
+
+    expect(description).toBeInTheDocument();
+    expect(description.tagName).toBe("P");
 })

@@ -64,7 +64,7 @@ export function LoginForm({ login }: Props) {
     return <form className="form loginForm" onSubmit={onSubmit}>
         <TextInput ref={register} error={errors.emailLogin} type="email" name="emailLogin" label="Adresse email" />
         <PasswordInput ref={register} error={errors.passwordLogin} name="passwordLogin" label="Mot de passe" />
-        <Link className="link" to="/mot-de-passe-oublie">Mot de passe oublié</Link>
+        <Link className="link" to="/mot-de-passe-oublié">Mot de passe oublié</Link>
         <Button isLoading={isSubmitting} icon="unlock">Se connecter</Button>
     </form>;
 }

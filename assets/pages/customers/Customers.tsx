@@ -83,7 +83,7 @@ export function Customers() {
                     </div>
                     <footer className="customers__item-footer">
                         <Button className="btn--tertiary-small" icon="edit" onClick={handleEditBtn}>Éditer</Button>
-                        <Link to="/clients" className="customers__item-footer-seeMore">
+                        <Link to={`/clients/${customer.id}`} className="customers__item-footer-seeMore">
                             Voir plus
                             <Icon name="double-chevron-right" />
                         </Link>

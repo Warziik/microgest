@@ -10,4 +10,5 @@ export interface Invoice {
     paidAt: string;
     sentAt: string;
     status: "NEW" | "SENT" | "PAID" | "CANCELLED";
+    service: string;
 }

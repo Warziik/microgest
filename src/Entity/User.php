@@ -62,23 +62,23 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Groups(["users:read"])]
     private ?int $id = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:read", "users:write", "customers:read", "invoices:read"])]
+    #[Groups(["users:read", "users:write"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $firstname = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:read", "users:write", "customers:read", "invoices:read"])]
+    #[Groups(["users:read", "users:write"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $lastname = null;
 
     /** @ORM\Column(type="string", length=255, unique=true) */
-    #[Groups(["users:read", "users:write", "customers:read", "invoices:read", "forgotPassword:write"])]
+    #[Groups(["users:read", "users:write", "forgotPassword:write"])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
@@ -90,22 +90,21 @@ class User implements UserInterface
     private ?string $password = null;
 
     /** @ORM\Column(type="json") */
-    #[Groups(["users:read", "users:write", "customers:read", "invoices:read"])]
+    #[Groups(["users:read"])]
     private ?array $roles = [];
 
     /** @ORM\Column(type="datetime") */
-    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Groups(["users:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $createdAt = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Groups(["users:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 
     /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true, cascade={"persist"}) */
     #[ApiSubResource(maxDepth: 1)]
-    #[Groups(["users:read"])]
     private ?Collection $customers = null;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
@@ -114,7 +113,7 @@ class User implements UserInterface
     private ?string $confirmationToken = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["users:read", "customers:read", "invoices:read"])]
+    #[Groups(["users:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $confirmedAt = null;
 

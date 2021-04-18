@@ -5,6 +5,7 @@ import ConfirmAccount from '../pages/auth/ConfirmAccount';
 import ForgotPassword from '../pages/auth/ForgotPassword';
 import ResetPassword from '../pages/auth/ResetPassword';
 import { Customers } from '../pages/customers/Customers';
+import { ShowCustomer } from '../pages/customers/show/ShowCustomer';
 import Home from '../pages/Home';
 import { Invoices } from '../pages/invoices/Invoices';
 import {NotFound} from '../pages/NotFound';
@@ -15,8 +16,9 @@ import { PublicRoute } from './PublicRoute';
 export function Router() {
     return <BrowserRouter>
         <Switch>
-            <PrivateRoute path="/factures" component={Invoices} />
             <PrivateRoute path={["/paramètres", "/paramètres/sécurité"]} component={Settings} />
+            <PrivateRoute path="/factures" component={Invoices} />
+            <PrivateRoute path="/clients/:id" component={ShowCustomer} />
             <PrivateRoute path="/clients" component={Customers} />
             <PrivateRoute exact path="/" component={Home} />
 

@@ -50,7 +50,7 @@ class Invoice
     private ?int $id = null;
 
     /** @ORM\Column(type="float") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read", "users_customers_subresource"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read", "customers_invoices_subresource", "users_customers_subresource"])]
     #[Assert\NotBlank()]
     #[Assert\Type(type: "numeric", message: "Le montant doit être un nombre.")]
     private ?float $amount = null;

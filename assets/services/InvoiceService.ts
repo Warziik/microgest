@@ -1,4 +1,4 @@
-import { INVOICES_URI } from "../config/entrypoints";
+import { CUSTOMERS_URI, INVOICES_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { Invoice } from "../types/Invoice";
@@ -11,6 +11,12 @@ import { DataAccess } from "../utils/dataAccess";
  */
 export function fetchAllInvoicesOfUser(): Promise<[boolean, Collection<Invoice> | ErrorResponse]> {
     return DataAccess.request(INVOICES_URI, {
+        method: "GET"
+    });
+}
+
+export function fetchAllInvoicesOfCustomer(id: number): Promise<[boolean, Collection<Invoice> | ErrorResponse]> {
+    return DataAccess.request(`${CUSTOMERS_URI}/${id}/invoices`, {
         method: "GET"
     });
 }

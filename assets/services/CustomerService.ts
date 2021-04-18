@@ -15,6 +15,12 @@ export function fetchAllCustomers(id: number): Promise<[boolean, Collection<Cust
     });
 }
 
+export function fetchCustomer(id: number): Promise<[boolean, Customer]> {
+    return DataAccess.request(`${CUSTOMERS_URI}/${id}`, {
+        method: "GET"
+    });
+}
+
 /**
  * Send a POST request to create a new Customer for the logged User.
  * 

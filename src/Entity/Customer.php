@@ -76,7 +76,6 @@ class Customer
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(["customers:read"])]
     #[Assert\NotBlank]
     private ?User $owner = null;
 
@@ -91,7 +90,6 @@ class Customer
     private ?DateTimeInterface $updatedAt = null;
 
     /** @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true, cascade={"persist"}) */
-    #[Groups(["customers:read"])]
     #[ApiSubresource]
     private ?Collection $invoices = null;
 

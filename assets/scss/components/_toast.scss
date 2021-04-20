@@ -1,0 +1,160 @@
+.toast-container {
+  position: fixed;
+}
+
+.toast {
+  &--top-right {
+    top: 1.2rem;
+    right: 1.2rem;
+    &-enter {
+      animation: toast-in-right 0.3s;
+    }
+    &-leave {
+      animation: toast-in-right-leave 0.3s;
+    }
+  }
+
+  &--top-left {
+    top: 1.2rem;
+    left: 1.2rem;
+    &-enter {
+      animation: toast-in-left 0.3s;
+    }
+    &-leave {
+      animation: toast-in-left-leave 0.3s;
+    }
+  }
+
+  &--bottom-right {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    &-enter {
+      animation: toast-in-right 0.3s;
+    }
+    &-leave {
+      animation: toast-in-right-leave 0.3s;
+    }
+  }
+
+  &--bottom-left {
+    bottom: 1.2rem;
+    left: 1.2rem;
+    &-enter {
+      animation: toast-in-left 0.3s;
+    }
+    &-leave {
+      animation: toast-in-left-leave 0.3s;
+    }
+  }
+}
+
+.toast {
+  position: relative;
+  padding: 2.4rem;
+
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+
+  &:not(:last-child) {
+    margin-bottom: 1.6rem;
+  }
+
+  &__close {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+    padding: 0;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: none;
+
+    svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      fill: #fff;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__content {
+    margin-right: 4.8rem;
+    display: flex;
+    align-items: center;
+
+    &-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background-color: #fff;
+      border-radius: 50%;
+      width: 2.4rem;
+      height: 2.4rem;
+      margin-right: 1.6rem;
+
+      svg {
+        width: 1.2rem;
+        height: 1.2rem;
+        fill: #fff;
+      }
+    }
+
+    &-message {
+      color: #fff;
+      max-width: 30rem;
+      font-weight: 600;
+    }
+  }
+
+  &__progressbar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+
+    border-radius: var(--radius);
+
+    background-color: #fff;
+
+    transform-origin: left;
+    animation: toast-trackProgress linear 1 forwards;
+  }
+
+  &--success {
+    background: var(--success-color);
+
+    .toast__content-icon svg {
+      fill: var(--success-color);
+    }
+  }
+
+  &--error {
+    background: var(--error-color);
+
+    .toast__content-icon svg {
+      fill: var(--error-color);
+    }
+  }
+
+  &--warning {
+    background: var(--warning-color);
+
+    .toast__content-icon svg {
+      fill: var(--warning-color);
+    }
+  }
+
+  &--info {
+    background: var(--info-color);
+
+    .toast__content-icon svg {
+      fill: var(--info-color);
+    }
+  }
+}

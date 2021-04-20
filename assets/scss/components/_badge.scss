@@ -1,0 +1,40 @@
+.badge {
+  display: inline-block;
+  padding: 0.8rem 1.6rem;
+  border-radius: var(--radius);
+  background-color: black;
+  color: white;
+  font-weight: 700;
+  text-transform: lowercase;
+  text-align: center;
+  &::first-letter {
+    text-transform: uppercase;
+  }
+
+  &--success,
+  &--info,
+  &--warning,
+  &--error {
+    @extend .badge;
+  }
+
+  &--success {
+    color: var(--success-color);
+    background-color: var(--success-color-contrast);
+  }
+
+  &--info {
+    color: var(--info-color);
+    background-color: var(--info-color-contrast);
+  }
+
+  &--warning {
+    color: var(--warning-color);
+    background-color: var(--warning-color-contrast);
+  }
+
+  &--error {
+    color: var(--error-color);
+    background-color: var(--error-color-contrast);
+  }
+}

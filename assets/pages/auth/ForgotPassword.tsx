@@ -55,11 +55,11 @@ export default function ForgotPassword() {
     return <div className="forgotPassword">
         <h1>Mot de passe oublié</h1>
         <div className="forgotPassword__content" onSubmit={onSubmit}>
-            <Button className="btn--secondary" icon="arrow-left" onClick={() => history.push("/connexion")}>Retour à la connexion</Button>
+            <Button className="btn--outline" icon="arrow-left" onClick={() => history.push("/connexion")}>Retour à la connexion</Button>
             <p className="forgotPassword__description">Un mail contenant un lien de réinitialisation de mot de passe vous sera envoyé à l&apos;adresse email spécifiée ci-dessous si celle-ci est liée à un compte utilisateur existant.</p>
             <form className="form">
                 <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
-                <Button isLoading={isSubmitting} icon="send">Envoyer</Button>
+                <Button isLoading={isSubmitting} className="btn--primary btn--center" icon="send">Envoyer</Button>
             </form>
         </div>
     </div>

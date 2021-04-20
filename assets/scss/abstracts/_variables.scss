@@ -1,0 +1,40 @@
+:root {
+  // FONTS
+  --font-family: "Nunito", sans-serif;
+  --default-font-size: 1.6rem;
+
+  // COLORS
+  --primary-color: #4d6ef5;
+  --primary-color-darker: #3b5bdb;
+  --primary-color-a05: #{rgba(#4d6ef5, 0.05)};
+  --primary-color-a1: #{rgba(#4d6ef5, 0.1)};
+  --primary-color-a16: #{rgba(#4d6ef5, 0.16)};
+  --primary-color-dark: #19203e;
+  --primary-color-dark-a5: #{rgba(#19203e, 0.5)};
+
+  --accent-color: #be4bdb;
+  --accent-color-a1: #{rgba(#be4bdb, 0.1)};
+  --accent-color-a16: #{rgba(#be4bdb, 0.16)};
+
+  --error-color: #c54b4b;
+  --error-color-contrast: #{rgba(#c54b4b, 0.1)};
+  --warning-color: #ffb600;
+  --warning-color-contrast: #{rgba(#ffb600, 0.1)};
+  --info-color: #00b6ff;
+  --info-color-contrast: #{rgba(#00b6ff, 0.1)};
+  --success-color: #4bc5a0;
+  --success-color-contrast: #{rgba(#4bc5a0, 0.1)};
+  --content-background: #fff;
+  --body-background: #f8f9fa;
+  --text-color: var(--primary-color-dark);
+  --paragraph-color: #343a40;
+  --secondary-paragraph-color: #868e96;
+  --modal-backdrop: var(--primary-color-dark-a5);
+  --border-color: #ced4da;
+  --hr-color: #dee2e6;
+
+  // OTHER
+  --radius: 1rem;
+  --input-box-shadow: 0 1px 10px var(--primary-color-a16);
+  --box-shadow: 1px 7px 20px var(--primary-color-a16);
+}

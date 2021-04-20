@@ -1,0 +1,133 @@
+.customers {
+  &__ctas {
+    display: flex;
+    gap: 1.6rem;
+    margin-bottom: 2.4rem;
+  }
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.4rem;
+  }
+  &__item {
+    display: grid;
+    grid-template-rows: min-content min-content 1fr;
+    gap: 2.4rem;
+    padding: 2.4rem;
+    border-radius: 3.2rem;
+    background-color: var(--content-background);
+
+    &-header {
+      display: grid;
+      grid-template-columns: min-content 1fr;
+      grid-template-rows: repeat(2, min-content);
+      gap: 0.4rem 1.6rem;
+
+      img {
+        grid-area: 1 / 1 / -1 / 2;
+        width: 7.2rem;
+        height: 7.2rem;
+        border-radius: 50%;
+      }
+
+      h2 {
+        align-self: flex-end;
+        grid-area: 1 / 2 / 2 / 2;
+        font-size: 2.4rem;
+        color: var(--primary-color-dark);
+      }
+      p {
+        grid-area: 2 / 2 / -1 / -1;
+        color: var(--secondary-paragraph-color);
+      }
+    }
+
+    &-main {
+      &-data p {
+        color: var(--secondary-paragraph-color);
+        strong {
+          font-weight: 600;
+          color: var(--primary-color-dark);
+        }
+      }
+
+      &-data:not(:last-child) {
+        margin-bottom: 1.6rem;
+      }
+
+      &-data:last-child {
+        display: flex;
+        align-items: center;
+        a {
+          margin-left: 0.8rem;
+          color: var(--primary-color);
+          font-weight: 600;
+          text-decoration: none;
+          transition: color 0.3s ease-in-out;
+          &:hover {
+            color: var(--primary-color-darker);
+          }
+        }
+      }
+    }
+
+    &-footer {
+      align-self: flex-end;
+      display: flex;
+      justify-content: space-between;
+
+      &-seeMore {
+        position: relative;
+        display: flex;
+        padding: 0.8rem 1.6rem;
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: 700;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+
+        line-height: 1.2;
+
+        svg {
+          margin-left: 0.8rem;
+          max-width: 1rem;
+          max-height: 1rem;
+          transform: rotate(180deg);
+        }
+
+        &:after {
+          content: "";
+          z-index: -1;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: var(--radius);
+          background-color: var(--primary-color);
+          transition: transform 0.3s ease;
+          transform: scale(0);
+        }
+
+        transition: color 0.3s ease 0.1s;
+        &:hover {
+          color: #fff;
+          &:after {
+            transform: scale(1);
+          }
+        }
+      }
+    }
+  }
+}
+
+.addCustomerModal {
+  .modal__content {
+    width: 52rem;
+  }
+}
+
+.addCustomerForm {
+  button {
+    margin: 0 auto;
+  }
+}

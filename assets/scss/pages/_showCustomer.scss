@@ -16,7 +16,6 @@
       width: 7.2rem;
       height: 7.2rem;
       border-radius: 50%;
-      background-color: grey;
     }
 
     h2 {
@@ -42,8 +41,8 @@
     &-info {
       text-align: center;
       p:first-child {
-        color: var(--primary-color-darker);
-        font-weight: 700;
+        color: var(--primary-color-dark);
+        font-weight: 600;
         margin-bottom: 0.8rem;
       }
       p:last-child {
@@ -59,8 +58,7 @@
       border-color: var(--error-color) !important;
       color: var(--error-color) !important;
       &:hover {
-        color: #fff !important;
-        background-color: var(--error-color) !important;
+        background-color: var(--error-color-contrast) !important;
       }
     }
   }

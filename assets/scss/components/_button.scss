@@ -27,7 +27,7 @@
   &:disabled {
     cursor: not-allowed;
     color: var(--primary-color);
-    background-color: var(--input-background);
+    background: none;
   }
 }
 
@@ -36,57 +36,65 @@
   background-color: var(--primary-color);
   transition: background-color 0.3s ease-in;
   &:hover {
-    background-color: #3b5bdb;
+    background-color: var(--primary-color-darker);
+  }
+}
+
+.btn--outline {
+  @extend .btn;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+
+  transition: background-color 0.3s ease-in-out;
+  &:hover {
+    background-color: var(--primary-color-a05);
   }
 }
 
 .btn--secondary {
   @extend .btn;
-  background: none;
-  border: 1px solid var(--primary-color);
+
+  background-color: var(--primary-color-a1);
   color: var(--primary-color);
 
-  &:disabled {
-    background: none;
-    border-color: lighten(#000, 80%);
-    color: lighten(#000, 80%);
-  }
-
-  transition: all 0.3s ease-in-out;
+  transition: background-color 0.3s ease-out;
   &:hover {
-    color: #fff;
-    background-color: var(--primary-color);
+    background-color: var(--primary-color-a16);
   }
 }
 
-.btn--tertiary {
+.btn--secondary-accent {
   @extend .btn;
 
-  background: rgba(#4c6ef5, 0.1);
-  color: var(--primary-color);
+  background-color: var(--accent-color-a1);
+  color: var(--accent-color);
+
+  transition: background-color 0.3s ease-out;
+  &:hover {
+    background-color: var(--accent-color-a16);
+  }
 }
 
-.btn--tertiary-accent {
-  @extend .btn;
-
-  background: rgba(#be4bdb, 0.1);
-  color: #be4bdb;
-}
-
-.btn--tertiary-small {
+.btn--secondary-small {
   display: flex;
   align-items: center;
   padding: 0.8rem 1.6rem;
   border: none;
   border-radius: var(--radius);
   color: var(--primary-color);
-  background-color: rgba(#4c6ef5, 0.1);
+  background-color: var(--primary-color-a1);
   cursor: pointer;
   font-weight: 700;
+
   svg {
     margin-right: 0.8rem;
     width: 1.6rem;
     height: 1.6rem;
-    fill: currentColor;
   }
+}
+
+.btn--center {
+  margin-left: auto;
+  margin-right: auto;
 }

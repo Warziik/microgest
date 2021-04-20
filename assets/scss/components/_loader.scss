@@ -1,0 +1,21 @@
+.loader {
+  margin-top: 2.4rem;
+
+  &--center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.loader--circle {
+  @extend .loader;
+  width: 5rem;
+  height: 5rem;
+
+  border: 0.5rem solid var(--primary-color-a16);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+
+  animation: rotate-spinner 5s linear infinite;
+}

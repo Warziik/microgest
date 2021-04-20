@@ -40,7 +40,7 @@ export function Sidebar() {
         </nav>
         {/* TODO: Light / Dark theme switch */}
         <hr />
-        <a href="https://github.com/Warziik/microgest" target="_blank" rel="noreferrer" className="btn--secondary">
+        <a href="https://github.com/Warziik/microgest" target="_blank" rel="noreferrer" className="btn--outline">
             <Icon name="github" />
             Code source
         </a>

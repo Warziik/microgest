@@ -87,14 +87,10 @@ export function ShowCustomer() {
                         <p>Numéro SIRET</p>
                         <p>-</p>
                     </div>
-                    <div className="customerDetails__header-info">
-                        <p>Adresse</p>
-                        <p>-</p>
-                    </div>
                 </div>
 
-                <Button icon="edit" className="btn--secondary" onClick={handleEditBtn}>Éditer</Button>
-                <Button icon="trash" className="btn--secondary customerDetails__header-deleteBtn" onClick={handleDeleteBtn}>Supprimer</Button>
+                <Button icon="edit" className="btn--outline" onClick={handleEditBtn}>Éditer</Button>
+                <Button icon="trash" className="btn--outline customerDetails__header-deleteBtn" onClick={handleDeleteBtn}>Supprimer</Button>
             </> || <p>Chargement...</p>}
          </div>
 
@@ -104,9 +100,9 @@ export function ShowCustomer() {
                 <form>
                     <SelectInput name="tableDataSwitch" error={undefined} ref={register} options={selectOptions} />
                 </form>
-                <Button className="btn--secondary" icon="filter">Filtrer</Button>
-                <Button icon="invoice" className="btn--tertiary-accent">Exporter les devis</Button>
-                <Button icon="invoice" className="btn--tertiary">Exporter les factures</Button>
+                <Button icon="filter" className="btn--outline">Filtrer</Button>
+                <Button icon="invoice" className="btn--secondary-accent">Exporter les devis</Button>
+                <Button icon="invoice" className="btn--secondary">Exporter les factures</Button>
             </> || <p>Chargement...</p>}
         </div>
         

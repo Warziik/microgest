@@ -19,9 +19,14 @@
     }
 
     button {
+      padding: 0;
       position: absolute;
       right: 1.6rem;
-      height: 2rem;
+
+      display: flex;
+      justify-content: center;
+      max-width: 2rem;
+      max-height: 2rem;
 
       border: none;
       cursor: pointer;
@@ -29,10 +34,14 @@
       background: none;
 
       svg {
-        max-width: 1.6rem;
+        max-width: 2rem;
         max-height: 1.6rem;
 
-        fill: var(--primary-color-darker);
+        fill: var(--border-color);
+      }
+
+      &:hover svg {
+        fill: var(--primary-color-dark);
       }
     }
   }
@@ -61,7 +70,7 @@
     display: block;
     margin-bottom: 0.8rem;
     font-weight: 600;
-    color: var(--primary-color-darker);
+    color: var(--primary-color-dark);
   }
 
   &__input {
@@ -85,5 +94,10 @@
 
   &__select select {
     @extend .form__input;
+    appearance: none;
+  }
+
+  .btn--primary {
+    margin-top: 2.4rem;
   }
 }

@@ -5,7 +5,6 @@ import Icon from "../../components/Icon";
 import { useAuth } from "../../hooks/useAuth";
 import { fetchAllCustomers } from "../../services/CustomerService";
 import { Customer } from "../../types/Customer";
-import { Badge } from "../../components/Badge";
 import { Modal } from "../../components/Modal";
 import { AddCustomerForm } from "./AddCustomerForm";
 import dayjs from "dayjs";
@@ -53,7 +52,7 @@ export function Customers() {
         </Modal>
         <div className="customers__ctas">
             <Button icon="add" onClick={openAddCustomerModal} ref={openAddCustomerModalBtn}>Ajouter un client</Button>
-            <Button className="btn--secondary" icon="filter" onClick={handleFilterBtn}>Filtrer</Button>
+            <Button className="btn--outline" icon="filter" onClick={handleFilterBtn}>Filtrer</Button>
             {/* TODO: Pagination */}
         </div>
         <div className="customers__list">
@@ -62,30 +61,30 @@ export function Customers() {
                     <header className="customers__item-header">
                         <img src="https://via.placeholder.com/72" alt={`${customer.firstname} ${customer.lastname}'s picture.`} />
                         <h2>{customer.firstname} {customer.lastname}</h2>
-                        <p>{customer.email}</p>
+                        <p>Ajouté {dayjs(customer.createdAt).fromNow()}</p>
                     </header>
                     <div className="customers__item-main">
-                        <div className="customers__item-main-addedDate">
-                            <h4>Date d&lsquo;ajout</h4>
-                            <p>{dayjs(customer.createdAt).fromNow()}</p>
+                        <div className="customers__item-main-data">
+                            <p><strong>Adresse email:</strong> {customer.email}</p>
                         </div>
-                        <div className="customers__item-main-company">
-                            <h4>Entreprise</h4>
-                            <p>{customer.company || `Non spécifiée`}</p>
+                        <div className="customers__item-main-data">
+                            <p><strong>Numéro SIRET:</strong> {customer.company || `-`}</p>
                         </div>
-                        <div className="customers__item-main-lastInvoice">
-                            <h4>Dernière facture</h4>
+                        <div className="customers__item-main-data">
+                            <p><strong>Numéro de téléphone:</strong> -</p>
+                        </div>
+                        <div className="customers__item-main-data">
+                            <p><strong>Dernière facture:</strong></p> 
                             {customer.lastInvoice && <>
                                 <Link to="/">{customer.lastInvoice.chrono}</Link>
-                                <Badge status={customer.lastInvoice.status} />
                             </> || "-"}
                         </div>
                     </div>
                     <footer className="customers__item-footer">
-                        <Button className="btn--tertiary-small" icon="edit" onClick={handleEditBtn}>Éditer</Button>
+                        <Button className="btn--secondary-small" icon="edit" onClick={handleEditBtn}>Éditer</Button>
                         <Link to={`/clients/${customer.id}`} className="customers__item-footer-seeMore">
                             Voir plus
-                            <Icon name="double-chevron-right" />
+                            <Icon name="arrow-left" />
                         </Link>
                     </footer>
                 </article>

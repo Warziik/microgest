@@ -71,7 +71,7 @@ export function GeneralInformationsForm() {
         <div className="settings__generalInformations-picture">
             <img src="https://via.placeholder.com/144" alt="Your profile picture." />
             <p>Vous pouvez changer votre photo de profil en cliquant sur le bouton ci-dessous.</p>
-            <Button className="btn--secondary" icon="edit">Changer</Button>
+            <Button className="btn--outline" icon="edit">Changer</Button>
         </div>
         <hr />
         <form className="settings__generalInformations-form" onSubmit={onSubmit}>

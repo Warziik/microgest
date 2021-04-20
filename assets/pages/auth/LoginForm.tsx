@@ -9,6 +9,7 @@ import { useHistory } from "react-router";
 import { Violation } from "../../types/Violation";
 import { Link } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
+import Icon from "../../components/Icon";
 
 type Props = {
     login: (email: string, password: string) => Promise<[boolean, Record<string, any | Violation>]>;
@@ -64,7 +65,10 @@ export function LoginForm({ login }: Props) {
     return <form className="form loginForm" onSubmit={onSubmit}>
         <TextInput ref={register} error={errors.emailLogin} type="email" name="emailLogin" label="Adresse email" />
         <PasswordInput ref={register} error={errors.passwordLogin} name="passwordLogin" label="Mot de passe" />
-        <Link className="link" to="/mot-de-passe-oublié">Mot de passe oublié</Link>
+        <Link className="link" to="/mot-de-passe-oublié">
+            Mot de passe oublié
+            <Icon name="arrow-left" />
+        </Link>
         <Button isLoading={isSubmitting} icon="unlock">Se connecter</Button>
     </form>;
 }

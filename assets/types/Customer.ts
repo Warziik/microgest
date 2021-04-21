@@ -14,10 +14,10 @@ export interface Customer {
     createdAt: string;
     updatedAt: string;
     invoices?: Invoice[];
-    lastInvoice: Invoice;
+    lastInvoice?: Invoice;
 }
 
-export interface AddCustomerData {
+export interface CustomerFormData {
     firstname: string;
     lastname: string;
     email: string;

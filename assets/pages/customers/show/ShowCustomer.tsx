@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Badge } from "../../../components/Badge";
@@ -13,6 +13,8 @@ import { Invoice } from "../../../types/Invoice";
 import dayjs from "dayjs";
 import { Option, SelectInput } from "../../../components/form/SelectInput";
 import { useForm } from "react-hook-form";
+import { Modal } from "../../../components/Modal";
+import { AddEditCustomerForm } from "../AddEditCustomerForm";
 
 type MatchParams = {
     id: string;
@@ -27,6 +29,9 @@ export function ShowCustomer() {
 
     const [customer, setCustomer] = useState<Customer>();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+    const [showEditCustomerModal, setShowEditCustomerModal] = useState<boolean>(false);
+    const openEditCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
     const selectOptions: Option[] = [
         {label: "Afficher les factures associées", value: 1},
@@ -59,15 +64,28 @@ export function ShowCustomer() {
         document.title = `${customer?.firstname} ${customer?.lastname} - Microgest`;
     }, [customer]);
 
-    const handleEditBtn = () => {
-        console.log("edit btn clicked");
+    const editCustomer = (customer: Customer) => setCustomer(customer);
+
+    const closeEditCustomerModal = () => {
+        setShowEditCustomerModal(false);
+        openEditCustomerModalBtn.current?.focus();
     }
+
+    const openEditCustomerModal = () => setShowEditCustomerModal(true);
 
     const handleDeleteBtn = () => {
         console.log("delete btn clicked");
     }
 
     return <div className="customerDetails">
+        {customer && <Modal
+            isOpen={showEditCustomerModal}
+            onClose={closeEditCustomerModal}
+            title="Éditer le client"
+            className="addCustomerModal"
+        >
+            <AddEditCustomerForm customerToEdit={customer} changeCustomer={editCustomer} />
+        </Modal>}
         <div className="customerDetails__header">
             {customer && <>
                 <img src="https://via.placeholder.com/72" alt={`Photo de ${customer.firstname} ${customer.lastname}`} />
@@ -89,7 +107,14 @@ export function ShowCustomer() {
                     </div>
                 </div>
 
-                <Button icon="edit" className="btn--outline" onClick={handleEditBtn}>Éditer</Button>
+                <Button
+                    icon="edit"
+                    className="btn--outline"
+                    onClick={openEditCustomerModal}
+                    ref={openEditCustomerModalBtn}
+                >
+                    Éditer
+                </Button>
                 <Button icon="trash" className="btn--outline customerDetails__header-deleteBtn" onClick={handleDeleteBtn}>Supprimer</Button>
             </> || <p>Chargement...</p>}
          </div>

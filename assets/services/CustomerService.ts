@@ -1,6 +1,6 @@
 import { CUSTOMERS_URI, USERS_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
-import { AddCustomerData, Customer } from "../types/Customer";
+import { CustomerFormData, Customer } from "../types/Customer";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { DataAccess } from "../utils/dataAccess";
 
@@ -26,9 +26,16 @@ export function fetchCustomer(id: number): Promise<[boolean, Customer]> {
  * 
  * @param data The Customer data
  */
-export function createCustomer(data: AddCustomerData): Promise<[boolean, Customer | ErrorResponse]> {
+export function createCustomer(data: CustomerFormData): Promise<[boolean, Customer | ErrorResponse]> {
     return DataAccess.request(CUSTOMERS_URI, {
         method: "POST",
         body: JSON.stringify(data)
-    })
+    });
+}
+
+export function updateCustomer(id: number, data: CustomerFormData): Promise<[boolean, Customer | ErrorResponse]> {
+    return DataAccess.request(`${CUSTOMERS_URI}/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data)
+    });
 }

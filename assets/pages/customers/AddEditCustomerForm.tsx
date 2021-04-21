@@ -6,13 +6,14 @@ import TextInput from "../../components/form/TextInput";
 import { useToast } from "../../hooks/useToast";
 import { Customer } from "../../types/Customer";
 import * as yup from "yup";
-import { createCustomer } from "../../services/CustomerService";
+import { createCustomer, updateCustomer } from "../../services/CustomerService";
 import { Violation } from "../../types/Violation";
 import { ModalContext } from "../../components/Modal";
 import { ErrorResponse } from "../../types/ErrorResponse";
 
 type Props = {
-    addCustomer: (customer: Customer) => void;
+    customerToEdit?: Customer;
+    changeCustomer: (customer: Customer) => void;
 }
 
 type FormData = {
@@ -22,7 +23,7 @@ type FormData = {
     company: string;
 }
 
-export function AddCustomerForm({ addCustomer }: Props) {
+export function AddEditCustomerForm({ customerToEdit, changeCustomer }: Props) {
     const { onClose } = useContext(ModalContext);
     const toast = useToast();
 
@@ -48,15 +49,26 @@ export function AddCustomerForm({ addCustomer }: Props) {
         errors,
         setError,
         reset
-    } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
+    } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema), defaultValues: {
+        firstname: customerToEdit?.firstname ?? "",
+        lastname: customerToEdit?.lastname ?? "",
+        email: customerToEdit?.email ?? "",
+        company: customerToEdit?.company ?? ""
+    } });
 
     const onSubmit = handleSubmit(async ({ firstname, lastname, email, company }) => {
-        const [isSuccess, data] = await createCustomer({ firstname, lastname, email, company });
+        const [isSuccess, data] = customerToEdit ?
+            await updateCustomer(customerToEdit.id, { firstname, lastname, email, company })
+            : await createCustomer({ firstname, lastname, email, company });
 
         if (isSuccess) {
-            reset();
-            toast("success", "Le nouveau client a bien été ajouté.");
-            addCustomer(data as Customer);
+            if (!customerToEdit) reset();
+
+            changeCustomer(data as Customer);
+            toast("success", customerToEdit ? 
+                "Le client a bien été modifié."
+                :
+                "Le nouveau client a bien été ajouté.");
             onClose();
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "violations")) {
@@ -78,6 +90,6 @@ export function AddCustomerForm({ addCustomer }: Props) {
         <TextInput ref={register} error={errors.lastname} type="text" name="lastname" label="Nom de famille" />
         <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
         <TextInput ref={register} error={errors.company} type="text" name="company" label="Entreprise" />
-        <Button isLoading={isSubmitting} icon="add">Ajouter</Button>
+        <Button isLoading={isSubmitting} icon={customerToEdit ? "edit" : "add"}>{customerToEdit ? "Éditer" : "Ajouter"}</Button>
     </form>;
 }

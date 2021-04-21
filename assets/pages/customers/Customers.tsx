@@ -6,15 +6,20 @@ import { useAuth } from "../../hooks/useAuth";
 import { fetchAllCustomers } from "../../services/CustomerService";
 import { Customer } from "../../types/Customer";
 import { Modal } from "../../components/Modal";
-import { AddCustomerForm } from "./AddCustomerForm";
+import { AddEditCustomerForm } from "./AddEditCustomerForm";
 import dayjs from "dayjs";
 import { Collection } from "../../types/Collection";
 
 export function Customers() {
     const { userData } = useAuth();
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [showAddCustomerModal, setShowAddCustomerModal] = useState<boolean>(false);
-    const openAddCustomerModalBtn = useRef<HTMLButtonElement>(null);
+
+    const [showAddEditCustomerModal, setShowAddEditCustomerModal] = useState(false);
+    const [customerToEdit, setCustomerToEdit] = useState<Customer>();
+    
+    const addCustomerBtnRef = useRef<HTMLButtonElement>(null);
+    const editCustomerBtnRefs = useRef<HTMLButtonElement[]>([]);
+    const [activeEditCustomerBtnIndex, setActiveEditCustomerBtnIndex] = useState(0);
 
     useEffect(() => {
         document.title = "Mes clients - Microgest";
@@ -30,33 +35,49 @@ export function Customers() {
 
     const addCustomer = (customer: Customer) => setCustomers([...customers, customer]);
 
-    const closeAddCustomerModal = () => {
-        setShowAddCustomerModal(false);
-        openAddCustomerModalBtn.current?.focus();
+    const editCustomer = (updatedCustomer: Customer) => {
+        const index = customers.findIndex((customer: Customer) => customer.id === updatedCustomer.id);
+        const newCustomers = [...customers];
+        newCustomers[index] = updatedCustomer;
+        setCustomers(newCustomers);
     }
 
-    const openAddCustomerModal = () => setShowAddCustomerModal(true);
+    const openAddCustomerModal = () => setShowAddEditCustomerModal(true);
+
+    const openEditCustomerModal = (customer: Customer, index: number) => {
+        setActiveEditCustomerBtnIndex(index);
+        setCustomerToEdit(customer);
+        setShowAddEditCustomerModal(true);
+    }
+
+    const closeAddEditCustomerModal = () => {
+        setShowAddEditCustomerModal(false);
+        if (customerToEdit) {
+            editCustomerBtnRefs.current[activeEditCustomerBtnIndex].focus();
+        } else {
+            addCustomerBtnRef.current?.focus();
+        }
+    }
 
     const handleFilterBtn = () => console.log("handle filter btn clicked.");
 
-    const handleEditBtn = () => console.log("handle edit btn clicked.");
-
     return <div className="customers">
         <Modal
-            isOpen={showAddCustomerModal}
-            onClose={closeAddCustomerModal}
-            title="Ajouter un client"
+            isOpen={showAddEditCustomerModal}
+            onClose={closeAddEditCustomerModal}
+            title={customerToEdit ? "Éditer le client" : "Ajouter un client"}
             className="addCustomerModal"
         >
-            <AddCustomerForm addCustomer={addCustomer} />
+            {customerToEdit && <AddEditCustomerForm customerToEdit={customerToEdit} changeCustomer={editCustomer} />}
+            {!customerToEdit && <AddEditCustomerForm changeCustomer={addCustomer} />}
         </Modal>
         <div className="customers__ctas">
-            <Button icon="add" onClick={openAddCustomerModal} ref={openAddCustomerModalBtn}>Ajouter un client</Button>
+            <Button icon="add" onClick={openAddCustomerModal} ref={addCustomerBtnRef}>Ajouter un client</Button>
             <Button className="btn--outline" icon="filter" onClick={handleFilterBtn}>Filtrer</Button>
             {/* TODO: Pagination */}
         </div>
         <div className="customers__list">
-            {customers.map((customer: Customer) => (
+            {customers.map((customer: Customer, index: number) => (
                 <article className="customers__item" key={customer.id}>
                     <header className="customers__item-header">
                         <img src="https://via.placeholder.com/72" alt={`${customer.firstname} ${customer.lastname}'s picture.`} />
@@ -81,7 +102,7 @@ export function Customers() {
                         </div>
                     </div>
                     <footer className="customers__item-footer">
-                        <Button className="btn--secondary-small" icon="edit" onClick={handleEditBtn}>Éditer</Button>
+                        <Button ref={(el: HTMLButtonElement) => editCustomerBtnRefs.current.push(el)} className="btn--secondary-small" icon="edit" onClick={() => openEditCustomerModal(customer, index)}>Éditer</Button>
                         <Link to={`/clients/${customer.id}`} className="customers__item-footer-seeMore">
                             Voir plus
                             <Icon name="arrow-left" />

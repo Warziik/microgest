@@ -22,14 +22,15 @@
 
   &__close {
     position: absolute;
-    height: 2.4rem;
     right: 2.4rem;
     cursor: pointer;
     border: none;
     background: none;
+    display: flex;
+    justify-content: center;
     svg {
-      width: 1.6rem;
-      height: 1.6rem;
+      max-width: 1.6rem;
+      max-height: 1.6rem;
       fill: var(--primary-color-dark);
     }
   }

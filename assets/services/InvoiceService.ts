@@ -21,6 +21,12 @@ export function fetchAllInvoicesOfCustomer(id: number): Promise<[boolean, Collec
     });
 }
 
+export function fetchInvoice(id: number): Promise<[boolean, Invoice]> {
+    return DataAccess.request(`${INVOICES_URI}/${id}`, {
+        method: "GET"
+    });
+}
+
 /**
  * Send a POST request to create a new Invoice. 
  * 

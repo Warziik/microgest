@@ -62,7 +62,7 @@ class Customer
     private ?string $lastname = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;

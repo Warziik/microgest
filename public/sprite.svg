@@ -67,5 +67,8 @@
         <symbol id="icon-trash" viewBox="0 0 14 16">
             <path fill="currentColor" d="M13.5,1H9.75L9.456.416A.75.75,0,0,0,8.784,0H5.212a.741.741,0,0,0-.669.416L4.25,1H.5a.5.5,0,0,0-.5.5v1A.5.5,0,0,0,.5,3h13a.5.5,0,0,0,.5-.5v-1A.5.5,0,0,0,13.5,1ZM1.662,14.594A1.5,1.5,0,0,0,3.159,16h7.681a1.5,1.5,0,0,0,1.5-1.406L13,4H1Z" transform="translate(0 0)" />
         </symbol>
+        <symbol id="icon-download" viewBox="0 0 13.333 16">
+            <path fill="currentColor" d="M20.083,10.146H16.275V4.5H10.558v5.646H6.75l6.667,6.588ZM6.75,18.617V20.5H20.083V18.617Z" transform="translate(-6.75 -4.5)" />
+        </symbol>
     </defs>
 </svg>

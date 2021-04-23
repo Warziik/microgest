@@ -97,13 +97,13 @@ export function Customers() {
                         <div className="customers__item-main-data">
                             <p><strong>Dernière facture:</strong></p> 
                             {customer.lastInvoice && <>
-                                <Link to="/">{customer.lastInvoice.chrono}</Link>
+                                <Link to={`/factures/${customer.lastInvoice.id}`}>{customer.lastInvoice.chrono}</Link>
                             </> || "-"}
                         </div>
                     </div>
                     <footer className="customers__item-footer">
                         <Button ref={(el: HTMLButtonElement) => editCustomerBtnRefs.current.push(el)} className="btn--secondary-small" icon="edit" onClick={() => openEditCustomerModal(customer, index)}>Éditer</Button>
-                        <Link to={`/clients/${customer.id}`} className="customers__item-footer-seeMore">
+                        <Link to={`/clients/${customer.id}`} className="link-btn">
                             Voir plus
                             <Icon name="arrow-left" />
                         </Link>

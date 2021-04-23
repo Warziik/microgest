@@ -115,7 +115,7 @@ export function ShowCustomer() {
                 >
                     Éditer
                 </Button>
-                <Button icon="trash" className="btn--outline customerDetails__header-deleteBtn" onClick={handleDeleteBtn}>Supprimer</Button>
+                <Button icon="trash" className="btn--outline-danger" onClick={handleDeleteBtn}>Supprimer</Button>
             </> || <p>Chargement...</p>}
          </div>
 

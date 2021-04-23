@@ -50,6 +50,15 @@
   &:hover {
     background-color: var(--primary-color-a05);
   }
+
+  &-danger {
+    @extend .btn--outline;
+    border-color: var(--error-color);
+    color: var(--error-color);
+    &:hover {
+      background-color: var(--error-color-contrast);
+    }
+  }
 }
 
 .btn--secondary {

@@ -8,6 +8,7 @@ import { Customers } from '../pages/customers/Customers';
 import { ShowCustomer } from '../pages/customers/show/ShowCustomer';
 import Home from '../pages/Home';
 import { Invoices } from '../pages/invoices/Invoices';
+import { ShowInvoice } from '../pages/invoices/show/ShowInvoice';
 import {NotFound} from '../pages/NotFound';
 import { Settings } from '../pages/settings/Settings';
 import { PrivateRoute } from './PrivateRoute';
@@ -17,6 +18,7 @@ export function Router() {
     return <BrowserRouter>
         <Switch>
             <PrivateRoute path={["/paramètres", "/paramètres/sécurité"]} component={Settings} />
+            <PrivateRoute path="/factures/:id" component={ShowInvoice} />
             <PrivateRoute path="/factures" component={Invoices} />
             <PrivateRoute path="/clients/:id" component={ShowCustomer} />
             <PrivateRoute path="/clients" component={Customers} />

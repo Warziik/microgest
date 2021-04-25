@@ -12,3 +12,12 @@ export interface Invoice {
     status: "NEW" | "SENT" | "PAID" | "CANCELLED";
     service: string;
 }
+
+export interface InvoiceFormData {
+    customer: number;
+    amount: number;
+    service: string;
+    status?: string;
+    sentAt?: string;
+    paidAt?: string;
+}

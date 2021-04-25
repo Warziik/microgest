@@ -26,17 +26,21 @@
 
   &:disabled {
     cursor: not-allowed;
-    color: var(--primary-color);
-    background: none;
   }
 }
 
 .btn--primary {
   @extend .btn;
   background-color: var(--primary-color);
-  transition: background-color 0.3s ease-in;
   &:hover {
     background-color: var(--primary-color-darker);
+  }
+  &:disabled {
+    background-color: var(--primary-color-disabled);
+
+    &:hover {
+      background-color: var(--primary-color-disabled);
+    }
   }
 }
 
@@ -51,12 +55,26 @@
     background-color: var(--primary-color-a05);
   }
 
+  &:disabled {
+    color: var(--primary-color-disabled);
+    border-color: var(--primary-color-disabled);
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
   &-danger {
     @extend .btn--outline;
     border-color: var(--error-color);
     color: var(--error-color);
     &:hover {
       background-color: var(--error-color-contrast);
+    }
+
+    &:disabled {
+      color: var(--error-color-disabled);
+      border-color: var(--error-color-disabled);
     }
   }
 }

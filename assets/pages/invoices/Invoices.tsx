@@ -1,17 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "../../components/Badge";
-import { useAuth } from "../../hooks/useAuth";
 import { Invoice } from "../../types/Invoice";
 import { fetchAllInvoicesOfUser } from "../../services/InvoiceService";
 import dayjs from "dayjs";
 import { Collection } from "../../types/Collection";
 import { Modal } from "../../components/Modal";
-import { CreateInvoiceForm } from "./CreateInvoiceForm";
+import { AddEditInvoiceForm } from "./AddEditInvoiceForm";
 import { Button } from "../../components/Button";
 
 export function Invoices() {
-    const { userData } = useAuth();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [showCreateInvoiceModal, setShowCreateInvoiceModal] = useState<boolean>(false);
     const openCreateInvoiceModalBtn = useRef<HTMLButtonElement>(null);
@@ -58,7 +56,7 @@ export function Invoices() {
             title="Nouvelle facture"
             className="createInvoiceModal"
         >
-            <CreateInvoiceForm addInvoice={addInvoice} userId={userData.id} />
+            <AddEditInvoiceForm changeInvoice={addInvoice} />
         </Modal>
         <div className="invoices__ctas">
             <Button onClick={openCreateInvoiceModal} ref={openCreateInvoiceModalBtn} icon="add">Créer une nouvelle facture</Button>

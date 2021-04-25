@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Badge } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
@@ -8,6 +8,8 @@ import { Invoice } from "../../../types/Invoice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import Icon from "../../../components/Icon";
+import { AddEditInvoiceForm } from "../AddEditInvoiceForm";
+import { Modal } from "../../../components/Modal";
 
 type MatchParams = {
     id: string;
@@ -19,6 +21,8 @@ export function ShowInvoice() {
     const toast = useToast();
 
     const [invoice, setInvoice] = useState<Invoice>();
+    const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(false);
+    const openEditInvoiceModalBtn = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (Number.isNaN(id)) {
@@ -41,11 +45,30 @@ export function ShowInvoice() {
         document.title = `Facture n°${invoice?.chrono} - Microgest`;
     }, [invoice]);
 
+    const editInvoice = (invoice: Invoice) => setInvoice(invoice);
+
+    const closeEditInvoiceModal = () => {
+        setShowEditInvoiceModal(false);
+        openEditInvoiceModalBtn.current?.focus();
+    }
+
+    const openEditInvoiceModal = () => setShowEditInvoiceModal(true);
+
     const handleDownloadInvoice = () => {
         console.log("handle download invoice btn clicked!");
     }
+
+    const handleDeleteBtn = () => console.log("delete btn clicked!");
     
     return <div className="showInvoice">
+        {invoice && <Modal
+            isOpen={showEditInvoiceModal}
+            onClose={closeEditInvoiceModal}
+            title="Éditer la facture"
+            className="createInvoiceModal"
+        >
+            <AddEditInvoiceForm invoiceToEdit={invoice} changeInvoice={editInvoice} />
+        </Modal>}
         {invoice && <>
             <div className="showInvoice__preview"></div>
             <div className="showInvoice__details">
@@ -56,12 +79,18 @@ export function ShowInvoice() {
                 
                 <div className="showInvoice__ctas">
                     <Button
-                        icon="edit"
-                        className="btn--outline"
-                    >
-                        Éditer
-                    </Button>
-                    <Button icon="trash" className="btn--outline-danger">Supprimer</Button>
+                    icon="edit"
+                    className="btn--outline"
+                    onClick={openEditInvoiceModal}
+                    ref={openEditInvoiceModalBtn}
+                    >Éditer</Button>
+
+                    <Button
+                    icon="trash"
+                    className="btn--outline-danger"
+                    disabled={invoice.status !== "NEW"}
+                    onClick={invoice.status === "NEW" ? handleDeleteBtn : undefined}
+                    >Supprimer</Button>
                 </div>
                 
                 <div className="showInvoice__customer">
@@ -84,7 +113,7 @@ export function ShowInvoice() {
 
                 <div className="showInvoice__info">
                     <p>Date d&lsquo;envoi</p>
-                    <p>{invoice.sentAt && dayjs(invoice.sentAt).format("LL") || "-"}</p>
+                    <p>{invoice.sentAt && dayjs(invoice.sentAt).format("LLLL") || "-"}</p>
                 </div>
 
                 <div className="showInvoice__info">

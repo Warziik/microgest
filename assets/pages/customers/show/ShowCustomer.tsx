@@ -30,7 +30,7 @@ export function ShowCustomer() {
     const [customer, setCustomer] = useState<Customer>();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
 
-    const [showEditCustomerModal, setShowEditCustomerModal] = useState<boolean>(false);
+    const [showEditCustomerModal, setShowEditCustomerModal] = useState(false);
     const openEditCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
     const selectOptions: Option[] = [

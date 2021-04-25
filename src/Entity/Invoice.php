@@ -8,7 +8,7 @@ use App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreateInvoice;
+use App\Controller\CreateUpdateInvoice;
 use App\Controller\GetInvoices;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,11 +24,15 @@ use Symfony\Component\Validator\Constraints as Assert;
         denormalizationContext: ["groups" => ["invoices:write"]],
         collectionOperations: [
             "get" => ["controller" => GetInvoices::class, "normalization_context" => ["groups" => ["allInvoices:read"]]],
-            "post" => ["controller" => CreateInvoice::class]
+            "post" => ["controller" => CreateUpdateInvoice::class]
         ],
         itemOperations: [
             "get" => ["security" => "object.getCustomer().getOwner() == user"],
-            "put" => ["security" => "object.getCustomer().getOwner() == user", "denormalization_context" => ["groups" => ["invoice:update"]]],
+            "put" => [
+                "security" => "object.getCustomer().getOwner() == user",
+                "denormalization_context" => ["groups" => ["invoice:update"]],
+                "controller" => CreateUpdateInvoice::class
+            ],
             "delete" => ["security" => "object.getCustomer().getOwner() == user"]
         ],
         subresourceOperations: [
@@ -64,7 +68,7 @@ class Invoice
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(["invoices:read", "invoices:write", "allInvoices:read"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read"])]
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 

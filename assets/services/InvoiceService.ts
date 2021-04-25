@@ -1,7 +1,7 @@
 import { CUSTOMERS_URI, INVOICES_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
 import { ErrorResponse } from "../types/ErrorResponse";
-import { Invoice } from "../types/Invoice";
+import { Invoice, InvoiceFormData } from "../types/Invoice";
 import { DataAccess } from "../utils/dataAccess";
 
 /**
@@ -41,6 +41,26 @@ export function createInvoice(customerId: number, service: string, amount: numbe
             amount,
             service,
             customer: `/api/customers/${customerId}`
+        })
+    });
+}
+
+/**
+ * Send a PUT request to update an existing Invoice. 
+ * 
+ * @param id The Invoice's id
+ * @param data The Invoice data to update
+ */
+export function updateInvoice(id: number, data: InvoiceFormData): Promise<[boolean, Invoice | ErrorResponse]> {
+    return DataAccess.request(`${INVOICES_URI}/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+            amount: data.amount,
+            service: data.service,
+            status: data.status,
+            sentAt: data.sentAt ?? null,
+            paidAt: data.paidAt ?? null,
+            customer: `/api/customers/${data.customer}`
         })
     });
 }

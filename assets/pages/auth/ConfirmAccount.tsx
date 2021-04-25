@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Loader } from "../../components/Loader";
+import { Spinner } from "../../components/Spinner";
 import { useToast } from "../../hooks/useToast";
 import { confirmAccount } from "../../services/UserService";
 
@@ -44,7 +44,7 @@ export default function ConfirmAccount() {
     return <div className="confirmAccount">
         <div className="confirmAccount__content">
             <h2>Confirmation de votre compte...</h2>
-            <Loader />
+            <Spinner />
         </div>
     </div>
 }

@@ -5,11 +5,11 @@ type Props = {
     center?: boolean;
 }
 
-export function Loader({ type = "circle", center = true }: Props) {
+export function Spinner({ type = "circle", center = true }: Props) {
     return <div
-        data-testid="loader"
         aria-busy={true}
         aria-live="polite"
-        className={`loader--${type} ${center ? "loader--center" : ""}`}
+        role="status"
+        className={`spinner--${type} ${center ? "spinner--center" : ""}`}
     ></div>
 }

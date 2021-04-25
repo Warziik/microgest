@@ -2,7 +2,7 @@ import React, { createContext, Dispatch, ReactNode, SetStateAction, useCallback,
 import { User } from "../types/User";
 import MemoryJwt from "../utils/memoryJwt";
 import { refreshToken } from "../services/AuthService";
-import { Loader } from "../components/Loader";
+import { Spinner } from "../components/Spinner";
 import jwtDecode from "jwt-decode";
 import { JwtToken } from "../types/JwtToken";
 
@@ -60,7 +60,7 @@ export function AuthContextProvider({ children }: Props) {
 
     return <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, userData, setUserData }}>
         {isWorking ? <div className="defaultLoading">
-            <Loader />
+            <Spinner />
         </div> : children}
     </AuthContext.Provider>
 }

@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import Icon from "../../../components/Icon";
 import { AddEditInvoiceForm } from "../AddEditInvoiceForm";
 import { Modal } from "../../../components/Modal";
+import { Tooltip } from "../../../components/Tooltip";
 
 type MatchParams = {
     id: string;
@@ -85,12 +86,18 @@ export function ShowInvoice() {
                     ref={openEditInvoiceModalBtn}
                     >Éditer</Button>
 
-                    <Button
-                    icon="trash"
-                    className="btn--outline-danger"
-                    disabled={invoice.status !== "NEW"}
-                    onClick={invoice.status === "NEW" ? handleDeleteBtn : undefined}
-                    >Supprimer</Button>
+                    <Tooltip
+                        isActive={invoice.status !== "NEW"}
+                        content="Vous ne pouvez pas supprimer une facture qui a été envoyée, payée ou annulée."
+                        position="bottom"
+                    >
+                        <Button
+                            icon="trash"
+                            className="btn--outline-danger"
+                            disabled={invoice.status !== "NEW"}
+                            onClick={invoice.status === "NEW" ? handleDeleteBtn : undefined}
+                        >Supprimer</Button>
+                    </Tooltip>
                 </div>
                 
                 <div className="showInvoice__customer">

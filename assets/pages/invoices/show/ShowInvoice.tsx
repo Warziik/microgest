@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router";
 import { Badge } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { useToast } from "../../../hooks/useToast";
-import { fetchInvoice } from "../../../services/InvoiceService";
+import { deleteInvoice, fetchInvoice } from "../../../services/InvoiceService";
 import { Invoice } from "../../../types/Invoice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
@@ -24,6 +24,9 @@ export function ShowInvoice() {
     const [invoice, setInvoice] = useState<Invoice>();
     const [showEditInvoiceModal, setShowEditInvoiceModal] = useState(false);
     const openEditInvoiceModalBtn = useRef<HTMLButtonElement>(null);
+
+    const [showDeleteInvoiceModal, setShowDeleteInvoiceModal] = useState(false);
+    const openDeleteInvoiceModalBtn = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (Number.isNaN(id)) {
@@ -48,20 +51,49 @@ export function ShowInvoice() {
 
     const editInvoice = (invoice: Invoice) => setInvoice(invoice);
 
+    const openEditInvoiceModal = () => setShowEditInvoiceModal(true);
+
     const closeEditInvoiceModal = () => {
         setShowEditInvoiceModal(false);
         openEditInvoiceModalBtn.current?.focus();
     }
 
-    const openEditInvoiceModal = () => setShowEditInvoiceModal(true);
+    const openDeleteInvoiceModal = () => setShowDeleteInvoiceModal(true);
+
+    const closeDeleteInvoiceModal = () => {
+        setShowDeleteInvoiceModal(false);
+        openDeleteInvoiceModalBtn.current?.focus();
+    }
 
     const handleDownloadInvoice = () => {
         console.log("handle download invoice btn clicked!");
     }
 
-    const handleDeleteBtn = () => console.log("delete btn clicked!");
+    const handleDeleteBtn = async () => {
+        if (invoice) {
+            const [isSuccess] = await deleteInvoice(invoice.id);
+            if (isSuccess) {
+                history.push("/factures");
+                toast("success", "La facture a bien été supprimée.");
+            } else {
+                toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+            }
+        }
+    }
     
     return <div className="showInvoice">
+        {invoice && <Modal
+            isOpen={showDeleteInvoiceModal}
+            onClose={closeDeleteInvoiceModal}
+            title="Supprimer la facture"
+            className="deleteInvoiceModal"
+        >
+            <p>Êtes-vous sûr de vouloir supprimer la facture ? (action irréversible)</p>
+            <div className="deleteInvoiceModal__ctas">
+                <Button className="btn--secondary" onClick={closeDeleteInvoiceModal} icon="close">Annuler</Button>
+                <Button className="btn--primary" onClick={handleDeleteBtn} icon="trash">Supprimer</Button>
+            </div>
+        </Modal>}
         {invoice && <Modal
             isOpen={showEditInvoiceModal}
             onClose={closeEditInvoiceModal}
@@ -95,7 +127,8 @@ export function ShowInvoice() {
                             icon="trash"
                             className="btn--outline-danger"
                             disabled={invoice.status !== "NEW"}
-                            onClick={invoice.status === "NEW" ? handleDeleteBtn : undefined}
+                            ref={openDeleteInvoiceModalBtn}
+                            onClick={invoice.status === "NEW" ? openDeleteInvoiceModal : undefined}
                         >Supprimer</Button>
                     </Tooltip>
                 </div>

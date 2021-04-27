@@ -32,9 +32,13 @@ export class DataAccess {
             .then(response => response)
             .catch(err => err);
 
-        const responseData: Record<string, any> = await response.json();
+        if (response.status === 204) {
+            return [response.ok, []];
+        } else {
+            const responseData: Record<string, any> = await response.json();
 
-        return [response.ok, responseData];
+            return [response.ok, responseData];
+        }
     }
 
     public static setHeader(key: string, value: string): void {

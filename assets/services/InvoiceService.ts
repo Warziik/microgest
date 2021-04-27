@@ -64,3 +64,14 @@ export function updateInvoice(id: number, data: InvoiceFormData): Promise<[boole
         })
     });
 }
+
+/**
+ * Send a DELETE request to delete the Invoice.
+ * 
+ * @param id The Invoice's id
+ */
+export function deleteInvoice(id: number): Promise<[boolean, []]> {
+    return DataAccess.request(`${INVOICES_URI}/${id}`, {
+        method: "DELETE"
+    });
+}

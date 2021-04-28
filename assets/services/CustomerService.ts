@@ -33,9 +33,26 @@ export function createCustomer(data: CustomerFormData): Promise<[boolean, Custom
     });
 }
 
+/**
+ * Send a PUT request to update an existing Customer. 
+ * 
+ * @param id The Customer's id
+ * @param data The data to update
+ */
 export function updateCustomer(id: number, data: CustomerFormData): Promise<[boolean, Customer | ErrorResponse]> {
     return DataAccess.request(`${CUSTOMERS_URI}/${id}`, {
         method: "PUT",
         body: JSON.stringify(data)
+    });
+}
+
+/**
+ * Send a DELETE request to delete the Customer and its related Invoices.
+ * 
+ * @param id The Customer's id
+ */
+ export function deleteCustomer(id: number): Promise<[boolean, []]> {
+    return DataAccess.request(`${CUSTOMERS_URI}/${id}`, {
+        method: "DELETE"
     });
 }

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Badge } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { useToast } from "../../../hooks/useToast";
-import { fetchCustomer } from "../../../services/CustomerService";
+import { deleteCustomer, fetchCustomer } from "../../../services/CustomerService";
 import { fetchAllInvoicesOfCustomer } from "../../../services/InvoiceService";
 import { Collection } from "../../../types/Collection";
 import { Customer } from "../../../types/Customer";
@@ -32,6 +32,9 @@ export function ShowCustomer() {
 
     const [showEditCustomerModal, setShowEditCustomerModal] = useState(false);
     const openEditCustomerModalBtn = useRef<HTMLButtonElement>(null);
+
+    const [showDeleteCustomerModal, setShowDeleteCustomerModal] = useState(false);
+    const openDeleteCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
     const selectOptions: Option[] = [
         {label: "Afficher les factures associées", value: 1},
@@ -66,18 +69,45 @@ export function ShowCustomer() {
 
     const editCustomer = (customer: Customer) => setCustomer(customer);
 
+    const openEditCustomerModal = () => setShowEditCustomerModal(true);
+
     const closeEditCustomerModal = () => {
         setShowEditCustomerModal(false);
         openEditCustomerModalBtn.current?.focus();
     }
+    
+    const openDeleteCustomerModal = () => setShowDeleteCustomerModal(true);
 
-    const openEditCustomerModal = () => setShowEditCustomerModal(true);
+    const closeDeleteCustomerModal = () => {
+        setShowDeleteCustomerModal(false);
+        openDeleteCustomerModalBtn.current?.focus();
+    }
 
-    const handleDeleteBtn = () => {
-        console.log("delete btn clicked");
+    const handleDeleteBtn = async () => {
+        if (customer) {
+            const [isSuccess] = await deleteCustomer(customer.id);
+            if (isSuccess) {
+                history.push("/clients");
+                toast("success", "Le client a bien été supprimé.");
+            } else {
+                toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+            }
+        }
     }
 
     return <div className="customerDetails">
+        {customer && <Modal
+            isOpen={showDeleteCustomerModal}
+            onClose={closeDeleteCustomerModal}
+            title="Supprimer le client"
+            className="deleteInvoiceModal"
+        >
+            <p>Êtes-vous sûr de vouloir supprimer le client et les factures associées ? (action irréversible)</p>
+            <div className="deleteInvoiceModal__ctas">
+                <Button className="btn--secondary" onClick={closeDeleteCustomerModal} icon="close">Annuler</Button>
+                <Button className="btn--primary" onClick={handleDeleteBtn} icon="trash">Supprimer</Button>
+            </div>
+        </Modal>}
         {customer && <Modal
             isOpen={showEditCustomerModal}
             onClose={closeEditCustomerModal}
@@ -115,7 +145,14 @@ export function ShowCustomer() {
                 >
                     Éditer
                 </Button>
-                <Button icon="trash" className="btn--outline-danger" onClick={handleDeleteBtn}>Supprimer</Button>
+                <Button
+                    icon="trash"
+                    className="btn--outline-danger"
+                    onClick={openDeleteCustomerModal}
+                    ref={openDeleteCustomerModalBtn}
+                >
+                    Supprimer
+                </Button>
             </> || <p>Chargement...</p>}
          </div>
 

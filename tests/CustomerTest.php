@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tests;
 
 use App\Entity\Customer;
@@ -74,9 +75,14 @@ class CustomerTest extends ApiTestCase
         $authToken = $this->getAuthToken();
 
         $response = static::createClient()->request(Request::METHOD_POST, "/api/customers", ["auth_bearer" => $authToken, "json" => [
+            "type" => "PERSON",
             "firstname" => "Firstname-test",
             "lastname" => "Lastname-test",
-            "email" => "customer-test@localhost.dev"
+            "email" => "customer-test@localhost.dev",
+            "address" => "119 avenue Aléatoire",
+            "city" => "Paris",
+            "postalCode" => 75000,
+            "country" => "FRA"
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -84,9 +90,14 @@ class CustomerTest extends ApiTestCase
         $this->assertJsonContains([
             "@context" => "/api/contexts/Customer",
             "@type" => "Customer",
+            "type" => "PERSON",
             "firstname" => "Firstname-test",
             "lastname" => "Lastname-test",
-            "email" => "customer-test@localhost.dev"
+            "email" => "customer-test@localhost.dev",
+            "address" => "119 avenue Aléatoire",
+            "city" => "Paris",
+            "postalCode" => 75000,
+            "country" => "FRA"
         ]);
         $this->assertRegExp('~^/api/customers/\d+$~', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(Customer::class);
@@ -98,9 +109,14 @@ class CustomerTest extends ApiTestCase
     public function testCreateCustomerWithoutAuthorization(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/customers", ["json" => [
+            "type" => "PERSON",
             "firstname" => "Firstname-test",
             "lastname" => "Lastname-test",
-            "email" => "customer-test@localhost.dev"
+            "email" => "customer-test@localhost.dev",
+            "address" => "119 avenue Aléatoire",
+            "city" => "Paris",
+            "postalCode" => 75000,
+            "country" => "FRA"
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
@@ -174,8 +190,9 @@ class CustomerTest extends ApiTestCase
         $authToken = $this->getAuthToken();
 
         static::createClient()->request(Request::METHOD_PUT, "/api/customers/1", ["auth_bearer" => $authToken, "json" => [
-            "firstname" => null,
+            "firstname" => 123,
         ]]);
+
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 

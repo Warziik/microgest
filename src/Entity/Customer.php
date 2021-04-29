@@ -13,14 +13,12 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  * @ORM\Table(name="customers")
  * @ORM\HasLifecycleCallbacks
  */
-#[UniqueEntity(fields: ["email"], message: "This email address is already in use.")]
 #[
     ApiResource(
         normalizationContext: ["groups" => ["customers:read"]],
@@ -47,17 +45,23 @@ class Customer
      * @ORM\Column(type="integer")
      */
     #[Groups(["customers:read", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
-    private ?int $id = null;
+    private int $id;
 
-    /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
+    /** @ORM\Column(type="string", length=7) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
     #[Assert\NotBlank]
+    #[Assert\Choice(choices: ["PERSON", "COMPANY"], message: "Le client ne peut-être qu'un particulier (PERSON) ou une entreprise (COMPANY).")]
+    private string $type;
+
+    /** @ORM\Column(type="string", length=30, nullable=true) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
+    #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $firstname = null;
 
-    /** @ORM\Column(type="string", length=255) */
+    /** @ORM\Column(type="string", length=30, nullable=true) */
     #[Groups(["customers:read", "customers:write", "users_customers_subresource", "invoices:read", "allInvoices:read"])]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $lastname = null;
 
@@ -65,24 +69,57 @@ class Customer
     #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank]
     #[Assert\Email]
-    private ?string $email = null;
+    private string $email;
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    /** @ORM\Column(type="string", length=30, nullable=true) */
     #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
-    #[Assert\Length(max: 30)]
+    #[Assert\NotBlank(allowNull: true)]
+    private ?string $phone = null;
+
+    /** @ORM\Column(type="string", length=40, nullable=true) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank(allowNull: true)]
+    #[Assert\Length(max: 40)]
     private ?string $company = null;
+
+    /** @ORM\Column(type="bigint", nullable=true) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank(allowNull: true)]
+    #[Assert\Regex(pattern: "/^\d{14}$/", message: "Le numéro SIRET doit contenir 14 chiffres.")]
+    private ?int $siret = null;
+
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    private string $address;
+
+    /** @ORM\Column(type="integer") */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    private int $postalCode;
+
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    private string $city;
+
+    /** @ORM\Column(type="string", length=3) */
+    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Assert\NotBlank]
+    #[Assert\Country(alpha3: true)]
+    private string $country;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
      */
     #[Assert\NotBlank]
-    private ?User $owner = null;
+    private User $owner;
 
     /** @ORM\Column(type="datetime") */
     #[Groups(["customers:read", "users_customers_subresource"])]
     #[Assert\Type(DateTimeInterface::class)]
-    private ?DateTimeInterface $createdAt = null;
+    private DateTimeInterface $createdAt;
 
     /** @ORM\Column(type="datetime", nullable=true) */
     #[Groups(["customers:read", "users_customers_subresource"])]
@@ -91,7 +128,7 @@ class Customer
 
     /** @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true, cascade={"persist"}) */
     #[ApiSubresource]
-    private ?Collection $invoices = null;
+    private Collection $invoices;
 
     public function __construct()
     {
@@ -114,12 +151,24 @@ class Customer
         return $this->id;
     }
 
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
@@ -131,7 +180,7 @@ class Customer
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -150,6 +199,18 @@ class Customer
         return $this;
     }
 
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getCompany(): ?string
     {
         return $this->company;
@@ -162,12 +223,72 @@ class Customer
         return $this;
     }
 
+    public function getSiret(): ?int
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(?int $siret): self
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?int
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(int $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
     public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    public function setOwner(?User $owner): self
+    public function setOwner(User $owner): self
     {
         $this->owner = $owner;
 

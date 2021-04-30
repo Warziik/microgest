@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\KernelEvents;
 use App\EventSubscriber\GenerateChronoSubscriber;
+use DateTime;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -24,8 +25,13 @@ class GenerateChronoSubscriberTest extends TestCase
     public function testGenerateChrono(): void
     {
         $invoice = (new Invoice())
-            ->setAmount(300)
+            ->setChrono("2021-000001")
             ->setStatus("NEW")
+            ->setTvaApplicable(false)
+            ->setServiceDoneAt(new DateTime("-1 week"))
+            ->setPaymentDeadline(new DateTime("+40 days"))
+            ->setPaymentDelayRate(3)
+            ->setCreatedAt(new DateTime())
             ->setCustomer(new Customer());
 
         $securityMock = $this->createMock(Security::class);

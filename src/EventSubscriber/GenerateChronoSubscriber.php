@@ -6,6 +6,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Invoice;
 use App\Repository\InvoiceRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
@@ -33,19 +34,19 @@ final class GenerateChronoSubscriber implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if ($entity instanceof Invoice && $method === "POST") {
+        if ($entity instanceof Invoice && $method === Request::METHOD_POST) {
             $lastChrono = $this->repository->findLastChrono($this->security->getUser());
-            if (is_null($lastChrono) || !preg_match("/^[0-9]{4}-[0-9]{4}$/", $lastChrono)) {
-                $lastChrono = date("Y") . "-0000";
+            if (is_null($lastChrono) || !preg_match("/^(\d{4})-(\d{6})$/", $lastChrono)) {
+                $lastChrono = date("Y") . "-000000";
             }
 
             $chronoValues = explode("-", $lastChrono);
             if ($chronoValues[0] !== date("Y")) {
                 $chronoValues[0] = date("Y");
-                $chronoValues[1] = "0000";
+                $chronoValues[1] = "000000";
             }
 
-            $chrono = $chronoValues[0] . "-" . str_pad(intval($chronoValues[1]) + 1, 4, "0", STR_PAD_LEFT);
+            $chrono = $chronoValues[0] . "-" . str_pad(intval($chronoValues[1]) + 1, 6, "0", STR_PAD_LEFT);
             $entity->setChrono($chrono);
         }
     }

@@ -24,26 +24,79 @@ class InvoiceTest extends ApiTestCase
     private function getEntity(): Invoice
     {
         return (new Invoice())
-            ->setAmount(rand(200, 5000))
-            ->setService("Website creation")
+            ->setChrono("2021-000001")
             ->setStatus("NEW")
+            ->setTvaApplicable(false)
+            ->setServiceDoneAt(new DateTime("-1 week"))
+            ->setPaymentDeadline(new DateTime("+40 days"))
+            ->setPaymentDelayRate(3)
+            ->setCreatedAt(new DateTime())
             ->setCustomer(new Customer());
     }
 
-    public function testAmountConstraints(): void
+    public function testChronoConstraints(): void
     {
-        $this->expectException(\TypeError::class);
-        $this->assertHasErrors(0, $this->getEntity()->setAmount(400.459));
+        $this->expectException(TypeError::class);
 
-        $this->assertHasErrors(1, $this->getEntity()->setAmount(null));
-        $this->assertHasErrors(1, $this->getEntity()->setAmount("invalid_amount"));
+        $this->assertHasErrors(0, $this->getEntity()->setChrono("2021-000000"));
+
+        $this->assertHasErrors(1, $this->getEntity()->setChrono(null));
+        $this->assertHasErrors(1, $this->getEntity()->setChrono(""));
+        $this->assertHasErrors(1, $this->getEntity()->setChrono("invalid_chrono"));
     }
 
     public function testStatusConstraints(): void
     {
+        $this->expectException(\TypeError::class);
+
         $this->assertHasErrors(0, $this->getEntity()->setStatus("PAID"));
 
+        $this->assertHasErrors(0, $this->getEntity()->setStatus("NEW"));
+        $this->assertHasErrors(0, $this->getEntity()->setStatus("SENT"));
+        $this->assertHasErrors(0, $this->getEntity()->setStatus("PAID"));
+        $this->assertHasErrors(0, $this->getEntity()->setStatus("CANCELLED"));
+
+        $this->assertHasErrors(1, $this->getEntity()->setStatus(null));
         $this->assertHasErrors(1, $this->getEntity()->setStatus("invalid_status"));
+    }
+
+    public function testTvaApplicableConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(true));
+        $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(false));
+
+        $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(null));
+    }
+
+    public function testServiceDoneAtConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setServiceDoneAt(new DateTime()));
+
+        $this->assertHasErrors(1, $this->getEntity()->setServiceDoneAt(null));
+    }
+
+    public function testPaymentDeadlineConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setPaymentDeadline(new DateTime()));
+
+        $this->assertHasErrors(1, $this->getEntity()->setPaymentDeadline(null));
+    }
+
+    public function testPaymentDelayRateConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setPaymentDelayRate(20));
+        $this->assertHasErrors(0, $this->getEntity()->setPaymentDelayRate(null));
+
+        $this->assertHasErrors(1, $this->getEntity()->setPaymentDelayRate(400)); // Out of Range (max 100)
+        $this->assertHasErrors(1, $this->getEntity()->setPaymentDelayRate("invalid_payment_delay_rate"));
     }
 
     public function testPaidAtConstraints(): void
@@ -58,26 +111,10 @@ class InvoiceTest extends ApiTestCase
         $this->assertHasErrors(0, $this->getEntity()->setSentAt(null));
     }
 
-    public function testServiceConstraints(): void
-    {
-        $this->assertHasErrors(0, $this->getEntity()->setService("Website creation"));
-
-        $this->assertHasErrors(2, $this->getEntity()->setService(""));
-        $this->assertHasErrors(1, $this->getEntity()->setService("f"));
-    }
-
-    public function testChronoConstraints(): void
-    {
-        $this->expectException(TypeError::class);
-        $this->assertHasErrors(0, $this->getEntity()->setChrono("2021-0000"));
-
-        $this->assertHasErrors(1, $this->getEntity()->setChrono(null));
-        $this->assertHasErrors(1, $this->getEntity()->setChrono(""));
-        $this->assertHasErrors(1, $this->getEntity()->setChrono("invalid_chrono"));
-    }
-
     public function testCustomerConstraints(): void
     {
+        $this->assertHasErrors(0, $this->getEntity()->setCustomer(new Customer()));
+
         $this->assertHasErrors(1, $this->getEntity()->setCustomer(null));
     }
 }

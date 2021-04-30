@@ -114,7 +114,7 @@ class Customer
      * @ORM\JoinColumn(nullable=false)
      */
     #[Assert\NotBlank]
-    private User $owner;
+    private ?User $owner = null;
 
     /** @ORM\Column(type="datetime") */
     #[Groups(["customers:read", "users_customers_subresource"])]
@@ -288,7 +288,7 @@ class Customer
         return $this->owner;
     }
 
-    public function setOwner(User $owner): self
+    public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
 

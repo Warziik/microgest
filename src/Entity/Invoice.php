@@ -51,18 +51,7 @@ class Invoice
      * @ORM\Column(type="integer")
      */
     #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read", "users_customers_subresource"])]
-    private ?int $id = null;
-
-    /** @ORM\Column(type="float") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read", "customers_invoices_subresource", "users_customers_subresource"])]
-    #[Assert\NotBlank()]
-    #[Assert\Type(type: "numeric", message: "Le montant doit être un nombre.")]
-    private ?float $amount = null;
-
-    /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
-    #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "Le statut doit être de type 'NEW', 'SENT', 'PAID' ou 'CANCELLED'.")]
-    private ?string $status = null;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
@@ -72,41 +61,63 @@ class Invoice
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /** @ORM\Column(type="string", length=11) */
+    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource", "allInvoices:read"])]
+    #[Assert\Regex(pattern: "/^(\d{4})-(\d{6})$/", message: "Le chrono n'est pas au format valide (format accepté: YYYY-0000).")]
+    private string $chrono;
+
+    /** @ORM\Column(type="string", length=9) */
     #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "Le statut doit être de type 'NEW', 'SENT', 'PAID' ou 'CANCELLED'.")]
+    private string $status;
+
+    /** @ORM\Column(type="boolean") */
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\Type("boolean")]
+    private bool $tvaApplicable;
+
+    /** @ORM\Column(type="datetime") */
+    #[Groups(["invoices:read", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private DateTimeInterface $createdAt;
+
+    /** @ORM\Column(type="datetime") */
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\NotBlank]
+    #[Assert\Type(DateTimeInterface::class)]
+    private DateTimeInterface $serviceDoneAt;
+
+    /** @ORM\Column(type="datetime") */
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\NotBlank]
+    #[Assert\Type(DateTimeInterface::class)]
+    private DateTimeInterface $paymentDeadline;
+
+    /** @ORM\Column(type="integer", nullable=true) */
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Assert\NotBlank(allowNull: true)]
+    #[Assert\Range(min: 0, max: 100, notInRangeMessage: "Le taux des péanlités de retard ou d'absence de paiement doit être un pourcentage compris entre {{ min }} et {{ max }}.")]
+    private ?int $paymentDelayRate = null;
+
+    /** @ORM\Column(type="datetime", nullable=true) */
+    #[Groups(["invoices:read", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(["invoices:read", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
-    /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource", "allInvoices:read"])]
-    private ?string $chrono = null;
-
-    /** @ORM\Column(type="string", length=255) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "customers_invoices_subresource", "users_customers_subresource", "allInvoices:read"])]
-    #[Assert\NotBlank()]
-    #[Assert\Length(min: 5, max: 255)]
-    private ?string $service = null;
+    public function __construct()
+    {
+        $this->setCreatedAt(new \DateTime());
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getAmount(): ?float
-    {
-        return $this->amount;
-    }
-
-    public function setAmount($amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
     }
 
     public function getStatus(): ?string
@@ -114,7 +125,7 @@ class Invoice
         return $this->status;
     }
 
-    public function setStatus($status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
@@ -169,14 +180,62 @@ class Invoice
         return $this;
     }
 
-    public function getService(): ?string
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->service;
+        return $this->createdAt;
     }
 
-    public function setService(string $service): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->service = $service;
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getTvaApplicable(): ?bool
+    {
+        return $this->tvaApplicable;
+    }
+
+    public function setTvaApplicable(bool $tvaApplicable): self
+    {
+        $this->tvaApplicable = $tvaApplicable;
+
+        return $this;
+    }
+
+    public function getPaymentDeadline(): ?\DateTimeInterface
+    {
+        return $this->paymentDeadline;
+    }
+
+    public function setPaymentDeadline(\DateTimeInterface $paymentDeadline): self
+    {
+        $this->paymentDeadline = $paymentDeadline;
+
+        return $this;
+    }
+
+    public function getPaymentDelayRate(): ?int
+    {
+        return $this->paymentDelayRate;
+    }
+
+    public function setPaymentDelayRate(?int $paymentDelayRate): self
+    {
+        $this->paymentDelayRate = $paymentDelayRate;
+
+        return $this;
+    }
+
+    public function getServiceDoneAt(): ?\DateTimeInterface
+    {
+        return $this->serviceDoneAt;
+    }
+
+    public function setServiceDoneAt(\DateTimeInterface $serviceDoneAt): self
+    {
+        $this->serviceDoneAt = $serviceDoneAt;
 
         return $this;
     }

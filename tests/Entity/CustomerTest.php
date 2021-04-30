@@ -141,8 +141,6 @@ class CustomerTest extends ApiTestCase
 
     public function testOwnerConstraints(): void
     {
-        $this->expectException(\TypeError::class);
-
         $this->assertHasErrors(0, $this->getEntity()->setOwner(new User()));
 
         $this->assertHasErrors(1, $this->getEntity()->setOwner(null));

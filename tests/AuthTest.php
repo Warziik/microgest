@@ -50,7 +50,12 @@ class AuthTest extends ApiTestCase
             "firstname" => "demoUser-firstname",
             "lastname" => "demoUser-lastname",
             "email" => "demo@domain.fr",
-            "password" => "demo1234"
+            "password" => "demo1234",
+            "siret" => "12345678912345",
+            "address" => "119 avenue Aléatoire",
+            "city" => "Paris",
+            "postalCode" => 75000,
+            "country" => "FRA"
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -61,6 +66,11 @@ class AuthTest extends ApiTestCase
             'lastname' => 'demoUser-lastname',
             'email' => 'demo@domain.fr',
             'roles' => ["ROLE_USER"],
+            "siret" => "12345678912345",
+            "address" => "119 avenue Aléatoire",
+            "city" => "Paris",
+            "postalCode" => 75000,
+            "country" => "FRA"
         ]);
 
         $this->assertRegExp('~^/api/users/\d+$~', $response->toArray()['@id']);

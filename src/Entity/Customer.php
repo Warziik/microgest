@@ -86,7 +86,7 @@ class Customer
     #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Regex(pattern: "/^\d{14}$/", message: "Le numéro SIRET doit contenir 14 chiffres.")]
-    private ?int $siret = null;
+    private ?string $siret = null;
 
     /** @ORM\Column(type="string", length=255) */
     #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
@@ -223,12 +223,12 @@ class Customer
         return $this;
     }
 
-    public function getSiret(): ?int
+    public function getSiret(): ?string
     {
         return $this->siret;
     }
 
-    public function setSiret(?int $siret): self
+    public function setSiret(?string $siret): self
     {
         $this->siret = $siret;
 

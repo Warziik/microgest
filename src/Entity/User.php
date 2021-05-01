@@ -63,19 +63,19 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     #[Groups(["users:read"])]
-    private ?int $id = null;
+    private int $id;
 
     /** @ORM\Column(type="string", length=255) */
     #[Groups(["users:read", "users:write"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
-    private ?string $firstname = null;
+    private string $firstname;
 
     /** @ORM\Column(type="string", length=255) */
     #[Groups(["users:read", "users:write"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
-    private ?string $lastname = null;
+    private string $lastname;
 
     /** @ORM\Column(type="string", length=255, unique=true) */
     #[Groups(["users:read", "users:write", "forgotPassword:write"])]
@@ -87,25 +87,7 @@ class User implements UserInterface
     #[Groups(["users:write", "resetPassword:write"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
-    private ?string $password = null;
-
-    /** @ORM\Column(type="json") */
-    #[Groups(["users:read"])]
-    private ?array $roles = [];
-
-    /** @ORM\Column(type="datetime") */
-    #[Groups(["users:read"])]
-    #[Assert\Type(DateTimeInterface::class)]
-    private ?DateTimeInterface $createdAt = null;
-
-    /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["users:read"])]
-    #[Assert\Type(DateTimeInterface::class)]
-    private ?DateTimeInterface $updatedAt = null;
-
-    /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true, cascade={"persist"}) */
-    #[ApiSubResource(maxDepth: 1)]
-    private ?Collection $customers = null;
+    private string $password;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
     #[Groups(["users:read"])]
@@ -117,8 +99,71 @@ class User implements UserInterface
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $confirmedAt = null;
 
+    /** @ORM\Column(type="json") */
+    #[Groups(["users:read"])]
+    private array $roles = [];
+
+    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank(allowNull: true)]
+    private ?string $phone = null;
+
+    /** @ORM\Column(type="string", length=40, nullable=true) */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank(allowNull: true)]
+    #[Assert\Length(max: 40)]
+    private ?string $businessName = null;
+
+    /** @ORM\Column(type="bigint") */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank]
+    #[Assert\Regex(pattern: "/^\d{14}$/", message: "Le numéro SIRET doit contenir 14 chiffres.")]
+    private string $siret;
+
+    /** @ORM\Column(type="string", length=13, nullable=true) */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank(allowNull: true)]
+    #[Assert\Regex(pattern: "/^([A-Z]{2})(\d{2})(\d{9})$/", message: "Le numéro de TVA n'est pas au format valide (FR 00 000000000).")]
+    private ?string $tvaNumber = null;
+
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank]
+    private string $address;
+
+    /** @ORM\Column(type="string", length=255) */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank]
+    private string $city;
+
+    /** @ORM\Column(type="integer") */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank]
+    private int $postalCode;
+
+    /** @ORM\Column(type="string", length=3) */
+    #[Groups(["users:read", "users:write"])]
+    #[Assert\NotBlank]
+    #[Assert\Country(alpha3: true)]
+    private string $country;
+
+    /** @ORM\Column(type="datetime") */
+    #[Groups(["users:read"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private DateTimeInterface $createdAt;
+
+    /** @ORM\Column(type="datetime", nullable=true) */
+    #[Groups(["users:read"])]
+    #[Assert\Type(DateTimeInterface::class)]
+    private ?DateTimeInterface $updatedAt = null;
+
+    /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true, cascade={"persist"}) */
+    #[ApiSubResource(maxDepth: 1)]
+    private Collection $customers;
+
     public function __construct()
     {
+        $this->setCreatedAt(new DateTime());
         $this->customers = new ArrayCollection();
     }
 
@@ -308,11 +353,99 @@ class User implements UserInterface
         $this->setUpdatedAt(new DateTime());
     }
 
-    /** @ORM\PrePersist */
-    public function prePersist(): void
+    public function getPhone(): ?string
     {
-        if ($this->getCreatedAt() === null) {
-            $this->setCreatedAt(new DateTime());
-        }
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getBusinessName(): ?string
+    {
+        return $this->businessName;
+    }
+
+    public function setBusinessName(?string $businessName): self
+    {
+        $this->businessName = $businessName;
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(string $siret): self
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?int
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(int $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getTvaNumber(): ?string
+    {
+        return $this->tvaNumber;
+    }
+
+    public function setTvaNumber(?string $tvaNumber): self
+    {
+        $this->tvaNumber = $tvaNumber;
+
+        return $this;
     }
 }

@@ -90,13 +90,10 @@ class CustomerTest extends ApiTestCase
 
     public function testSiretConstraints(): void
     {
-        $this->expectException(\TypeError::class);
-
-        $this->assertHasErrors(0, $this->getEntity()->setSiret(12345678912345));
+        $this->assertHasErrors(0, $this->getEntity()->setSiret("12345678912345"));
         $this->assertHasErrors(0, $this->getEntity()->setSiret(null));
 
         $this->assertHasErrors(1, $this->getEntity()->setSiret(12345));
-        $this->assertHasErrors(1, $this->getEntity()->setSiret("invalid_siret"));
     }
 
     public function testAddressConstraints(): void

@@ -37,6 +37,8 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
 
             $manager->persist($i);
             $c++;
+
+            $this->addReference("invoice-$index", $i);
         }
 
         $manager->flush();

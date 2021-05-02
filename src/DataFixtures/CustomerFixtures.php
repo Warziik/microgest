@@ -23,7 +23,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             $c->setEmail($faker->email);
             $c->setPhone($faker->phoneNumber);
             $c->setCompany($i === 0 || $c->getType() === "PERSON" ? "" : $faker->company);
-            $c->setSiret($c->getType() === "PERSON" ? null : "12345678914253");
+            $c->setSiret($c->getType() === "PERSON" ? null : 12345678914253);
             $c->setAddress($faker->streetAddress);
             $c->setCity($faker->city);
             $c->setPostalCode((int) $faker->postcode);

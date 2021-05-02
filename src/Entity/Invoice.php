@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use DateTimeInterface;
 use App\Entity\Customer;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -20,8 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[
     ApiResource(
-        normalizationContext: ["groups" => ["invoices:read"]],
-        denormalizationContext: ["groups" => ["invoices:write"]],
+        normalizationContext: ["groups" => ["invoices:read", "invoice:service_read"]],
+        denormalizationContext: ["groups" => ["invoices:write", "invoice:service_write"]],
         collectionOperations: [
             "get" => ["controller" => GetInvoices::class, "normalization_context" => ["groups" => ["allInvoices:read"]]],
             "post" => ["controller" => CreateUpdateInvoice::class]
@@ -110,9 +111,14 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
+    /** @ORM\OneToMany(targetEntity=InvoiceService::class, mappedBy="invoice", orphanRemoval=true, cascade={"persist", "remove"}) */
+    #[Groups(["invoices:read", "invoices:write"])]
+    private Collection $services;
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
+        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,5 +252,35 @@ class Invoice
         if ($this->getStatus() === null) {
             $this->setStatus("NEW");
         }
+    }
+
+    /**
+     * @return Collection|InvoiceService[]
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(InvoiceService $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->setInvoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(InvoiceService $service): self
+    {
+        if ($this->services->removeElement($service)) {
+            // set the owning side to null (unless already changed)
+            if ($service->getInvoice() === $this) {
+                $service->setInvoice(null);
+            }
+        }
+
+        return $this;
     }
 }

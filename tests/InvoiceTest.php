@@ -103,7 +103,15 @@ class InvoiceTest extends ApiTestCase
             "serviceDoneAt" => "2021-03-18",
             "paymentDeadline" => "2021-04-18",
             "paymentDelayRate" => null,
-            "customer" => "/api/customers/1"
+            "customer" => "/api/customers/1",
+            "services" => [
+                [
+                    "name" => "Création d'un site internet",
+                    "description" => null,
+                    "quantity" => 1,
+                    "unitPrice" => 2051.51
+                ]
+            ]
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -114,7 +122,15 @@ class InvoiceTest extends ApiTestCase
             "status" => "SENT",
             "tvaApplicable" => false,
             "paymentDelayRate" => null,
-            "paidAt" => null
+            "paidAt" => null,
+            "services" => [
+                [
+                    "name" => "Création d'un site internet",
+                    "description" => null,
+                    "quantity" => 1,
+                    "unitPrice" => 2051.51
+                ]
+            ]
         ]);
         $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
     }

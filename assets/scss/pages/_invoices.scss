@@ -10,12 +10,36 @@
   }
 }
 
-.createInvoiceModal {
+.addEditInvoiceModal {
   .modal__content {
-    width: 50rem;
+    width: 100rem;
+  }
+}
 
-    button {
-      margin: 0 auto;
+.addEditInvoiceForm {
+  .btn--primary {
+    margin: 0 auto;
+  }
+  &__services {
+    .btn--secondary-small {
+      margin-bottom: 0.8rem;
+    }
+    &-item {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      gap: 0 1.6rem;
+
+      .form__group {
+        margin-bottom: 0;
+      }
+
+      button {
+        align-self: flex-end;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 1.6rem;
+      }
     }
   }
 }

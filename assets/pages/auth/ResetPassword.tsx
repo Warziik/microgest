@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "../../components/Button";
-import PasswordInput from "../../components/form/PasswordInput";
+import { PasswordInput } from "../../components/form/PasswordInput";
 import { resetPassword } from "../../services/UserService";
 import { useToast } from "../../hooks/useToast";
 
@@ -37,8 +37,7 @@ export default function ResetPassword() {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors
+        formState: { isSubmitting, errors },
     } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
 
     const onSubmit = handleSubmit(async ({ password }) => {
@@ -60,8 +59,17 @@ export default function ResetPassword() {
         <h1>Réinitialisation de votre mot de passe</h1>
         <div className="resetPassword__content">
             <form className="form" onSubmit={onSubmit}>
-                <PasswordInput ref={register} error={errors.password} name="password" label="Nouveau mot de passe" />
-                <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre nouveau mot de passe" />
+                <PasswordInput
+                    error={errors.password}
+                    label="Nouveau mot de passe"
+                    {...register("password")}
+                />
+                
+                <PasswordInput
+                    error={errors.passwordConfirm}
+                    label="Confirmez votre nouveau mot de passe"
+                    {...register("passwordConfirm")}
+                />
 
                 <Button isLoading={isSubmitting}>Sauvegarder</Button>
             </form>

@@ -3,14 +3,15 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Button } from '../../components/Button';
-import PasswordInput from '../../components/form/PasswordInput';
-import TextInput from '../../components/form/TextInput';
+import { PasswordInput } from '../../components/form/PasswordInput';
+import { TextInput } from '../../components/form/TextInput';
 import { Violation } from '../../types/Violation';
 import { useToast } from '../../hooks/useToast';
 import { SignupData } from '../../types/User';
+import { Option, SelectInput } from '../../components/form/SelectInput';
 
 type Props = {
-    createUser: ({ firstname, lastname, email, password }: SignupData) => Promise<[boolean, Record<string, any | Violation>]>;
+    createUser: (data: SignupData) => Promise<[boolean, Record<string, any | Violation>]>;
 }
 
 type FormData = {
@@ -19,6 +20,14 @@ type FormData = {
     email: string;
     password: string;
     passwordConfirm: string;
+    phone: string | null;
+    businessName: string | null;
+    siret: string;
+    tvaNumber: string | null;
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
 }
 
 export function RegisterForm({ createUser }: Props) {
@@ -47,23 +56,66 @@ export function RegisterForm({ createUser }: Props) {
         passwordConfirm:
             yup.string()
                 .oneOf([yup.ref("password"), null], "Les mots de passe ne correspondent pas.")
-                .required("Ce champ est requis.")
+                .required("Ce champ est requis."),
+        phone:
+            yup.string()
+                .max(255),
+        businessName:
+            yup.string()
+                .max(40, "Le nom de l'entreprise ne peut dépasser 40 caractères."),
+        siret:
+            yup.string()
+                .matches(/^\d{14}$/, "Le numéro SIRET doit contenir 14 chiffres.")
+                .required("Ce champ est requis."),
+        tvaNumber:
+            yup.string()
+                .max(13, "Le numéro de TVA ne peut dépasser 13 caractères."),
+        address:
+            yup.string()
+                .max(255)
+                .required("Ce champ est requis."),
+        city:
+            yup.string()
+                .max(255)
+                .required("Ce champ est requis."),
+        postalCode:
+            yup.string()
+                .matches(/^\d{5}$/, "Le code postal doit contenir 5 chiffres.")
+                .required("Ce champ est requis."),
+        country:
+            yup.string()
+                .required("Ce champ est requis."),
     });
 
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors,
+        formState: { isSubmitting, errors },
         setError,
         reset
     } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
 
-    const onSubmit = handleSubmit(async ({ firstname, lastname, email, password }) => {
-        const [isSuccess, data] = await createUser({ firstname, lastname, email, password });
+    const selectCountryOptions: Option[] = [
+        {value: "FRA", label: "France"}
+    ];
+
+    const onSubmit = handleSubmit(async (formData: FormData) => {
+        if (formData.phone === "") {
+            formData.phone = null;
+        }
+        
+        if (formData.businessName === "") {
+            formData.businessName = null;
+        }
+
+        if (formData.tvaNumber === "") {
+            formData.tvaNumber = null;
+        }
+
+        const [isSuccess, data] = await createUser({...formData, postalCode: parseInt(formData.postalCode)});
 
         if (isSuccess) {
-            toast("success", "Un mail de confirmation a été envoyé à l&apos;adresse email spécifiée.");
+            toast("success", "Un mail de confirmation a été envoyé à l'adresse email spécifiée.");
             reset();
         } else {
             if (Object.prototype.hasOwnProperty.call(data, "violations")) {
@@ -80,12 +132,89 @@ export function RegisterForm({ createUser }: Props) {
 
     return <form className="form registerForm" onSubmit={onSubmit}>
         <div className="form__horizontal">
-            <TextInput ref={register} error={errors.firstname} name="firstname" label="Prénom" />
-            <TextInput ref={register} error={errors.lastname} name="lastname" label="Nom de famille" />
+            <TextInput 
+                error={errors.firstname}
+                label="Prénom"
+                {...register("firstname")}
+            />
+            
+            <TextInput
+                error={errors.lastname}
+                label="Nom de famille"
+                {...register("lastname")}
+            />
         </div>
-        <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
-        <PasswordInput ref={register} error={errors.password} name="password" label="Mot de passe" />
-        <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm" label="Confirmez votre mot de passe" />
+
+        <TextInput
+            error={errors.email}
+            type="email"
+            label="Adresse email"
+            {...register("email")}
+        />
+
+        <PasswordInput
+            error={errors.password}
+            label="Mot de passe"
+            {...register("password")}
+        />
+
+        <PasswordInput
+            error={errors.passwordConfirm}
+            label="Confirmez votre mot de passe"
+            {...register("passwordConfirm")}
+        />
+
+        <TextInput
+            error={errors.phone}
+            label="Numéro de téléphone (facultatif)"
+            {...register("phone")}
+        />
+
+        <TextInput
+            error={errors.businessName}
+            label="Nom commercial (facultatif)"
+            {...register("businessName")}
+        />
+
+        <TextInput
+            error={errors.siret}
+            type="number"
+            label="Numéro SIRET"
+            {...register("siret")}
+        />
+
+        <TextInput
+            error={errors.tvaNumber}
+            label="Numéro de TVA (facultatif)"
+            {...register("tvaNumber")}
+        />
+
+        <TextInput
+            error={errors.address}
+            label="Adresse"
+            {...register("address")}
+        />
+
+        <TextInput
+            error={errors.city}
+            label="Ville"
+            {...register("city")}
+        />
+
+        <TextInput
+            error={errors.postalCode}
+            type="number"
+            label="Code postal"
+            {...register("postalCode")}
+        />
+        
+        <SelectInput
+            error={errors.country}
+            options={selectCountryOptions}
+            label="Pays"
+            {...register("country")}
+        />
+
         <Button isLoading={isSubmitting} icon="user-plus">Créer mon compte</Button>
     </form>;
 }

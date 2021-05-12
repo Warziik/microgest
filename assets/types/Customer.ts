@@ -6,10 +6,17 @@ export interface Customer {
     "@id": string;
     "@type": string;
     id: number;
-    firstname: string;
-    lastname: string;
+    type: "PERSON" | "COMPANY";
+    firstname: string | null;
+    lastname: string | null;
     email: string;
-    company: string;
+    phone: string | null;
+    company: string | null;
+    siret: string | null;
+    address: string;
+    city: string;
+    postalCode: number;
+    country: string;
     owner?: User;
     createdAt: string;
     updatedAt: string;
@@ -18,8 +25,15 @@ export interface Customer {
 }
 
 export interface CustomerFormData {
-    firstname: string;
-    lastname: string;
+    type: "PERSON" | "COMPANY";
+    firstname: string | null;
+    lastname: string | null;
     email: string;
-    company: string;
+    phone: string | null;
+    company: string | null;
+    siret: string | null;
+    address: string;
+    city: string;
+    postalCode: number;
+    country: string;
 }

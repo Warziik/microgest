@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, fireEvent, screen} from "@testing-library/react";
-import PasswordInput from '../../../components/form/PasswordInput';
+import {PasswordInput} from '../../../components/form/PasswordInput';
 
 describe("Password Input", () => {
     it("should render a password input", () => {

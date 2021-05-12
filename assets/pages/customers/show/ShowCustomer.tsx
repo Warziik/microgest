@@ -25,7 +25,9 @@ export function ShowCustomer() {
     const history = useHistory();
     const toast = useToast();
 
-    const {register} = useForm<FormData>({mode: "onChange"});
+    const {register, watch} = useForm<{dataType: "INVOICES" | "DEVIS"}>(
+        {mode: "onChange", defaultValues: {dataType: "INVOICES"}}
+    );
 
     const [customer, setCustomer] = useState<Customer>();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -36,9 +38,9 @@ export function ShowCustomer() {
     const [showDeleteCustomerModal, setShowDeleteCustomerModal] = useState(false);
     const openDeleteCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
-    const selectOptions: Option[] = [
-        {label: "Afficher les factures associées", value: 1},
-        {label: "Afficher les devis associées", value: 2},
+    const selectDataTypeOptions: Option[] = [
+        {value: "INVOICES", label: "Afficher les factures associées"},
+        {value: "DEVIS", label: "Afficher les devis associées"},
     ]
 
     useEffect(() => {
@@ -64,7 +66,7 @@ export function ShowCustomer() {
     }, [id, history, toast]);
 
     useEffect(() => {
-        document.title = `${customer?.firstname} ${customer?.lastname} - Microgest`;
+        document.title = customer?.type === "PERSON" ? `${customer?.firstname} ${customer?.lastname} ` : customer?.company + `- Microgest`;
     }, [customer]);
 
     const editCustomer = (customer: Customer) => setCustomer(customer);
@@ -118,8 +120,8 @@ export function ShowCustomer() {
         </Modal>}
         <div className="customerDetails__header">
             {customer && <>
-                <img src="https://via.placeholder.com/72" alt={`Photo de ${customer.firstname} ${customer.lastname}`} />
-                <h2>{customer.firstname} {customer.lastname}</h2>
+                <img src="https://via.placeholder.com/72" alt={customer.type === "PERSON" ? `Photo de ${customer.firstname} ${customer.lastname}` : `Logo de ${customer.company}`} />
+                <h2>{customer.type === "PERSON" ? `${customer.firstname} ${customer.lastname}` : customer.company}</h2>
                 <p className="customerDetails__header-createdAt">Ajouté {dayjs(customer.createdAt).fromNow()}</p>
 
                 <div className="customerDetails__header-infos">
@@ -129,11 +131,11 @@ export function ShowCustomer() {
                     </div>
                     <div className="customerDetails__header-info">
                         <p>Numéro de téléphone</p>
-                        <p>-</p>
+                        <p>{customer.phone ?? "-"}</p>
                     </div>
                     <div className="customerDetails__header-info">
                         <p>Numéro SIRET</p>
-                        <p>-</p>
+                        <p>{customer.siret ?? "-" }</p>
                     </div>
                 </div>
 
@@ -160,7 +162,11 @@ export function ShowCustomer() {
             {invoices && <>
                 <p><strong>{invoices.length}</strong> factures associées.</p>
                 <form>
-                    <SelectInput name="tableDataSwitch" error={undefined} ref={register} options={selectOptions} />
+                    <SelectInput
+                        error={undefined}
+                        options={selectDataTypeOptions}
+                        {...register("dataType")}
+                    />
                 </form>
                 <Button icon="filter" className="btn--outline">Filtrer</Button>
                 <Button icon="invoice" className="btn--secondary-accent">Exporter les devis</Button>
@@ -169,32 +175,32 @@ export function ShowCustomer() {
         </div>
         
         <div className="customerDetails__tableData">
-            {invoices && 
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Chrono</th>
-                            <th>Montant (€)</th>
-                            <th>Statut</th>
-                            <th>Prestation réalisée</th>
-                            <th>Date d&lsquo;envoi</th>
-                            <th>Date de paiement</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {invoices.map((invoice: Invoice, index: number) => (
-                            <tr key={index}>
-                                <td><Link to={`/factures/${invoice.id}`}>{invoice.chrono}</Link></td>
-                                <td>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.amount)}</td>
-                                <td><Badge status={invoice.status} /></td>
-                                <td>{invoice.service}</td>
-                                <td>{invoice.sentAt && dayjs(invoice.sentAt).fromNow() || "-"}</td>
-                                <td>{invoice.paidAt && dayjs(invoice.paidAt).fromNow() || "-"}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-             || <p>Chargement...</p>}
+                {watch("dataType") === "INVOICES" && <> 
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Chrono</th>
+                                    <th>Montant total (HT)</th>
+                                    <th>Statut</th>
+                                    <th>Prestation réalisée</th>
+                                    <th>Date d&lsquo;envoi</th>
+                                    <th>Date de paiement</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {invoices.map((invoice: Invoice, index: number) => (
+                                    <tr key={index}>
+                                        <td><Link to={`/factures/${invoice.id}`}>{invoice.chrono}</Link></td>
+                                        <td>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.totalAmount)}</td>
+                                        <td><Badge status={invoice.status} /></td>
+                                        <td>-</td>
+                                        <td>{invoice.sentAt && dayjs(invoice.sentAt).fromNow() || "-"}</td>
+                                        <td>{invoice.paidAt && dayjs(invoice.paidAt).fromNow() || "-"}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                </>}
         </div>
     </div>
 }

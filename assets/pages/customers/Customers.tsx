@@ -81,7 +81,7 @@ export function Customers() {
                 <article className="customers__item" key={customer.id}>
                     <header className="customers__item-header">
                         <img src="https://via.placeholder.com/72" alt={`${customer.firstname} ${customer.lastname}'s picture.`} />
-                        <h2>{customer.firstname} {customer.lastname}</h2>
+                        <h2>{customer.type === "PERSON" ? `${customer.firstname} ${customer.lastname}` : customer.company}</h2>
                         <p>Ajouté {dayjs(customer.createdAt).fromNow()}</p>
                     </header>
                     <div className="customers__item-main">
@@ -89,10 +89,12 @@ export function Customers() {
                             <p><strong>Adresse email:</strong> {customer.email}</p>
                         </div>
                         <div className="customers__item-main-data">
-                            <p><strong>Numéro SIRET:</strong> {customer.company || `-`}</p>
+                            {customer.type === "COMPANY" && 
+                                <p><strong>Numéro SIRET:</strong> {customer.siret || `-`}</p>
+                            }
                         </div>
                         <div className="customers__item-main-data">
-                            <p><strong>Numéro de téléphone:</strong> -</p>
+                            <p><strong>Numéro de téléphone:</strong> {customer.phone || `-`}</p>
                         </div>
                         <div className="customers__item-main-data">
                             <p><strong>Dernière facture:</strong></p> 

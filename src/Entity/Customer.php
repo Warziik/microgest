@@ -48,7 +48,7 @@ class Customer
     private int $id;
 
     /** @ORM\Column(type="string", length=7) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write",  "invoices:read", "users_customers_subresource", "allInvoices:read"])]
     #[Assert\NotBlank]
     #[Assert\Choice(choices: ["PERSON", "COMPANY"], message: "Le client ne peut-être qu'un particulier (PERSON) ou une entreprise (COMPANY).")]
     private string $type;
@@ -66,45 +66,45 @@ class Customer
     private ?string $lastname = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource", "allInvoices:read"])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private string $email;
 
     /** @ORM\Column(type="string", length=30, nullable=true) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource", "allInvoices:read"])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $phone = null;
 
     /** @ORM\Column(type="string", length=40, nullable=true) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource", "allInvoices:read"])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $company = null;
 
     /** @ORM\Column(type="bigint", nullable=true) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource", "allInvoices:read"])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Regex(pattern: "/^\d{14}$/", message: "Le numéro SIRET doit contenir 14 chiffres.")]
     private ?string $siret = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank]
     private string $address;
 
     /** @ORM\Column(type="integer") */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank]
     private int $postalCode;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank]
     private string $city;
 
     /** @ORM\Column(type="string", length=3) */
-    #[Groups(["customers:read", "customers:write", "users_customers_subresource"])]
+    #[Groups(["customers:read", "customers:write", "invoices:read", "users_customers_subresource"])]
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;

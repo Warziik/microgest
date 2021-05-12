@@ -4,7 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import TextInput from "../../components/form/TextInput";
+import { TextInput } from "../../components/form/TextInput";
 import { updateUser } from "../../services/UserService";
 import { useToast } from "../../hooks/useToast";
 import { Violation } from "../../types/Violation";
@@ -39,8 +39,7 @@ export function GeneralInformationsForm() {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors,
+        formState: { isSubmitting, errors },
         setError
     } = useForm<FormData>({
         mode: "onTouched", resolver: yupResolver(schema), defaultValues: {
@@ -75,20 +74,18 @@ export function GeneralInformationsForm() {
         </div>
         <hr />
         <form className="settings__generalInformations-form" onSubmit={onSubmit}>
-            <TextInput
-                ref={register}
+            <TextInput 
                 error={errors.firstname}
-                type="text"
-                name="firstname"
                 label="Prénom"
+                {...register("firstname")}
             />
+            
             <TextInput
-                ref={register}
                 error={errors.lastname}
-                type="text"
-                name="lastname"
                 label="Nom de famille"
+                {...register("lastname")}
             />
+            
             <Button isLoading={isSubmitting}>Sauvegarder</Button>
         </form>
     </>

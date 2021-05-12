@@ -86,7 +86,16 @@
 }
 
 .addCustomerForm {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1.6rem;
+
+  .form__select {
+    grid-column: 1 / -1;
+  }
+
   button {
-    margin: 0 auto;
+    grid-column: 1 / -1;
+    justify-self: center;
   }
 }

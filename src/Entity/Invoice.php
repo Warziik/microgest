@@ -112,13 +112,26 @@ class Invoice
     private ?DateTimeInterface $paidAt = null;
 
     /** @ORM\OneToMany(targetEntity=InvoiceService::class, mappedBy="invoice", orphanRemoval=true, cascade={"persist", "remove"}) */
-    #[Groups(["invoices:read", "invoices:write"])]
+    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
     private Collection $services;
 
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
         $this->services = new ArrayCollection();
+    }
+
+    /* Returns the total amount of all the services prices */
+    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read", "users_customers_subresource"])]
+    public function getTotalAmount()
+    {
+        $totalAmount = 0;
+
+        foreach ($this->services as $service) {
+            $totalAmount += $service->getUnitPrice() * $service->getQuantity();
+        }
+
+        return $totalAmount;
     }
 
     public function getId(): ?int

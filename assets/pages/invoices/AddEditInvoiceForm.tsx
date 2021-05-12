@@ -1,20 +1,21 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { ModalContext } from '../../components/Modal';
 import { useToast } from '../../hooks/useToast';
-import { Invoice } from '../../types/Invoice';
+import { Invoice, InvoiceServiceFormData } from '../../types/Invoice';
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { Button } from '../../components/Button';
 import { Customer } from '../../types/Customer';
 import { fetchAllCustomers } from '../../services/CustomerService';
-import TextInput from '../../components/form/TextInput';
 import { Option, SelectInput } from '../../components/form/SelectInput';
+import { useAuth } from '../../hooks/useAuth';
+import { DatePickerInput } from '../../components/form/DatePickerInput';
+import { TextInput } from '../../components/form/TextInput';
+import { ToggleInput } from '../../components/form/ToggleInput';
 import { createInvoice, updateInvoice } from '../../services/InvoiceService';
 import { ErrorResponse } from '../../types/ErrorResponse';
 import { Violation } from '../../types/Violation';
-import { useAuth } from '../../hooks/useAuth';
-import { DatePickerInput } from '../../components/form/DatePickerInput';
 
 type Props = {
     invoiceToEdit?: Invoice;
@@ -23,11 +24,14 @@ type Props = {
 
 type FormData = {
     customer: number;
-    amount: number;
-    service: string;
-    status?: string;
-    sentAt?: string;
-    paidAt?: string;
+    status: string;
+    sentAt: string;
+    paidAt: string;
+    services: InvoiceServiceFormData[];
+    tvaApplicable: boolean;
+    serviceDoneAt: string;
+    paymentDeadline: string;
+    paymentDelayRate: number;
 }
 
 export function AddEditInvoiceForm({invoiceToEdit, changeInvoice}: Props) {
@@ -35,7 +39,10 @@ export function AddEditInvoiceForm({invoiceToEdit, changeInvoice}: Props) {
     const {userData} = useAuth();
     const toast = useToast();
 
-    const [selectCustomerOptions, setSelectCustomerOptions] = useState<Option[]>([]);
+    const [selectCustomerOptions, setSelectCustomerOptions] = useState<Option[]>([
+        {value: 0, label: "Sélectionner un client"}
+    ]);
+
     const selectStatusOptions: Option[] = useMemo(() => {
         return [
             {value: "NEW", label: "Nouveau"},
@@ -48,15 +55,8 @@ export function AddEditInvoiceForm({invoiceToEdit, changeInvoice}: Props) {
     const schema: yup.AnyObjectSchema = yup.object().shape({
         customer:
             yup.number()
-                .required("Ce champ est requis."),
-        amount:
-            yup.number()
-                .typeError("Le montant doit être un nombre.")
-                .required("Ce champ est requis."),
-        service:
-            yup.string()
-                .min(5, "La prestation doit contenir au minimum 5 caractères.")
-                .max(255, "La prestation ne peut dépasser plus de 255 caractères.")
+                .min(1, "Veuillez sélectionner ou créer un client.")
+                .typeError("Veuillez séléctionner un client ou en créer un.")
                 .required("Ce champ est requis."),
         status:
             yup.string(),
@@ -65,51 +65,96 @@ export function AddEditInvoiceForm({invoiceToEdit, changeInvoice}: Props) {
                 .typeError("Le format de la date est invalide."),
         paidAt:
             yup.date()
-                .typeError("Le format de la date est invalide.")
+                .typeError("Le format de la date est invalide."),
+        services: yup.array().of(
+            yup.object().shape({
+                name: yup.string()
+                    .required("Ce champ est requis."),
+                description: yup.string()
+                    .max(255),
+                quantity: yup.number()
+                    .positive()
+                    .integer()
+                    .typeError("La quantité doit être un nombre positif.")
+                    .required("Ce champ est requis."),
+                unitPrice: yup.number()
+                    .positive()
+                    .typeError("Le prix unitaire doit être un nombre positif.")
+                    .required("Ce champ est requis.")
+            })),
+        tvaApplicable:
+            yup.boolean(),
+        serviceDoneAt:
+            yup.date()
+                .typeError("Le format de la date est invalide."),
+        paymentDeadline:
+            yup.date()
+                .typeError("Le format de la date est invalide."),
+        paymentDelayRate:
+            yup.number()
+                .typeError("Le taux doit être un nombre compris entre 0 et 100.")
     });
 
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors,
+        formState: { isSubmitting, errors },
         setError,
         watch,
-        reset
-    } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
+        reset,
+        setValue,
+        control
+    } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema), defaultValues: {
+        status: invoiceToEdit?.status ?? "NEW",
+        sentAt: invoiceToEdit?.sentAt ?
+            invoiceToEdit.sentAt.substr(0, 19) : new Date().toISOString(),
+        paidAt: invoiceToEdit?.paidAt ?
+            invoiceToEdit.paidAt.substr(0, 19) : new Date().toISOString(),
+        services: invoiceToEdit?.services ?? [{name: "", description: "", quantity: 1, unitPrice: 0}],
+        tvaApplicable: invoiceToEdit?.tvaApplicable ?? true,
+        serviceDoneAt: invoiceToEdit?.serviceDoneAt ?
+            invoiceToEdit.serviceDoneAt.substr(0, 10)
+            : "",
+        paymentDeadline: invoiceToEdit?.paymentDeadline ?
+            invoiceToEdit.paymentDeadline.substr(0, 10)
+            : "",
+        paymentDelayRate: invoiceToEdit?.paymentDelayRate ?? 0
+    }});
 
-    const fetchFormData = useCallback(async (userId: number) => {
+    const {fields, append, remove} = useFieldArray({
+        control,
+        name: "services"
+    });
+
+    const fetchFormData = async (userId: number) => {
         const [isSuccess, data] = await fetchAllCustomers(userId);
         if (isSuccess) {
             const customers: Option[] = [];
-            data["hydra:member"].forEach((customer: Customer) => {
-                customers.push({value: customer.id, label: `${customer.firstname} ${customer.lastname}`});
+                data["hydra:member"].forEach((customer: Customer) => {
+                customers.push({value: customer.id, label: 
+                    customer.type === "PERSON" ?
+                    `${customer.firstname} ${customer.lastname}`
+                    :
+                    customer.company as string
+                });
             });
-            setSelectCustomerOptions(customers);
-            reset({
-                customer: invoiceToEdit?.customer.id ?? customers[0].value as number,
-                amount: invoiceToEdit?.amount ?? 0,
-                service: invoiceToEdit?.service ?? "",
-                status: invoiceToEdit?.status ?? selectStatusOptions[0].value as string,
-                sentAt: invoiceToEdit?.sentAt ?
-                    invoiceToEdit.sentAt.substr(0, 19) : new Date().toISOString(),
-                paidAt: invoiceToEdit?.paidAt ?
-                    invoiceToEdit.paidAt.substr(0, 19) : new Date().toISOString()
-            });
+            setSelectCustomerOptions([...selectCustomerOptions, ...customers]);
+            setValue("customer", invoiceToEdit?.customer.id ?? selectCustomerOptions[0].value as number);
         }
-    }, [invoiceToEdit, reset, selectStatusOptions]);
-    
+    };
+
     useEffect(() => {
         fetchFormData(userData.id);
-    }, [fetchFormData, userData.id]);
+    }, [userData.id]);
 
-    const onSubmit = handleSubmit(async ({ customer, service, amount, status, sentAt, paidAt }) => {
+    const onSubmit = handleSubmit(async (formData: FormData) => {
         const [isSuccess, data] = invoiceToEdit ?
-            await updateInvoice(invoiceToEdit.id, {customer, service, amount, status, sentAt, paidAt})
+            await updateInvoice(invoiceToEdit.id, formData)
             :
-            await createInvoice(customer, service, amount);
+            await createInvoice(formData.customer, {...formData, tvaApplicable: !formData.tvaApplicable});
         if (isSuccess) {
-            reset();
+            if (!invoiceToEdit) reset();
+
             toast("success", invoiceToEdit ? 
             "La facture a bien été modifiée."
             :
@@ -131,46 +176,113 @@ export function AddEditInvoiceForm({invoiceToEdit, changeInvoice}: Props) {
         }
     });
 
-    return <form className="createInvoiceForm" onSubmit={onSubmit}>
-        <SelectInput
-            ref={register}
+    return <form className="addEditInvoiceForm" onSubmit={onSubmit}>
+         <SelectInput
             error={errors.customer}
-            name="customer"
             className="customerSelectInput"
             label="Client associé"
             options={selectCustomerOptions}
-        />
-        <TextInput
-            ref={register}
-            error={errors.service}
-            name="service"
-            label="Prestation réalisée"
-        />
-        <TextInput
-            ref={register}
-            error={errors.amount}
-            type="number"
-            name="amount"
-            label="Montant (€)"
-            info="Montant total de la facture (sans la TVA)"
+            {...register("customer")}
         />
 
         {invoiceToEdit && <SelectInput
-            ref={register}
             error={errors.status}
-            name="status"
             className="customerSelectInput"
             label="Statut"
             options={selectStatusOptions}
+            {...register("status")}
         />}
 
         {invoiceToEdit && watch("status") === "SENT" && 
-            <DatePickerInput ref={register} error={errors.sentAt} type="datetime-local" label="Date d'envoi" name="sentAt" />
+            <DatePickerInput
+                error={errors.sentAt}
+                type="datetime-local"
+                label="Date d'envoi"
+                {...register("sentAt")}
+            />
         }
 
         {invoiceToEdit && watch("status") === "PAID" && 
-            <DatePickerInput ref={register} error={errors.paidAt} type="datetime-local" label="Date de paiement" name="paidAt" />
+            <DatePickerInput
+                error={errors.paidAt}
+                type="datetime-local"
+                label="Date de paiement"
+                {...register("paidAt")}
+            />
         }
+
+        <div className="form__group addEditInvoiceForm__services">
+            <Button className="btn--secondary-small" icon="add" onClick={() => append({})}>
+                Ajouter une prestation
+            </Button>
+            <div className="addEditInvoiceForm__services-list">
+                {fields.map((field, index: number) => {
+                    return <div key={field.id} className="addEditInvoiceForm__services-item">
+                        <TextInput
+                            error={errors?.services?.[index]?.name}
+                            label="Nom de la prestation"
+                            {...register(`services.${index}.name` as const)}
+                            defaultValue={field.name}
+                        />
+
+                        <TextInput
+                            error={errors?.services?.[index]?.description}
+                            label="Description (facultatif)"
+                            {...register(`services.${index}.description` as const)}
+                            defaultValue={field.description ?? ""}
+                        />
+
+                        <TextInput
+                            error={errors?.services?.[index]?.quantity}
+                            type="number"
+                            label="Quantité"
+                            {...register(`services.${index}.quantity` as const)}
+                            defaultValue={field.quantity}
+                        />
+
+                        <TextInput
+                            error={errors?.services?.[index]?.unitPrice}
+                            label="Prix unitaire (HT)"
+                            {...register(`services.${index}.unitPrice` as const)}
+                            defaultValue={field.unitPrice}
+                        />
+                        
+                        <Button
+                            className="btn--outline-danger"
+                            onlyIcon={true}
+                            icon="trash"
+                            onClick={() => remove(index)}
+                        />
+                    </div>
+                })}
+            </div>
+        </div>
+        
+        <DatePickerInput
+            error={errors.serviceDoneAt}
+            label="Date d'exécution"
+            {...register("serviceDoneAt")}
+        />
+
+        <DatePickerInput
+            error={errors.paymentDeadline}
+            label="Date limite de règlement"
+            {...register("paymentDeadline")}
+        />
+        
+        <TextInput
+            error={errors.paymentDelayRate}
+            type="number"
+            label="Taux de pénalité en cas de retard"
+            info="Valeur en pourcentage"
+            {...register("paymentDelayRate")}
+        />
+
+        <ToggleInput
+            type="switch"
+            label="TVA non applicable"
+            {...register("tvaApplicable")}
+        />
 
         <Button isLoading={isSubmitting} icon={invoiceToEdit ? "edit" : "add"}>{invoiceToEdit ? "Éditer" : "Créer"}</Button>
     </form>

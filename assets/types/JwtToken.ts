@@ -5,4 +5,5 @@ export interface JwtToken {
     firstname: string;
     lastname: string;
     username: string;
+    email: string;
 }

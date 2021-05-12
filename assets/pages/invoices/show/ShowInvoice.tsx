@@ -4,7 +4,7 @@ import { Badge } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { useToast } from "../../../hooks/useToast";
 import { deleteInvoice, fetchInvoice } from "../../../services/InvoiceService";
-import { Invoice } from "../../../types/Invoice";
+import { Invoice, InvoiceService } from "../../../types/Invoice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import Icon from "../../../components/Icon";
@@ -98,7 +98,7 @@ export function ShowInvoice() {
             isOpen={showEditInvoiceModal}
             onClose={closeEditInvoiceModal}
             title="Éditer la facture"
-            className="createInvoiceModal"
+            className="addEditInvoiceModal"
         >
             <AddEditInvoiceForm invoiceToEdit={invoice} changeInvoice={editInvoice} />
         </Modal>}
@@ -137,7 +137,7 @@ export function ShowInvoice() {
                     <h4>Client associé</h4>
                     <div className="showInvoice__customer-details">
                         <img src="https://via.placeholder.com/48" alt={`Photo de ${invoice.customer.firstname} ${invoice.customer.lastname}`} />
-                        <h3>{invoice.customer.firstname} {invoice.customer.lastname}</h3>
+                        <h3>{invoice.customer.type === "PERSON" ? `${invoice.customer.firstname} ${invoice.customer.lastname}` : invoice.customer.company}</h3>
                         <p>{invoice.customer.email}</p>
                         <Link to={`/clients/${invoice.customer.id}`} className="link-btn">
                             Voir plus
@@ -147,8 +147,10 @@ export function ShowInvoice() {
                 </div>
 
                 <div className="showInvoice__info">
-                    <p>Prestation réalisée</p>
-                    <p>{invoice.service}</p>
+                    <p>Prestations réalisées</p>
+                    <p>{invoice.services.map((service: InvoiceService) => (
+                        <span key={service.id}>{service.name}</span>
+                    )) || "-"}</p>
                 </div>
 
                 <div className="showInvoice__info">
@@ -161,9 +163,24 @@ export function ShowInvoice() {
                     <p>{invoice.paidAt && dayjs(invoice.paidAt).fromNow() || "-"}</p>
                 </div>
 
+                <div className="showInvoice__info">
+                    <p>Date d&lsquo;exécution</p>
+                    <p>{invoice.serviceDoneAt && dayjs(invoice.serviceDoneAt).format("LLLL") || "-"}</p>
+                </div>
+
+                <div className="showInvoice__info">
+                    <p>Date limite de règlement</p>
+                    <p>{invoice.paymentDeadline && dayjs(invoice.paymentDeadline).format("LLLL") || "-"}</p>
+                </div>
+
+                <div className="showInvoice__info">
+                    <p>Taux de pénalité en cas de retard</p>
+                    <p>{invoice.paymentDelayRate && `${invoice.paymentDelayRate}%` || "-"}</p>
+                </div>
+
                 <div className="showInvoice__amount">
-                    <p>Montant total</p>
-                    <p>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.amount)}</p>
+                    <p>Montant total (HT)</p>
+                    <p>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.totalAmount)}</p>
                 </div>
 
                 <Button

@@ -54,7 +54,7 @@ export function Invoices() {
             isOpen={showCreateInvoiceModal}
             onClose={closeCreateInvoiceModal}
             title="Nouvelle facture"
-            className="createInvoiceModal"
+            className="addEditInvoiceModal"
         >
             <AddEditInvoiceForm changeInvoice={addInvoice} />
         </Modal>
@@ -66,7 +66,7 @@ export function Invoices() {
                 <thead>
                     <tr>
                         <th>Chrono</th>
-                        <th>Montant (€)</th>
+                        <th>Montant total (HT)</th>
                         <th>Statut</th>
                         <th>Client</th>
                         <th>Date d&lsquo;envoi</th>
@@ -77,9 +77,9 @@ export function Invoices() {
                     {invoices.map((invoice: Invoice, index: number) => (
                         <tr key={index}>
                             <td><Link to={`/factures/${invoice.id}`}>{invoice.chrono}</Link></td>
-                            <td>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.amount)}</td>
+                            <td>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(invoice.totalAmount)}</td>
                             <td><Badge status={invoice.status} /></td>
-                            <td><Link to={`/clients/${invoice.customer.id}`}>{invoice.customer.firstname} {invoice.customer.lastname}</Link></td>
+                            <td><Link to={`/clients/${invoice.customer.id}`}>{invoice.customer.type === "PERSON" ? `${invoice.customer.firstname} ${invoice.customer.lastname}` : invoice.customer.company}</Link></td>
                             <td>{invoice.sentAt && dayjs(invoice.sentAt).fromNow() || "-"}</td>
                             <td>{invoice.paidAt && dayjs(invoice.paidAt).fromNow() || "-"}</td>
                         </tr>

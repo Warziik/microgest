@@ -29,6 +29,12 @@
   }
 }
 
+.btn--onlyIcon {
+  svg {
+    margin-right: 0;
+  }
+}
+
 .btn--primary {
   @extend .btn;
   background-color: var(--primary-color);
@@ -118,6 +124,11 @@
     margin-right: 0.8rem;
     width: 1.6rem;
     height: 1.6rem;
+  }
+
+  transition: background-color 0.3s ease-out;
+  &:hover {
+    background-color: var(--primary-color-a16);
   }
 }
 

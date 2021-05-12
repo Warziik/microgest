@@ -36,17 +36,20 @@ describe("Invoice Service", () => {
     };
 
     const invoiceData = {
-        id: 3,
-        chrono: "2021-0003",
-        amount: 716,
+        customer: 1,
         status: "NEW",
-        customer: {
-            id: 1,
-            firstname: "Foo",
-            lastname: "Bar"
-        },
-        sentAt: "2021-03-26T11:48:18+00:00",
-        paidAt: null
+        tvaApplicable: false,
+        serviceDoneAt: "2021-03-26T11:48:18+00:00",
+        paymentDeadline: "2021-03-26T11:48:18+00:00",
+        paymentDelayRate: 20,
+        services: [
+            {
+                name: "Création d'un site internet",
+                description: null,
+                quantity: 1,
+                unitPrice: 1674.51
+            }
+        ]
     }
 
     it("should returns all the Invoices of the logged User", async () => {
@@ -56,6 +59,6 @@ describe("Invoice Service", () => {
 
     it("should create an Invoice", async () => {
         fetchMock.mockResponse(JSON.stringify(invoiceData));
-        expect(await InvoiceService.createInvoice(1, "test", 1)).toStrictEqual([true, invoiceData]);
+        expect(await InvoiceService.createInvoice(1, invoiceData)).toStrictEqual([true, invoiceData]);
     });
 });

@@ -8,7 +8,15 @@ export interface User {
     firstname: string;
     lastname: string;
     email: string;
-    roles?: Array<string>;
+    phone?: string;
+    businessName?: string;
+    siret?: number;
+    tvaNumber?: string;
+    address?: string;
+    city?: string;
+    postalCode?: number;
+    country?: string;
+    roles?: string[];
     password?: string;
     createdAt?: string;
     updatedAt?: string;
@@ -17,9 +25,22 @@ export interface User {
     confirmedAt?: string;
 }
 
+export interface SigninData {
+    email: string;
+    password: string;
+}
+
 export interface SignupData {
     firstname: string;
     lastname: string;
     email: string;
     password: string;
+    phone: string | null;
+    businessName: string | null;
+    siret: string;
+    tvaNumber: string | null;
+    address: string;
+    city: string;
+    postalCode: number;
+    country: string;    
 }

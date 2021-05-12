@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "../../components/Button";
-import PasswordInput from "../../components/form/PasswordInput";
-import TextInput from "../../components/form/TextInput";
+import { PasswordInput } from "../../components/form/PasswordInput";
+import { TextInput } from "../../components/form/TextInput";
 import { useHistory } from "react-router";
 import { Violation } from "../../types/Violation";
 import { Link } from "react-router-dom";
@@ -37,8 +37,7 @@ export function LoginForm({ login }: Props) {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors,
+        formState: { isSubmitting, errors },
         reset
     } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
 
@@ -63,12 +62,24 @@ export function LoginForm({ login }: Props) {
     })
 
     return <form className="form loginForm" onSubmit={onSubmit}>
-        <TextInput ref={register} error={errors.emailLogin} type="email" name="emailLogin" label="Adresse email" />
-        <PasswordInput ref={register} error={errors.passwordLogin} name="passwordLogin" label="Mot de passe" />
+        <TextInput
+            error={errors.emailLogin}
+            type="email"
+            label="Adresse email"
+            {...register("emailLogin")}
+        />
+
+        <PasswordInput
+            error={errors.passwordLogin}
+            label="Mot de passe"
+            {...register("passwordLogin")}
+        />
+
         <Link className="link" to="/mot-de-passe-oublié">
             Mot de passe oublié
             <Icon name="arrow-left" />
         </Link>
+
         <Button isLoading={isSubmitting} icon="unlock">Se connecter</Button>
     </form>;
 }

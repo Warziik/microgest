@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "../../components/Button";
-import TextInput from "../../components/form/TextInput";
+import {TextInput} from "../../components/form/TextInput";
 import { useHistory } from "react-router";
 import { forgotPassword } from "../../services/UserService";
 import { useToast } from "../../hooks/useToast";
@@ -30,8 +30,7 @@ export default function ForgotPassword() {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors,
+        formState: { isSubmitting, errors },
         setError,
         reset
     } = useForm<FormData>({ mode: "onTouched", resolver: yupResolver(schema) });
@@ -58,7 +57,7 @@ export default function ForgotPassword() {
             <Button className="btn--outline" icon="arrow-left" onClick={() => history.push("/connexion")}>Retour à la connexion</Button>
             <p className="forgotPassword__description">Un mail contenant un lien de réinitialisation de mot de passe vous sera envoyé à l&apos;adresse email spécifiée ci-dessous si celle-ci est liée à un compte utilisateur existant.</p>
             <form className="form">
-                <TextInput ref={register} error={errors.email} type="email" name="email" label="Adresse email" />
+                <TextInput error={errors.email} type="email" label="Adresse email" {...register("email")} />
                 <Button isLoading={isSubmitting} className="btn--primary btn--center" icon="send">Envoyer</Button>
             </form>
         </div>

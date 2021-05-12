@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class AddLoggedUserToCustomerSubscriber implements EventSubscriberInterface
@@ -33,8 +34,9 @@ final class AddLoggedUserToCustomerSubscriber implements EventSubscriberInterfac
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if ($entity instanceof Customer && $method === Request::METHOD_POST) {
-            $entity->setOwner($this->security->getUser());
+        $user = $this->security->getUser();
+        if ($entity instanceof Customer && $method === Request::METHOD_POST && $user instanceof User) {
+            $entity->setOwner($user);
         }
     }
 }

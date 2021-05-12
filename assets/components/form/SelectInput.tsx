@@ -6,7 +6,7 @@ export type Option = {
     value: string | number;
 }
 
-type Props = {
+interface Props extends React.ComponentPropsWithoutRef<"select"> {
     label?: string;
     name: string;
     error: FieldError | undefined;
@@ -15,10 +15,13 @@ type Props = {
     info?: string;
 }
 
-const SelectInput = React.forwardRef(({label, name, error, options, className, info}: Props, ref: Ref<HTMLSelectElement>) => {
+const SelectInput = React.forwardRef((
+        {label, name, error, options, className, info, ...rest}: Props,
+        ref: Ref<HTMLSelectElement>
+    ) => {
     return <div className={`form__group form__select ${className ?? ""}`.trim()}>
         {label && <label htmlFor={name} className="form__label">{label}</label>}
-        <select className="form__select" ref={ref} aria-invalid={error ? "true" : "false"} id={name} name={name}>
+        <select ref={ref} className="form__select" aria-invalid={error ? "true" : "false"} id={name} name={name} {...rest}>
             {options.map((option: Option, index: number) => (
                 <option key={index} value={option.value}>{option.label}</option>
             ))}

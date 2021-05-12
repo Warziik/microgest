@@ -1,16 +1,24 @@
 import * as CustomerService from "../../services/CustomerService";
 import fetchMock from "jest-fetch-mock";
+import { CustomerFormData } from "../../types/Customer";
 
 fetchMock.enableMocks();
 
 describe("CustomerService", () => {
     const allCustomersData = {};
 
-    const customerData = {
+    const customerData: CustomerFormData = {
+        type: "PERSON",
         firstname: "Foo",
         lastname: "Bar",
         email: "foo@bar.dev",
-        company: "Oui"
+        phone: null,
+        company: null,
+        siret: null,
+        address: "119 avenue Aléatoire",
+        city: "Paris",
+        postalCode: 75000,
+        country: "FRA"
     }
 
     it("should returns all the Customers", async () => {

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { updateUser } from "../../services/UserService";
 import { Violation } from "../../types/Violation";
 import { useAuth } from "../../hooks/useAuth";
-import PasswordInput from "../../components/form/PasswordInput";
+import { PasswordInput } from "../../components/form/PasswordInput";
 import { Button } from "../../components/Button";
 import { ErrorResponse } from "../../types/ErrorResponse";
 import { User } from "../../types/User";
@@ -39,8 +39,7 @@ export function SecurityForm() {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting },
-        errors,
+        formState: { isSubmitting, errors },
         setError
     } = useForm<FormData>({
         mode: "onTouched", resolver: yupResolver(schema)
@@ -64,10 +63,18 @@ export function SecurityForm() {
     })
 
     return <form className="settings__security" onSubmit={onSubmit}>
-        <PasswordInput ref={register} error={errors.password} name="password" label="Nouveau mot de passe" />
-        <PasswordInput ref={register} error={errors.passwordConfirm} name="passwordConfirm"
-            label="Confirmez votre nouveau mot de passe"
+        <PasswordInput
+            error={errors.password}
+            label="Nouveau mot de passe"
+            {...register("password")}
         />
+
+        <PasswordInput
+            error={errors.passwordConfirm}
+            label="Confirmez votre nouveau mot de passe"
+            {...register("passwordConfirm")}
+        />
+
         <Button isLoading={isSubmitting}>Sauvegarder</Button>
     </form>
 }

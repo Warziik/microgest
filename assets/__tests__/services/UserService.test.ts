@@ -9,7 +9,15 @@ describe("AuthService", () => {
         firstname: "Demo",
         lastname: "User",
         email: "demoUser@localhost.dev",
-        password: "demo1234"
+        password: "demo1234",
+        phone: "00 00 00 00 00",
+        businessName: "DemOCompany",
+        siret: "12345678912345",
+        tvaNumber: "FR 00 000000000",
+        address: "119 avenue Aléatoire",
+        city: "Paris",
+        postalCode: 75000,
+        country: "FRA"
     };
 
     const violations: Violation[] = [

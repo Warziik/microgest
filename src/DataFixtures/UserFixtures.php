@@ -20,28 +20,33 @@ class UserFixtures extends Fixture
         $faker = Factory::create("fr_FR");
 
         for ($i = 0; $i <= 50; $i++) {
-            $user = new User();
-            $user->setFirstname($faker->firstName)
-                ->setLastname($faker->lastName)
-                ->setEmail($faker->email)
-                ->setPassword($this->passwordEncoder->encodePassword($user, "demo1234"))
-                ->setCreatedAt(new DateTime())
-                ->setConfirmationToken(null)
-                ->setConfirmedAt($faker->dateTimeBetween("now", "+1 week"));
+            $u = new User();
+            $u->setFirstname($faker->firstName);
+            $u->setLastname($faker->lastName);
+            $u->setEmail($i === 0 ? "testUser@localhost.dev" : $faker->email);
+            $u->setPhone($faker->randomElement([null, $faker->phoneNumber]));
+            $u->setPassword($this->passwordEncoder->encodePassword($u, "demo1234"));
+            $u->setCreatedAt(new DateTime());
+            $u->setConfirmationToken(null);
+            $u->setConfirmedAt($faker->dateTimeBetween("now", "+1 week"));
+            $u->setBusinessName($faker->randomElement([null, $faker->company]));
+            $u->setSiret("12345678914253");
+            $u->setTvaNumber($faker->randomElement([null, "FR25123456789"]));
+            $u->setAddress($faker->streetAddress);
+            $u->setCity($faker->city);
+            $u->setPostalCode((int) $faker->postcode);
+            $u->setCountry($faker->countryISOAlpha3);
 
-            if ($i === 0) {
-                $user->setEmail("testUser@localhost.dev");
-            }
             if ($i === 1) {
-                $user->setEmail("demoUser-$i@localhost.dev");
-                $user->setCreatedAt(new DateTime("-2 weeks"));
-                $user->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
-                $user->setConfirmedAt(null);
+                $u->setEmail("demoUser-$i@localhost.dev");
+                $u->setCreatedAt(new DateTime("-2 weeks"));
+                $u->setConfirmationToken(sha1(random_bytes(rand(8, 10))));
+                $u->setConfirmedAt(null);
             }
 
-            $manager->persist($user);
+            $manager->persist($u);
 
-            $i === 0 ? $this->addReference("testUser", $user) : $this->addReference("user-$i", $user);
+            $i === 0 ? $this->addReference("testUser", $u) : $this->addReference("user-$i", $u);
         }
 
         $manager->flush();

@@ -31,15 +31,13 @@ export function fetchInvoice(id: number): Promise<[boolean, Invoice]> {
  * Send a POST request to create a new Invoice. 
  * 
  * @param customerId The Customer's id
- * @param service The type of service made for the Customer (ex: a website)
- * @param amount The amount of the Invoice
+ * @param data Invoice's data
  */
-export function createInvoice(customerId: number, service: string, amount: number): Promise<[boolean, Invoice | ErrorResponse]> {
+export function createInvoice(customerId: number, data: InvoiceFormData): Promise<[boolean, Invoice | ErrorResponse]> {
     return DataAccess.request(INVOICES_URI, {
         method: "POST",
         body: JSON.stringify({
-            amount,
-            service,
+            ...data,
             customer: `/api/customers/${customerId}`
         })
     });
@@ -55,11 +53,7 @@ export function updateInvoice(id: number, data: InvoiceFormData): Promise<[boole
     return DataAccess.request(`${INVOICES_URI}/${id}`, {
         method: "PUT",
         body: JSON.stringify({
-            amount: data.amount,
-            service: data.service,
-            status: data.status,
-            sentAt: data.sentAt ?? null,
-            paidAt: data.paidAt ?? null,
+            ...data,
             customer: `/api/customers/${data.customer}`
         })
     });

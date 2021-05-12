@@ -97,11 +97,21 @@ class InvoiceTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
         $response = static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
-            "amount" => 2200,
             "status" => "SENT",
-            "service" => "Website creation",
-            "sentAt" => "2021-01-09 20:15:13",
-            "customer" => "/api/customers/1"
+            "sentAt" => "2021-04-09 20:15:13",
+            "tvaApplicable" => false,
+            "serviceDoneAt" => "2021-03-18",
+            "paymentDeadline" => "2021-04-18",
+            "paymentDelayRate" => null,
+            "customer" => "/api/customers/1",
+            "services" => [
+                [
+                    "name" => "Création d'un site internet",
+                    "description" => null,
+                    "quantity" => 1,
+                    "unitPrice" => 2051.51
+                ]
+            ]
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -109,9 +119,18 @@ class InvoiceTest extends ApiTestCase
         $this->assertJsonContains([
             "@context" => "/api/contexts/Invoice",
             "@type" => "Invoice",
-            "amount" => 2200,
             "status" => "SENT",
-            "service" => "Website creation"
+            "tvaApplicable" => false,
+            "paymentDelayRate" => null,
+            "paidAt" => null,
+            "services" => [
+                [
+                    "name" => "Création d'un site internet",
+                    "description" => null,
+                    "quantity" => 1,
+                    "unitPrice" => 2051.51
+                ]
+            ]
         ]);
         $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
     }
@@ -122,9 +141,12 @@ class InvoiceTest extends ApiTestCase
     public function testCreateInvoiceWithoutAuthorization(): void
     {
         static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["json" => [
-            "amount" => 2200,
             "status" => "SENT",
-            "sentAt" => "2021-01-09 20:15:13",
+            "sentAt" => "2021-04-09 20:15:13",
+            "tvaApplicable" => false,
+            "serviceDoneAt" => "2021-03-18",
+            "paymentDeadline" => "2021-04-18",
+            "paymentDelayRate" => null,
             "customer" => "/api/customers/1"
         ]]);
 
@@ -138,7 +160,7 @@ class InvoiceTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
         static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
-            "amount" => 2200
+            "status" => "NEW"
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -155,8 +177,12 @@ class InvoiceTest extends ApiTestCase
     {
         $authToken = $this->getAuthToken();
         static::createClient()->request(Request::METHOD_POST, "/api/invoices", ["auth_bearer" => $authToken, "json" => [
-            "amount" => 2200,
             "status" => "SENT",
+            "sentAt" => "2021-04-09 20:15:13",
+            "tvaApplicable" => false,
+            "serviceDoneAt" => "2021-03-18",
+            "paymentDeadline" => "2021-04-18",
+            "paymentDelayRate" => null,
             "customer" => "/api/customers/18"
         ]]);
 
@@ -175,7 +201,8 @@ class InvoiceTest extends ApiTestCase
         $authToken = $this->getAuthToken();
 
         $response = static::createClient()->request(Request::METHOD_PUT, "/api/invoices/1", ["auth_bearer" => $authToken, "json" => [
-            "amount" => 150,
+            "status" => "PAID",
+            "paidAt" => "2021-05-10 13:16:04"
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -183,7 +210,7 @@ class InvoiceTest extends ApiTestCase
         $this->assertJsonContains([
             "@context" => "/api/contexts/Invoice",
             "@type" => "Invoice",
-            "amount" => 150
+            "status" => "PAID"
         ]);
         $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
     }
@@ -194,7 +221,8 @@ class InvoiceTest extends ApiTestCase
     public function testUpdateInvoiceWithoutAuthorization(): void
     {
         static::createClient()->request(Request::METHOD_PUT, "/api/invoices/1", ["json" => [
-            "amound" => 150
+            "status" => "PAID",
+            "paidAt" => "2021-05-10 13:16:04"
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
@@ -207,7 +235,8 @@ class InvoiceTest extends ApiTestCase
         $authToken = $this->getAuthToken();
 
         static::createClient()->request(Request::METHOD_PUT, "/api/invoices/3", ["auth_bearer" => $authToken, "json" => [
-            "amound" => 150
+            "status" => "PAID",
+            "paidAt" => "2021-05-10 13:16:04"
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
@@ -220,9 +249,9 @@ class InvoiceTest extends ApiTestCase
         $authToken = $this->getAuthToken();
 
         static::createClient()->request(Request::METHOD_PUT, "/api/invoices/1", ["auth_bearer" => $authToken, "json" => [
-            "amount" => "invalid_amount",
+            "status" => "invalid_status",
         ]]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**

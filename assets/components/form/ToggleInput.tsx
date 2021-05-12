@@ -25,7 +25,7 @@ const ToggleInput = React.forwardRef((
         </> ||
         <>
             <input type="checkbox" ref={ref} name={name} id={name} defaultChecked={checked} {...rest} />
-            <label htmlFor={name}>{label}</label>
+            <label htmlFor={name} className="form__label">{label}</label>
         </>}
     </div>
 });

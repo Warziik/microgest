@@ -1,11 +1,6 @@
 import React, { Ref } from 'react';
 import { FieldError } from 'react-hook-form';
 
-export type Option = {
-    label: string;
-    value: string | number;
-}
-
 interface Props extends React.ComponentPropsWithoutRef<"input"> {
     type?: "date" | "datetime-local";
     label?: string;
@@ -21,7 +16,15 @@ const DatePickerInput = React.forwardRef((
     ) => {
     return <div className={`form__group form__datepicker ${className ?? ""}`.trim()}>
         {label && <label htmlFor={name} className="form__label">{label}</label>}
-        <input ref={ref} aria-invalid={error ? "true" : "false"} type={type} id={name} name={name} className="form__input" {...rest} />
+        <input
+            data-testid="datePicker"
+            ref={ref}
+            aria-invalid={error ? "true" : "false"}
+            type={type}
+            id={name}
+            name={name}
+            className="form__input" {...rest}
+        />
         {error && <p role="alert" className="form--invalid-message">{error.message}</p>}
         {info && <p className="form__info">{info}</p>}
     </div>

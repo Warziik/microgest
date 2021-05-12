@@ -3,15 +3,15 @@
 namespace App\Tests\EventSubsriber;
 
 use App\Entity\User;
+use App\EventSubscriber\AccountConfirmationSubscriber;
 use PHPUnit\Framework\TestCase;
 use App\Notification\UserNotification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
-use App\EventSubscriber\SendConfirmEmailSubscriber;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class SendConfirmEmailSubscriberTest extends TestCase
+class AccountConfirmationSubscriberTest extends TestCase
 {
     private function getViewEvent(User $user): ViewEvent
     {
@@ -23,7 +23,7 @@ class SendConfirmEmailSubscriberTest extends TestCase
 
     public function testEventSubscription(): void
     {
-        $this->assertArrayHasKey(KernelEvents::VIEW, SendConfirmEmailSubscriber::getSubscribedEvents());
+        $this->assertArrayHasKey(KernelEvents::VIEW, AccountConfirmationSubscriber::getSubscribedEvents());
     }
 
     public function testSetConfirmationToken(): void
@@ -34,7 +34,7 @@ class SendConfirmEmailSubscriberTest extends TestCase
         $user->expects($this->once())->method("setConfirmationToken");
 
         $event = $this->getViewEvent($user);
-        $subscriber = new SendConfirmEmailSubscriber($userNotification);
+        $subscriber = new AccountConfirmationSubscriber($userNotification);
         $subscriber->onPreWrite($event);
     }
 
@@ -46,7 +46,7 @@ class SendConfirmEmailSubscriberTest extends TestCase
         $userNotification->expects($this->once())->method("sendConfirmAccountEmail");
 
         $event = $this->getViewEvent($user);
-        $subscriber = new SendConfirmEmailSubscriber($userNotification);
+        $subscriber = new AccountConfirmationSubscriber($userNotification);
         $subscriber->onPostWrite($event);
     }
 }

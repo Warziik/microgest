@@ -20,7 +20,7 @@ class UserNotification
         $email = (new TemplatedEmail())
             ->from('noreply@localhost.dev')
             ->to($user->getEmail())
-            ->subject('Microgest - Reset password')
+            ->subject('Microgest - Réinitialisation de mot de passe')
             ->htmlTemplate('emails/resetPassword.html.twig')
             ->context(compact('user', 'resetPassword'));
 
@@ -31,11 +31,12 @@ class UserNotification
         }
     }
 
-    public function sendConfirmAccountEmail(User $user): void {
+    public function sendConfirmAccountEmail(User $user): void
+    {
         $email = (new TemplatedEmail())
             ->from('noreply@localhost.dev')
             ->to($user->getEmail())
-            ->subject('Microgest - Account confirmation')
+            ->subject('Microgest - Confirmation de compte')
             ->htmlTemplate('emails/confirmAccount.html.twig')
             ->context(compact('user'));
 

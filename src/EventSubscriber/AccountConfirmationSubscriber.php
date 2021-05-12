@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SendConfirmEmailSubscriber implements EventSubscriberInterface
+final class AccountConfirmationSubscriber implements EventSubscriberInterface
 {
     public function __construct(private UserNotification $userNotification)
     {
@@ -19,8 +19,10 @@ class SendConfirmEmailSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['onPreWrite', EventPriorities::PRE_WRITE],
-            KernelEvents::VIEW => ["onPostWrite", EventPriorities::POST_WRITE]
+            KernelEvents::VIEW => [
+                ['onPreWrite', EventPriorities::PRE_WRITE],
+                ["onPostWrite", EventPriorities::POST_WRITE]
+            ],
         ];
     }
 

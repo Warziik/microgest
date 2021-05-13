@@ -17,27 +17,55 @@ class InvoiceService
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["invoices:read", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups(['invoices:read', 'users_customers_subresource', 'customers_invoices_subresource', 'allInvoices:read'])]
     private int $id;
 
     /** @ORM\Column(type="string", length=60) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 60)]
     private string $name;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $description = null;
 
     /** @ORM\Column(type="integer", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     private ?int $quantity = null;
 
     /** @ORM\Column(type="float") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank]
     private float $unitPrice;
 

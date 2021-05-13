@@ -20,23 +20,23 @@ class JwtCreatedSubscriberTest extends TestCase
         $mockJwtCreatedEvent = $this->createMock(JWTCreatedEvent::class);
         $mockUser = $this->createMock(User::class);
 
-        $mockUser->expects($this->once())->method("getId")->willReturn(1);
-        $mockUser->expects($this->once())->method("getFirstname")->willReturn("Alex");
-        $mockUser->expects($this->once())->method("getLastname")->willReturn("Demo");
-        $mockUser->expects($this->once())->method("getUsername")->willReturn("demoUser@localhost.dev");
+        $mockUser->expects($this->once())->method('getId')->willReturn(1);
+        $mockUser->expects($this->once())->method('getFirstname')->willReturn('Alex');
+        $mockUser->expects($this->once())->method('getLastname')->willReturn('Demo');
+        $mockUser->expects($this->once())->method('getUsername')->willReturn('demoUser@localhost.dev');
 
-        $mockJwtCreatedEvent->expects($this->once())->method("getData")
-            ->willReturn(["roles" => ["ROLE_USER"], "username" => "demoUser@localhost.dev"]);
-        $mockJwtCreatedEvent->expects($this->once())->method("getUser")
+        $mockJwtCreatedEvent->expects($this->once())->method('getData')
+            ->willReturn(['roles' => ['ROLE_USER'], 'username' => 'demoUser@localhost.dev']);
+        $mockJwtCreatedEvent->expects($this->once())->method('getUser')
             ->willReturn($mockUser);
 
-        $mockJwtCreatedEvent->expects($this->once())->method("setData")
+        $mockJwtCreatedEvent->expects($this->once())->method('setData')
             ->with([
-                "username" => "demoUser@localhost.dev",
-                "id" => 1,
-                "firstname" => "Alex",
-                "lastname" => "Demo",
-                "email" => "demoUser@localhost.dev"
+                'username' => 'demoUser@localhost.dev',
+                'id' => 1,
+                'firstname' => 'Alex',
+                'lastname' => 'Demo',
+                'email' => 'demoUser@localhost.dev',
             ]);
 
         $jwtCreatedSubscriber = new JwtCreatedSubscriber();
@@ -46,15 +46,14 @@ class JwtCreatedSubscriberTest extends TestCase
     public function testTryChangeJwtPayloadWithoutValidUser(): void
     {
         $mockJwtCreatedEvent = $this->createMock(JWTCreatedEvent::class);
-        $invalidUser = new class()
-        {
+        $invalidUser = new class() {
         };
 
-        $mockJwtCreatedEvent->expects($this->once())->method("getUser")
+        $mockJwtCreatedEvent->expects($this->once())->method('getUser')
             ->willReturn($invalidUser);
 
         // setData() should not be called if the User is not an instance of UserInterface
-        $mockJwtCreatedEvent->expects($this->never())->method("setData");
+        $mockJwtCreatedEvent->expects($this->never())->method('setData');
 
         $jwtCreatedSubscriber = new JwtCreatedSubscriber();
         $jwtCreatedSubscriber->onJwtCreated($mockJwtCreatedEvent);

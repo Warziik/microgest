@@ -2,13 +2,13 @@
 
 namespace App\EventSubscriber;
 
+use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Notification\UserNotification;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
-use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 final class AccountConfirmationSubscriber implements EventSubscriberInterface
 {
@@ -21,7 +21,7 @@ final class AccountConfirmationSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::VIEW => [
                 ['onPreWrite', EventPriorities::PRE_WRITE],
-                ["onPostWrite", EventPriorities::POST_WRITE]
+                ['onPostWrite', EventPriorities::POST_WRITE],
             ],
         ];
     }
@@ -38,8 +38,6 @@ final class AccountConfirmationSubscriber implements EventSubscriberInterface
 
     /**
      * Send a confirm account email to the User's email address after persisting the User in database.
-     * 
-     * @param ViewEvent $event
      */
     public function onPostWrite(ViewEvent $event)
     {
@@ -53,9 +51,10 @@ final class AccountConfirmationSubscriber implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if ($entity instanceof User && $method === Request::METHOD_POST) {
+        if ($entity instanceof User && Request::METHOD_POST === $method) {
             return true;
         }
+
         return false;
     }
 }

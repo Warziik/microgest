@@ -2,18 +2,18 @@
 
 namespace App\Tests\EventSubscriber;
 
-use App\Entity\Invoice;
 use App\Entity\Customer;
+use App\Entity\Invoice;
 use App\Entity\User;
-use PHPUnit\Framework\TestCase;
-use App\Repository\InvoiceRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpKernel\KernelEvents;
 use App\EventSubscriber\GenerateChronoSubscriber;
+use App\Repository\InvoiceRepository;
 use DateTime;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Security;
 
 class GenerateChronoSubscriberTest extends TestCase
 {
@@ -25,11 +25,11 @@ class GenerateChronoSubscriberTest extends TestCase
     public function testGenerateChrono(): void
     {
         $invoice = (new Invoice())
-            ->setChrono("2021-000001")
-            ->setStatus("NEW")
+            ->setChrono('2021-000001')
+            ->setStatus('NEW')
             ->setTvaApplicable(false)
-            ->setServiceDoneAt(new DateTime("-1 week"))
-            ->setPaymentDeadline(new DateTime("+40 days"))
+            ->setServiceDoneAt(new DateTime('-1 week'))
+            ->setPaymentDeadline(new DateTime('+40 days'))
             ->setPaymentDelayRate(3)
             ->setCreatedAt(new DateTime())
             ->setCustomer(new Customer());

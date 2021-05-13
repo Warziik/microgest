@@ -4,13 +4,13 @@ namespace App\Security\Voter;
 
 use App\Entity\Customer;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class SubresourceVoter extends Voter
 {
-    const GRANTED_ROLE = "GET_SUBRESOURCE";
+    public const GRANTED_ROLE = 'GET_SUBRESOURCE';
 
     public function __construct(private EntityManagerInterface $em)
     {
@@ -18,7 +18,7 @@ class SubresourceVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        if ($attribute !== self::GRANTED_ROLE || !is_array($subject)) {
+        if (self::GRANTED_ROLE !== $attribute || !is_array($subject)) {
             return false;
         }
 

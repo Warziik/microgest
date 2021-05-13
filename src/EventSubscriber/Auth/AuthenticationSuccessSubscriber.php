@@ -21,7 +21,7 @@ class AuthenticationSuccessSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::AUTHENTICATION_SUCCESS => "onAuthenticationSuccess"
+            Events::AUTHENTICATION_SUCCESS => 'onAuthenticationSuccess',
         ];
     }
 
@@ -39,13 +39,13 @@ class AuthenticationSuccessSubscriber implements EventSubscriberInterface
             new Cookie(
                 $this->cookieName,
                 $refreshToken,
-                (new DateTime())->add(new DateInterval("PT" . $this->refreshTokeNTtl . "S")),
+                (new DateTime())->add(new DateInterval('PT'.$this->refreshTokeNTtl.'S')),
                 '/',
                 null,
                 true,
                 true
             )
         );
-        $event->setData(["token" => $event->getData()["token"]]);
+        $event->setData(['token' => $event->getData()['token']]);
     }
 }

@@ -11,8 +11,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class RefreshJwtTokenSubscriberTest extends TestCase
 {
-    private string $cookieName = "__refresh__token";
-    private string $refreshTokenParameterName = "refresh_token";
+    private string $cookieName = '__refresh__token';
+    private string $refreshTokenParameterName = 'refresh_token';
 
     public function testEventSubscription(): void
     {
@@ -29,18 +29,18 @@ class RefreshJwtTokenSubscriberTest extends TestCase
         $mockRequest->attributes = $mockAttributesProperty;
         $mockRequest->cookies = $mockCookiesProperty;
 
-        $mockRequestEvent->expects($this->once())->method("getRequest")->willReturn($mockRequest);
+        $mockRequestEvent->expects($this->once())->method('getRequest')->willReturn($mockRequest);
 
-        $mockRequest->expects($this->once())->method("getMethod")->willReturn(Request::METHOD_POST);
+        $mockRequest->expects($this->once())->method('getMethod')->willReturn(Request::METHOD_POST);
 
-        $mockAttributesProperty->expects($this->once())->method("get")->with("_route")
-            ->willReturn("gesdinet_jwt_refresh_token");
+        $mockAttributesProperty->expects($this->once())->method('get')->with('_route')
+            ->willReturn('gesdinet_jwt_refresh_token');
 
-        $mockCookiesProperty->expects($this->once())->method("get")->with($this->cookieName)
-            ->willReturn("demoRefreshToken");
+        $mockCookiesProperty->expects($this->once())->method('get')->with($this->cookieName)
+            ->willReturn('demoRefreshToken');
 
-        $mockAttributesProperty->expects($this->once())->method("set")
-            ->with($this->refreshTokenParameterName, "demoRefreshToken");
+        $mockAttributesProperty->expects($this->once())->method('set')
+            ->with($this->refreshTokenParameterName, 'demoRefreshToken');
 
         $refreshJwtTokenSubscriber = new RefreshJwtTokenSubscriber($this->refreshTokenParameterName, $this->cookieName);
         $refreshJwtTokenSubscriber->onKernelRequest($mockRequestEvent);
@@ -54,11 +54,11 @@ class RefreshJwtTokenSubscriberTest extends TestCase
 
         $mockRequest->attributes = $mockAttributesProperty;
 
-        $mockRequestEvent->expects($this->once())->method("getRequest")->willReturn($mockRequest);
-        $mockRequest->expects($this->once())->method("getMethod")->willReturn(Request::METHOD_GET);
+        $mockRequestEvent->expects($this->once())->method('getRequest')->willReturn($mockRequest);
+        $mockRequest->expects($this->once())->method('getMethod')->willReturn(Request::METHOD_GET);
 
         // set() should not be called because the Http method is not POST
-        $mockAttributesProperty->expects($this->never())->method("set");
+        $mockAttributesProperty->expects($this->never())->method('set');
 
         $refreshJwtTokenSubscriber = new RefreshJwtTokenSubscriber($this->refreshTokenParameterName, $this->cookieName);
         $refreshJwtTokenSubscriber->onKernelRequest($mockRequestEvent);

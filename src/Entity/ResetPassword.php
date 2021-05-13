@@ -2,19 +2,19 @@
 
 namespace App\Entity;
 
+use App\Repository\ResetPasswordRepository;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ResetPasswordRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ResetPasswordRepository::class)
  * @ORM\Table(name="users_reset_password")
  * @ORM\HasLifecycleCallbacks
  */
-#[UniqueEntity(fields: ["token"], message: "Token invalid")]
+#[UniqueEntity(fields: ['token'], message: 'Token invalid')]
 class ResetPassword
 {
     /**
@@ -31,7 +31,7 @@ class ResetPassword
     private ?User $user = null;
 
     /** @ORM\Column(type="string", length=255, unique=true) */
-    #[Assert\Type("string")]
+    #[Assert\Type('string')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 10, max: 255)]
     private ?string $token = null;
@@ -71,24 +71,24 @@ class ResetPassword
         return $this;
     }
 
-    public function getRequestedAt(): ?\DateTimeImmutable
+    public function getRequestedAt(): ?DateTimeImmutable
     {
         return $this->requestedAt;
     }
 
-    public function setRequestedAt(\DateTimeImmutable $requestedAt): self
+    public function setRequestedAt(DateTimeImmutable $requestedAt): self
     {
         $this->requestedAt = $requestedAt;
 
         return $this;
     }
 
-    public function getExpiresAt(): ?\DateTimeImmutable
+    public function getExpiresAt(): ?DateTimeImmutable
     {
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(\DateTimeImmutable $expiresAt): self
+    public function setExpiresAt(DateTimeImmutable $expiresAt): self
     {
         $this->expiresAt = $expiresAt;
 
@@ -100,6 +100,6 @@ class ResetPassword
     {
         $this->setToken(sha1(random_bytes(rand(8, 10))));
         $this->setRequestedAt(new DateTimeImmutable());
-        $this->setExpiresAt($this->getRequestedAt()->add(new DateInterval("PT2H")));
+        $this->setExpiresAt($this->getRequestedAt()->add(new DateInterval('PT2H')));
     }
 }

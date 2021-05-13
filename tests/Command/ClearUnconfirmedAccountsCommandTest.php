@@ -22,7 +22,7 @@ class ClearUnconfirmedAccountsCommandTest extends KernelTestCase
         $command = $application->find('app:clear-unconfirmed-accounts');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
-            'datetime' => '-1 week'
+            'datetime' => '-1 week',
         ]);
 
         $output = $commandTester->getDisplay();

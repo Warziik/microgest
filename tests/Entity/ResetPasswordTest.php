@@ -8,7 +8,7 @@ use App\Entity\User;
 use App\Tests\AssertTrait;
 
 /**
- * Unit tests
+ * Unit tests.
  */
 class ResetPasswordTest extends ApiTestCase
 {
@@ -18,14 +18,14 @@ class ResetPasswordTest extends ApiTestCase
     {
         return (new ResetPassword())
             ->setUser(new User())
-            ->setToken("testToken0123456789");
+            ->setToken('testToken0123456789');
     }
 
     public function testTokenConstraints(): void
     {
         $this->assertHasErrors(0, $this->getEntity()->setToken(sha1(random_bytes(10))));
 
-        $this->assertHasErrors(1, $this->getEntity()->setToken("test"));
-        $this->assertHasErrors(2, $this->getEntity()->setToken(""));
+        $this->assertHasErrors(1, $this->getEntity()->setToken('test'));
+        $this->assertHasErrors(2, $this->getEntity()->setToken(''));
     }
 }

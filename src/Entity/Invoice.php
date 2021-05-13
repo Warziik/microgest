@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
-use App\Entity\Customer;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateUpdateInvoice;
 use App\Controller\GetInvoices;
+use App\Repository\InvoiceRepository;
+use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,26 +20,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[
     ApiResource(
-        normalizationContext: ["groups" => ["invoices:read", "invoice:service_read"]],
-        denormalizationContext: ["groups" => ["invoices:write", "invoice:service_write"]],
+        normalizationContext: ['groups' => ['invoices:read', 'invoice:service_read']],
+        denormalizationContext: ['groups' => ['invoices:write', 'invoice:service_write']],
         collectionOperations: [
-            "get" => ["controller" => GetInvoices::class, "normalization_context" => ["groups" => ["allInvoices:read"]]],
-            "post" => ["controller" => CreateUpdateInvoice::class]
+            'get' => [
+                'controller' => GetInvoices::class,
+                'normalization_context' => ['groups' => ['allInvoices:read']],
+            ],
+            'post' => ['controller' => CreateUpdateInvoice::class],
         ],
         itemOperations: [
-            "get" => ["security" => "object.getCustomer().getOwner() == user"],
-            "put" => [
-                "security" => "object.getCustomer().getOwner() == user",
-                "denormalization_context" => ["groups" => ["invoice:update"]],
-                "controller" => CreateUpdateInvoice::class
+            'get' => ['security' => 'object.getCustomer().getOwner() == user'],
+            'put' => [
+                'security' => 'object.getCustomer().getOwner() == user',
+                'denormalization_context' => ['groups' => ['invoice:update']],
+                'controller' => CreateUpdateInvoice::class,
             ],
-            "delete" => ["security" => "object.getCustomer().getOwner() == user"]
+            'delete' => ['security' => 'object.getCustomer().getOwner() == user'],
         ],
         subresourceOperations: [
-            "api_customers_invoices_get_subresource" => [
-                "security" => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
-                "normalization_context" => ["groups" => ["customers_invoices_subresource"]]
-            ]
+            'api_customers_invoices_get_subresource' => [
+                'security' => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
+                'normalization_context' => ['groups' => ['customers_invoices_subresource']],
+            ],
         ]
     )
 ]
@@ -51,68 +53,148 @@ class Invoice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read", "users_customers_subresource"])]
+    #[Groups([
+        'invoices:read',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+        'users_customers_subresource',
+    ])]
     private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "allInvoices:read"])]
+    #[Groups(['invoices:read', 'invoices:write', 'invoice:update', 'allInvoices:read'])]
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
     /** @ORM\Column(type="string", length=11) */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "users_customers_subresource", "allInvoices:read"])]
-    #[Assert\Regex(pattern: "/^(\d{4})-(\d{6})$/", message: "Le chrono n'est pas au format valide (format accepté: YYYY-0000).")]
+    #[Groups([
+        'invoices:read',
+        'customers_invoices_subresource',
+        'users_customers_subresource',
+        'allInvoices:read',
+    ])]
+    #[Assert\Regex(
+        pattern: "/^(\d{4})-(\d{6})$/",
+        message: "Le chrono n'est pas au format valide (format accepté: YYYY-0000)."
+    )]
     private string $chrono;
 
     /** @ORM\Column(type="string", length=9) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank]
-    #[Assert\Choice(choices: ["NEW", "SENT", "PAID", "CANCELLED"], message: "Le statut doit être de type 'NEW', 'SENT', 'PAID' ou 'CANCELLED'.")]
+    #[Assert\Choice(
+        choices: ['NEW', 'SENT', 'PAID', 'CANCELLED'],
+        message: "Le statut doit être de type 'NEW', 'SENT', 'PAID' ou 'CANCELLED'."
+    )]
     private string $status;
 
     /** @ORM\Column(type="boolean") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
-    #[Assert\Type("boolean")]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
+    #[Assert\Type('boolean')]
     private bool $tvaApplicable;
 
     /** @ORM\Column(type="datetime") */
-    #[Groups(["invoices:read", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
     /** @ORM\Column(type="datetime") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $serviceDoneAt;
 
     /** @ORM\Column(type="datetime") */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $paymentDeadline;
 
     /** @ORM\Column(type="integer", nullable=true) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\NotBlank(allowNull: true)]
-    #[Assert\Range(min: 0, max: 100, notInRangeMessage: "Le taux des péanlités de retard ou d'absence de paiement doit être un pourcentage compris entre {{ min }} et {{ max }}.")]
+    #[Assert\Range(
+        min: 0,
+        max: 100,
+        notInRangeMessage: "Le taux des péanlités de retard ou d'absence de paiement doit être
+        un pourcentage compris entre {{ min }} et {{ max }}."
+    )]
     private ?int $paymentDelayRate = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["invoices:read", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
     /** @ORM\OneToMany(targetEntity=InvoiceService::class, mappedBy="invoice", orphanRemoval=true, cascade={"persist", "remove"}) */
-    #[Groups(["invoices:read", "invoices:write", "invoice:update", "users_customers_subresource", "customers_invoices_subresource", "allInvoices:read"])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     private Collection $services;
 
     public function __construct()
@@ -122,7 +204,8 @@ class Invoice
     }
 
     /* Returns the total amount of all the services prices */
-    #[Groups(["invoices:read", "customers_invoices_subresource", "allInvoices:read", "users_customers_subresource"])]
+
+    #[Groups(['invoices:read', 'customers_invoices_subresource', 'allInvoices:read', 'users_customers_subresource'])]
     public function getTotalAmount()
     {
         $totalAmount = 0;
@@ -199,12 +282,12 @@ class Invoice
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -223,12 +306,12 @@ class Invoice
         return $this;
     }
 
-    public function getPaymentDeadline(): ?\DateTimeInterface
+    public function getPaymentDeadline(): ?DateTimeInterface
     {
         return $this->paymentDeadline;
     }
 
-    public function setPaymentDeadline(\DateTimeInterface $paymentDeadline): self
+    public function setPaymentDeadline(DateTimeInterface $paymentDeadline): self
     {
         $this->paymentDeadline = $paymentDeadline;
 
@@ -247,12 +330,12 @@ class Invoice
         return $this;
     }
 
-    public function getServiceDoneAt(): ?\DateTimeInterface
+    public function getServiceDoneAt(): ?DateTimeInterface
     {
         return $this->serviceDoneAt;
     }
 
-    public function setServiceDoneAt(\DateTimeInterface $serviceDoneAt): self
+    public function setServiceDoneAt(DateTimeInterface $serviceDoneAt): self
     {
         $this->serviceDoneAt = $serviceDoneAt;
 
@@ -262,8 +345,8 @@ class Invoice
     /** @ORM\PrePersist */
     public function prePersist(): void
     {
-        if ($this->getStatus() === null) {
-            $this->setStatus("NEW");
+        if (null === $this->getStatus()) {
+            $this->setStatus('NEW');
         }
     }
 

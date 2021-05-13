@@ -3,18 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\InvoiceService;
-use Faker\Factory;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class InvoiceServiceFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create("fr_FR");
+        $faker = Factory::create('fr_FR');
 
-        for ($index = 0; $index < 300; $index++) {
+        for ($index = 0; $index < 300; ++$index) {
             $i = new InvoiceService();
             $i->setName($faker->sentence(4));
             $i->setDescription($faker->randomElement([null, $faker->sentence(8)]));

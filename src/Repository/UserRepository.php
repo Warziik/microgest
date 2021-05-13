@@ -43,9 +43,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function clearUnconfirmedAccounts(DateTime $dateTime): array
     {
         $unconfirmedAccounts = $this->createQueryBuilder('u')
-            ->where("u.createdAt < :dateTime")
-            ->setParameter("dateTime", $dateTime)
-            ->andWhere("u.confirmedAt IS NULL")
+            ->where('u.createdAt < :dateTime')
+            ->setParameter('dateTime', $dateTime)
+            ->andWhere('u.confirmedAt IS NULL')
             ->getQuery()
             ->getResult();
 

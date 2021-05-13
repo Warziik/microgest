@@ -2,56 +2,56 @@
 
 namespace App\Entity;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
-use App\Controller\ResetPassword;
-use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\ForgotPassword;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Controller\ConfirmAccount;
+use App\Controller\ForgotPassword;
+use App\Controller\ResetPassword;
+use App\Repository\UserRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  * @ORM\HasLifecycleCallbacks
  */
-#[UniqueEntity(fields: ["email"], message: "This email address is already in use.")]
+#[UniqueEntity(fields: ['email'], message: 'This email address is already in use.')]
 #[
     ApiResource(
-        normalizationContext: ["groups" => ["users:read"]],
-        denormalizationContext: ["groups" => ["users:write"]],
+        normalizationContext: ['groups' => ['users:read']],
+        denormalizationContext: ['groups' => ['users:write']],
         collectionOperations: [
-            "post",
-            "forgotPassword" => [
-                "method" => "POST",
-                "path" => "/users/forgot_password",
-                "controller" => ForgotPassword::class,
-                "denormalization_context" => ["groups" => ["forgotPassword:write"]]
+            'post',
+            'forgotPassword' => [
+                'method' => 'POST',
+                'path' => '/users/forgot_password',
+                'controller' => ForgotPassword::class,
+                'denormalization_context' => ['groups' => ['forgotPassword:write']],
             ],
-            "resetPassword" => [
-                "method" => "POST",
-                "path" => "/users/reset_password",
-                "controller" => ResetPassword::class,
-                "denormalization_context" => ["groups" => ["resetPassword:write"]]
-            ]
+            'resetPassword' => [
+                'method' => 'POST',
+                'path' => '/users/reset_password',
+                'controller' => ResetPassword::class,
+                'denormalization_context' => ['groups' => ['resetPassword:write']],
+            ],
         ],
         itemOperations: [
-            "get" => ["security" => "object == user"],
-            "put" => ["security" => "object == user"],
-            "delete" => ["security" => "object == user"],
-            "confirmAccount" => [
-                "method" => "POST",
-                "path" => "/users/{id}/confirm_account",
-                "controller" => ConfirmAccount::class
-            ]
+            'get' => ['security' => 'object == user'],
+            'put' => ['security' => 'object == user'],
+            'delete' => ['security' => 'object == user'],
+            'confirmAccount' => [
+                'method' => 'POST',
+                'path' => '/users/{id}/confirm_account',
+                'controller' => ConfirmAccount::class,
+            ],
         ]
     )
 ]
@@ -62,98 +62,101 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(["users:read"])]
+    #[Groups(['users:read'])]
     private int $id;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private string $firstname;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private string $lastname;
 
     /** @ORM\Column(type="string", length=255, unique=true) */
-    #[Groups(["users:read", "users:write", "forgotPassword:write"])]
+    #[Groups(['users:read', 'users:write', 'forgotPassword:write'])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:write", "resetPassword:write"])]
+    #[Groups(['users:write', 'resetPassword:write'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     private string $password;
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
-    #[Groups(["users:read"])]
+    #[Groups(['users:read'])]
     #[Assert\Length(min: 10, max: 255)]
     private ?string $confirmationToken = null;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["users:read"])]
+    #[Groups(['users:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $confirmedAt = null;
 
     /** @ORM\Column(type="json") */
-    #[Groups(["users:read"])]
+    #[Groups(['users:read'])]
     private array $roles = [];
 
     /** @ORM\Column(type="string", length=255, nullable=true) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $phone = null;
 
     /** @ORM\Column(type="string", length=40, nullable=true) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $businessName = null;
 
     /** @ORM\Column(type="bigint") */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: "/^\d{14}$/", message: "Le numéro SIRET doit contenir 14 chiffres.")]
+    #[Assert\Regex(pattern: "/^\d{14}$/", message: 'Le numéro SIRET doit contenir 14 chiffres.')]
     private string $siret;
 
     /** @ORM\Column(type="string", length=13, nullable=true) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank(allowNull: true)]
-    #[Assert\Regex(pattern: "/^([A-Z]{2})(\d{2})(\d{9})$/", message: "Le numéro de TVA n'est pas au format valide (FR 00 000000000).")]
+    #[Assert\Regex(
+        pattern: "/^([A-Z]{2})(\d{2})(\d{9})$/",
+        message: "Le numéro de TVA n'est pas au format valide (FR 00 000000000)."
+    )]
     private ?string $tvaNumber = null;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
     private string $address;
 
     /** @ORM\Column(type="string", length=255) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
     private string $city;
 
     /** @ORM\Column(type="integer") */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
     private int $postalCode;
 
     /** @ORM\Column(type="string", length=3) */
-    #[Groups(["users:read", "users:write"])]
+    #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;
 
     /** @ORM\Column(type="datetime") */
-    #[Groups(["users:read"])]
+    #[Groups(['users:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
     /** @ORM\Column(type="datetime", nullable=true) */
-    #[Groups(["users:read"])]
+    #[Groups(['users:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 
@@ -335,12 +338,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getConfirmedAt(): ?\DateTimeInterface
+    public function getConfirmedAt(): ?DateTimeInterface
     {
         return $this->confirmedAt;
     }
 
-    public function setConfirmedAt(?\DateTimeInterface $confirmedAt): self
+    public function setConfirmedAt(?DateTimeInterface $confirmedAt): self
     {
         $this->confirmedAt = $confirmedAt;
 

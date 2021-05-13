@@ -23,9 +23,8 @@ class InvoiceRepository extends ServiceEntityRepository
 
     /**
      * Retrieve the last chrono set to an Invoice by the logged User.
-     * 
+     *
      * @param User $user The current logged User
-     * @return null|string
      */
     public function findLastChrono(User $user): ?string
     {
@@ -34,7 +33,7 @@ class InvoiceRepository extends ServiceEntityRepository
             ->join('i.customer', 'c')
             ->where('c.owner = :user')
             ->setParameter('user', $user)
-            ->orderBy("i.chrono", "DESC")
+            ->orderBy('i.chrono', 'DESC')
             ->setMaxResults(1)
             ->getQuery();
 

@@ -12,7 +12,7 @@ class JwtCreatedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            Events::JWT_CREATED => "onJwtCreated"
+            Events::JWT_CREATED => 'onJwtCreated',
         ];
     }
 
@@ -25,12 +25,12 @@ class JwtCreatedSubscriber implements EventSubscriberInterface
             return;
         }
 
-        unset($payload["roles"]);
+        unset($payload['roles']);
 
-        $payload["id"] = $user->getId();
-        $payload["firstname"] = $user->getFirstname();
-        $payload["lastname"] = $user->getLastname();
-        $payload["email"] = $user->getUsername();
+        $payload['id'] = $user->getId();
+        $payload['firstname'] = $user->getFirstname();
+        $payload['lastname'] = $user->getLastname();
+        $payload['email'] = $user->getUsername();
 
         $event->setData($payload);
     }

@@ -13,8 +13,8 @@ class LogoutTest extends ApiTestCase
 {
     use FixturesTrait;
 
-    private const REVOKE_REFRESH_TOKEN_URI = "/api/authentication_token/revoke";
-    private string $cookieName = "__refresh__token";
+    private const REVOKE_REFRESH_TOKEN_URI = '/api/authentication_token/revoke';
+    private string $cookieName = '__refresh__token';
 
     protected function setUp(): void
     {
@@ -28,15 +28,15 @@ class LogoutTest extends ApiTestCase
         $client = static::createClient();
         $client->getCookieJar()->set(new Cookie(
             $this->cookieName,
-            "demoRefreshToken",
+            'demoRefreshToken',
             strtotime('+1 day')
         ));
         $client->request(Request::METHOD_POST, self::REVOKE_REFRESH_TOKEN_URI);
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            "code" => Response::HTTP_OK,
-            "message" => "User logged out successfully."
+            'code' => Response::HTTP_OK,
+            'message' => 'User logged out successfully.',
         ]);
     }
 
@@ -45,14 +45,14 @@ class LogoutTest extends ApiTestCase
         $client = static::createClient();
         $client->getCookieJar()->set(new Cookie(
             $this->cookieName,
-            "invalidRefreshToken",
+            'invalidRefreshToken',
             strtotime('+1 day')
         ));
         $client->request(Request::METHOD_POST, self::REVOKE_REFRESH_TOKEN_URI);
 
         $this->assertJsonContains([
-            "code" => Response::HTTP_INTERNAL_SERVER_ERROR,
-            "message" => "An unexpected error occurred during the process, please try again later."
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'message' => 'An unexpected error occurred during the process, please try again later.',
         ]);
     }
 
@@ -62,8 +62,8 @@ class LogoutTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
-            "code" => Response::HTTP_BAD_REQUEST,
-            "message" => "No __refresh__token cookie found in the request headers."
+            'code' => Response::HTTP_BAD_REQUEST,
+            'message' => 'No __refresh__token cookie found in the request headers.',
         ]);
     }
 }

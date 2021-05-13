@@ -16,21 +16,21 @@ class Logout extends AbstractController
 {
     public function logout(Request $request, KernelInterface $kernel)
     {
-        $cookieName = $this->getParameter("app.jwt_refresh_token_cookie_name");
+        $cookieName = $this->getParameter('app.jwt_refresh_token_cookie_name');
         if ($request->cookies->has($cookieName)) {
             $application = new Application($kernel);
             $application->setAutoExit(false);
             $input = new ArrayInput([
                 'command' => 'gesdinet:jwt:revoke',
-                'refresh_token' => $request->cookies->get($cookieName)
+                'refresh_token' => $request->cookies->get($cookieName),
             ]);
             $status = $application->run($input, new NullOutput());
 
-            if ($status === 0) {
+            if (0 === $status) {
                 $response = new JsonResponse(
                     [
-                        "code" => Response::HTTP_OK,
-                        "message" => "User logged out successfully."
+                        'code' => Response::HTTP_OK,
+                        'message' => 'User logged out successfully.',
                     ],
                     Response::HTTP_OK
                 );
@@ -38,8 +38,8 @@ class Logout extends AbstractController
             } else {
                 $response = new JsonResponse(
                     [
-                        "code" => Response::HTTP_INTERNAL_SERVER_ERROR,
-                        "message" => "An unexpected error occurred during the process, please try again later."
+                        'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                        'message' => 'An unexpected error occurred during the process, please try again later.',
                     ],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
@@ -50,8 +50,8 @@ class Logout extends AbstractController
 
         return new JsonResponse(
             [
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => "No __refresh__token cookie found in the request headers."
+                'code' => Response::HTTP_BAD_REQUEST,
+                'message' => 'No __refresh__token cookie found in the request headers.',
             ],
             Response::HTTP_BAD_REQUEST
         );

@@ -2,13 +2,13 @@
 
 namespace App\OpenApi;
 
-use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
 use Symfony\Component\HttpFoundation\Response;
 
 class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
 {
-    const OPERATION_PATH = "/api/invoices";
+    public const OPERATION_PATH = '/api/invoices';
 
     public function __construct(private OpenApiFactoryInterface $decorated)
     {
@@ -22,7 +22,7 @@ class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath(self::OPERATION_PATH, $pathItem->withGet(
             $operation
                 ->withSummary("Gets all invoices belonging to all of the User's customers.")
-                ->withDescription("")
+                ->withDescription('')
                 ->withResponses([
                     Response::HTTP_OK => [
                         'content' => [
@@ -32,15 +32,15 @@ class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
                                     'properties' => [
                                         '@context' => [
                                             'type' => 'string',
-                                            'readOnly' => true
+                                            'readOnly' => true,
                                         ],
                                         '@id' => [
                                             'type' => 'string',
-                                            'readOnly' => true
+                                            'readOnly' => true,
                                         ],
                                         '@type' => [
                                             'type' => 'string',
-                                            'readOnly' => true
+                                            'readOnly' => true,
                                         ],
                                         'allInvoices' => [
                                             'type' => 'array',
@@ -50,48 +50,48 @@ class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
                                                 'properties' => [
                                                     '@id' => [
                                                         'type' => 'string',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     '@type' => [
                                                         'type' => 'string',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     'id' => [
                                                         'type' => 'integer',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     'amount' => [
                                                         'type' => 'number',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     'status' => [
                                                         'type' => 'string',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     'customer' => [
-                                                        'type' => 'object'
+                                                        'type' => 'object',
                                                     ],
                                                     'paidAt' => [
                                                         'type' => 'string',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     'sentAt' => [
                                                         'type' => 'string',
-                                                        'readOnly' => true
+                                                        'readOnly' => true,
                                                     ],
                                                     'chrono' => [
                                                         'type' => 'string',
-                                                        'readOnly' => true
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
+                                                        'readOnly' => true,
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
                     ],
-                    Response::HTTP_FORBIDDEN => ["description" => "Access denied."]
+                    Response::HTTP_FORBIDDEN => ['description' => 'Access denied.'],
                 ])
         ));
 

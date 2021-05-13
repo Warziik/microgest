@@ -26,6 +26,7 @@ class GetInvoices
                 $invoices[] = $invoice;
             }
         }
+
         return $invoices;
     }
 }

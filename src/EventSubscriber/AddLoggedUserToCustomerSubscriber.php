@@ -2,14 +2,14 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Customer;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\Customer;
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Security;
 
 final class AddLoggedUserToCustomerSubscriber implements EventSubscriberInterface
 {
@@ -20,14 +20,12 @@ final class AddLoggedUserToCustomerSubscriber implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ["onKernelView", EventPriorities::PRE_VALIDATE]
+            KernelEvents::VIEW => ['onKernelView', EventPriorities::PRE_VALIDATE],
         ];
     }
 
     /**
      * Add the logged User to a Customer before validationg the entity.
-     * 
-     * @param ViewEvent $event
      */
     public function onKernelView(ViewEvent $event)
     {
@@ -35,7 +33,7 @@ final class AddLoggedUserToCustomerSubscriber implements EventSubscriberInterfac
         $method = $event->getRequest()->getMethod();
 
         $user = $this->security->getUser();
-        if ($entity instanceof Customer && $method === Request::METHOD_POST && $user instanceof User) {
+        if ($entity instanceof Customer && Request::METHOD_POST === $method && $user instanceof User) {
             $entity->setOwner($user);
         }
     }

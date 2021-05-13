@@ -19,22 +19,20 @@ final class PasswordEncoderSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ["onKernelView", EventPriorities::PRE_WRITE],
+            KernelEvents::VIEW => ['onKernelView', EventPriorities::PRE_WRITE],
         ];
     }
 
     /**
      * Encode the password before persisting in database if the entity is an instance of User
-     * and the request's method is POST or PUT
-     * 
-     * @param ViewEvent $event
+     * and the request's method is POST or PUT.
      */
     public function onKernelView(ViewEvent $event)
     {
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if ($entity instanceof User && ($method === Request::METHOD_POST || $method === Request::METHOD_PUT)) {
+        if ($entity instanceof User && (Request::METHOD_POST === $method || Request::METHOD_PUT === $method)) {
             $entity->setPassword($this->passwordEncoder->encodePassword($entity, $entity->getPassword()));
         }
     }

@@ -4,12 +4,12 @@ namespace App\Tests\EventSubsriber;
 
 use App\Entity\User;
 use App\EventSubscriber\AccountConfirmationSubscriber;
-use PHPUnit\Framework\TestCase;
 use App\Notification\UserNotification;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class AccountConfirmationSubscriberTest extends TestCase
 {
@@ -18,6 +18,7 @@ class AccountConfirmationSubscriberTest extends TestCase
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
+
         return new ViewEvent($kernel, $request, 1, $user);
     }
 
@@ -31,7 +32,7 @@ class AccountConfirmationSubscriberTest extends TestCase
         $user = $this->createMock(User::class);
         $userNotification = $this->createMock(UserNotification::class);
 
-        $user->expects($this->once())->method("setConfirmationToken");
+        $user->expects($this->once())->method('setConfirmationToken');
 
         $event = $this->getViewEvent($user);
         $subscriber = new AccountConfirmationSubscriber($userNotification);
@@ -43,7 +44,7 @@ class AccountConfirmationSubscriberTest extends TestCase
         $user = $this->createMock(User::class);
         $userNotification = $this->createMock(UserNotification::class);
 
-        $userNotification->expects($this->once())->method("sendConfirmAccountEmail");
+        $userNotification->expects($this->once())->method('sendConfirmAccountEmail');
 
         $event = $this->getViewEvent($user);
         $subscriber = new AccountConfirmationSubscriber($userNotification);

@@ -11,11 +11,11 @@ class ResetPasswordFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $testResetPassword = (new ResetPassword())->setUser($this->getReference("testUser"));
+        $testResetPassword = (new ResetPassword())->setUser($this->getReference('testUser'));
         $manager->persist($testResetPassword);
 
-        for ($i = 0; $i < 50; $i++) {
-            $resetPassword = (new ResetPassword())->setUser($this->getReference("user-" . rand(1, 50)));
+        for ($i = 0; $i < 50; ++$i) {
+            $resetPassword = (new ResetPassword())->setUser($this->getReference('user-'.rand(1, 50)));
             $manager->persist($resetPassword);
         }
         $manager->flush();

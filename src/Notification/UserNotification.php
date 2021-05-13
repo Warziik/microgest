@@ -5,8 +5,8 @@ namespace App\Notification;
 use App\Entity\ResetPassword;
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpClient\Exception\TransportException;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class UserNotification

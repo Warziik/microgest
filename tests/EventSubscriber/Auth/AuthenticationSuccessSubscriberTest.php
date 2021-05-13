@@ -16,13 +16,16 @@ class AuthenticationSuccessSubscriberTest extends TestCase
 {
     public function testEventSubscription(): void
     {
-        $this->assertArrayHasKey(Events::AUTHENTICATION_SUCCESS, AuthenticationSuccessSubscriber::getSubscribedEvents());
+        $this->assertArrayHasKey(
+            Events::AUTHENTICATION_SUCCESS,
+            AuthenticationSuccessSubscriber::getSubscribedEvents()
+        );
     }
 
     public function testSetCookieOnAuthenticationSuccess(): void
     {
-        $cookieName = "__refresh__token";
-        $refreshTokenParameterName = "refresh_token";
+        $cookieName = '__refresh__token';
+        $refreshTokenParameterName = 'refresh_token';
         $refreshTokenTtl = 900;
 
         $mockResponse = $this->createMock(Response::class);
@@ -32,16 +35,16 @@ class AuthenticationSuccessSubscriberTest extends TestCase
         $mockResponse->headers = $mockResponseHeaderBag;
 
         $mockAuthenticationSuccessEvent->expects($this->once())
-            ->method("getResponse")->willReturn($mockResponse);
+            ->method('getResponse')->willReturn($mockResponse);
 
         $mockAuthenticationSuccessEvent->expects($this->atLeast(2))
-            ->method("getData")->willReturn(["token" => "demoToken", "refresh_token" => "demoRefreshToken"]);
+            ->method('getData')->willReturn(['token' => 'demoToken', 'refresh_token' => 'demoRefreshToken']);
 
         $mockResponseHeaderBag->expects($this->once())
-            ->method("setCookie")->with(new Cookie(
+            ->method('setCookie')->with(new Cookie(
                 $cookieName,
-                "demoRefreshToken",
-                (new DateTime())->add(new DateInterval("PT" . $refreshTokenTtl . "S")),
+                'demoRefreshToken',
+                (new DateTime())->add(new DateInterval('PT'.$refreshTokenTtl.'S')),
                 '/',
                 null,
                 true,
@@ -49,7 +52,7 @@ class AuthenticationSuccessSubscriberTest extends TestCase
             ));
 
         $mockAuthenticationSuccessEvent->expects($this->once())
-            ->method("setData");
+            ->method('setData');
 
         $subscriber = new AuthenticationSuccessSubscriber($refreshTokenTtl, $refreshTokenParameterName, $cookieName);
         $subscriber->onAuthenticationSuccess($mockAuthenticationSuccessEvent);

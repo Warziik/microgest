@@ -18,7 +18,7 @@ class RefreshJwtTokenSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => "onKernelRequest"
+            KernelEvents::REQUEST => 'onKernelRequest',
         ];
     }
 
@@ -30,9 +30,8 @@ class RefreshJwtTokenSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
-        if (
-            $request->getMethod() === Request::METHOD_POST &&
-            $request->attributes->get("_route") === "gesdinet_jwt_refresh_token"
+        if (Request::METHOD_POST === $request->getMethod() &&
+            'gesdinet_jwt_refresh_token' === $request->attributes->get('_route')
         ) {
             $request->attributes->set($this->refreshTokenParameterName, $request->cookies->get($this->cookieName));
         }

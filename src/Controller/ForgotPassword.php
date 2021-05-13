@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\ResetPassword;
-use App\Repository\UserRepository;
+use App\Entity\User;
 use App\Notification\UserNotification;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ResetPasswordRepository;
-use Symfony\Component\HttpFoundation\Response;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @see App\OpenApi\ForgotPasswordOpenApi
@@ -28,12 +28,24 @@ class ForgotPassword
     {
         $email = $data->getEmail();
         if (is_null($email)) {
-            return new JsonResponse(["code" => Response::HTTP_BAD_REQUEST, "message" => "Email address must be provided as POST parameter."], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(
+                [
+                    'code' => Response::HTTP_BAD_REQUEST,
+                    'message' => 'Email address must be provided as POST parameter.',
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
         if (is_null($user)) {
-            return new JsonResponse(["code" => Response::HTTP_NOT_FOUND, "message" => "User not found."], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(
+                [
+                    'code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'User not found.',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
         }
 
         $resetPassword = (new ResetPassword())->setUser($user);
@@ -42,6 +54,13 @@ class ForgotPassword
         $this->entityManager->flush();
 
         $this->userNotification->sendResetPasswordMail($user, $resetPassword);
-        return new JsonResponse(["code" => Response::HTTP_OK, "message" => "Email sent successfully."], Response::HTTP_OK);
+
+        return new JsonResponse(
+            [
+                'code' => Response::HTTP_OK,
+                'message' => 'Email sent successfully.',
+            ],
+            Response::HTTP_OK
+        );
     }
 }

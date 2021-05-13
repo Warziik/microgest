@@ -3,13 +3,13 @@
 namespace App\Tests\EventSubsriber;
 
 use App\Entity\Customer;
+use App\EventSubscriber\AddLoggedUserToCustomerSubscriber;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use App\EventSubscriber\AddLoggedUserToCustomerSubscriber;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Security;
 
 class AddLoggedUserToCustomerSubscriberTest extends TestCase
 {
@@ -25,9 +25,9 @@ class AddLoggedUserToCustomerSubscriberTest extends TestCase
     public function testAddLoggedUserToCustomer(): void
     {
         $customer = (new Customer())
-            ->setFirstname("test")
-            ->setLastname("test")
-            ->setEmail("test@localhost.dev");
+            ->setFirstname('test')
+            ->setLastname('test')
+            ->setEmail('test@localhost.dev');
 
         $securityMock = $this->createMock(Security::class);
         $securityMock->expects($this->once())->method('getUser');

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ClearUnconfirmedAccountsCommand extends Command
 {
-    private const DEFAULT_DATETIME_VALUE = "-1 week";
+    private const DEFAULT_DATETIME_VALUE = '-1 week';
 
     protected static $defaultName = 'app:clear-unconfirmed-accounts';
 
@@ -23,20 +23,20 @@ class ClearUnconfirmedAccountsCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription("Clear all unconfirmed accounts of the database.")
-            ->addArgument("datetime", InputArgument::OPTIONAL);
+            ->setDescription('Clear all unconfirmed accounts of the database.')
+            ->addArgument('datetime', InputArgument::OPTIONAL);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $datetime = $input->getArgument("datetime");
+        $datetime = $input->getArgument('datetime');
         if (is_null($datetime)) {
             $datetime = new DateTime(self::DEFAULT_DATETIME_VALUE);
         } else {
             $datetime = new DateTime($datetime);
         }
 
-        $output->writeln("Cleaning unconfirmed accounts...");
+        $output->writeln('Cleaning unconfirmed accounts...');
 
         [$isSuccess, $deletedUsers] = $this->userRepository->clearUnconfirmedAccounts($datetime);
 
@@ -44,11 +44,12 @@ class ClearUnconfirmedAccountsCommand extends Command
             foreach ($deletedUsers as $deletedUser) {
                 $output->writeln(
                     sprintf(
-                        "Deleted account: <comment>%s</comment>",
+                        'Deleted account: <comment>%s</comment>',
                         $deletedUser->getUsername()
                     )
                 );
             }
+
             return Command::SUCCESS;
         }
 

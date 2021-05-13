@@ -20,15 +20,15 @@ class UserCheckerTest extends ApiTestCase
 
     public function testLoginWithoutConfirmingItsAccount(): void
     {
-        static::createClient()->request(Request::METHOD_POST, "/api/authentication_token", ["json" => [
-            "email" => "demoUser-1@localhost.dev",
-            "password" => "demo1234",
+        static::createClient()->request(Request::METHOD_POST, '/api/authentication_token', ['json' => [
+            'email' => 'demoUser-1@localhost.dev',
+            'password' => 'demo1234',
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertResponseHeaderSame('content-type', 'application/json');
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => 'Unconfirmed account.'
+            'message' => 'Unconfirmed account.',
         ]);
     }
 }

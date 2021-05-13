@@ -84,6 +84,12 @@ test-php: ##@tests Execute the PHP tests.
 test-js: ##@tests Execute the JavaScript tests.
 	$(NODE_CONTAINER) yarn test
 
+phpcs: ##@code-quality Check the PHP code quality (PHPCodeSniffer)
+	${PHP_CONTAINER} vendor/bin/phpcs
+
+phpcbf: ##@code-quality Fix small issues in PHP code quality
+	${PHP_CONTAINER} vendor/bin/phpcbf
+
 .PHONY: lint
 lint: ##@code-quality Check the JavaScript code quality (ESint).
 	$(NODE_CONTAINER) yarn lint

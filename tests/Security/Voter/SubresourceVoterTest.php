@@ -17,7 +17,7 @@ class SubresourceVoterTest extends TestCase
     public function testVoteAccessGranted(): void
     {
         $user = $this->createMock(User::class);
-        $user->method("getId")->willReturn(1);
+        $user->method('getId')->willReturn(1);
 
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository->expects($this->once())
@@ -30,22 +30,25 @@ class SubresourceVoterTest extends TestCase
             ->willReturn($userRepository);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())->method("getUser")->willReturn($user);
+        $token->expects($this->any())->method('getUser')->willReturn($user);
 
         $subject = [\App\Entity\User::class => ['id' => 1]];
 
         $subresourceVoter = new SubresourceVoter($entityManager);
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $subresourceVoter->vote($token, $subject, ["GET_SUBRESOURCE"]));
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $subresourceVoter->vote($token, $subject, ['GET_SUBRESOURCE'])
+        );
     }
 
     public function testVoteAccessDenied(): void
     {
         $user = $this->createMock(User::class);
-        $user->method("getId")->willReturn(1);
+        $user->method('getId')->willReturn(1);
 
         $customer = $this->createMock(Customer::class);
-        $customer->method("getId")->willReturn(1);
-        $customer->method("getOwner")->willReturn(new User());
+        $customer->method('getId')->willReturn(1);
+        $customer->method('getOwner')->willReturn(new User());
 
         $customerRepository = $this->createMock(CustomerRepository::class);
         $customerRepository->expects($this->once())
@@ -58,11 +61,14 @@ class SubresourceVoterTest extends TestCase
             ->willReturn($customerRepository);
 
         $token = $this->createMock(TokenInterface::class);
-        $token->expects($this->any())->method("getUser")->willReturn($user);
+        $token->expects($this->any())->method('getUser')->willReturn($user);
 
         $subject = [\App\Entity\Customer::class => ['id' => 1]];
 
         $subresourceVoter = new SubresourceVoter($entityManager);
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $subresourceVoter->vote($token, $subject, ["GET_SUBRESOURCE"]));
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $subresourceVoter->vote($token, $subject, ['GET_SUBRESOURCE'])
+        );
     }
 }

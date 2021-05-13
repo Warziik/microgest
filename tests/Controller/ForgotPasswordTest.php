@@ -21,8 +21,8 @@ class ForgotPasswordTest extends ApiTestCase
 
     public function testValidRequest(): void
     {
-        static::createClient()->request(Request::METHOD_POST, "/api/users/forgot_password", ["json" => [
-            "email" => "testUser@localhost.dev"
+        static::createClient()->request(Request::METHOD_POST, '/api/users/forgot_password', ['json' => [
+            'email' => 'testUser@localhost.dev',
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -31,8 +31,8 @@ class ForgotPasswordTest extends ApiTestCase
 
     public function testInvalidRequest(): void
     {
-        static::createClient()->request(Request::METHOD_POST, "/api/users/forgot_password", ["json" => [
-            "test" => "invalid_field"
+        static::createClient()->request(Request::METHOD_POST, '/api/users/forgot_password', ['json' => [
+            'test' => 'invalid_field',
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
@@ -40,8 +40,8 @@ class ForgotPasswordTest extends ApiTestCase
 
     public function testNotFoundResource(): void
     {
-        static::createClient()->request(Request::METHOD_POST, "/api/users/forgot_password", ["json" => [
-            "email" => "invalid_email"
+        static::createClient()->request(Request::METHOD_POST, '/api/users/forgot_password', ['json' => [
+            'email' => 'invalid_email',
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);

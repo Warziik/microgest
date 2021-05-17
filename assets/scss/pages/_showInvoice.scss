@@ -1,24 +1,8 @@
 .showInvoice {
   padding: 2.4rem;
-  width: 120rem;
   height: 100%;
   border-radius: var(--radius);
   background-color: var(--content-background);
-
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  gap: 0 2.4rem;
-
-  &__preview {
-    width: 61.6rem;
-    cursor: pointer;
-    border-radius: var(--radius);
-    background-color: var(--body-background);
-    transition: background-color 0.3s ease-in;
-    &:hover {
-      background-color: var(--primary-color-dark-a1);
-    }
-  }
 
   &__title {
     display: flex;

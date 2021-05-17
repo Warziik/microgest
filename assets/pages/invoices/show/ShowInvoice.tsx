@@ -65,10 +65,6 @@ export function ShowInvoice() {
         openDeleteInvoiceModalBtn.current?.focus();
     }
 
-    const handleDownloadInvoice = () => {
-        console.log("handle download invoice btn clicked!");
-    }
-
     const handleDeleteBtn = async () => {
         if (invoice) {
             const [isSuccess] = await deleteInvoice(invoice.id);
@@ -103,7 +99,6 @@ export function ShowInvoice() {
             <AddEditInvoiceForm invoiceToEdit={invoice} changeInvoice={editInvoice} />
         </Modal>}
         {invoice && <>
-            <div className="showInvoice__preview"></div>
             <div className="showInvoice__details">
                 <div className="showInvoice__title">
                     <h2>Facture n°{invoice.chrono}</h2>
@@ -186,8 +181,8 @@ export function ShowInvoice() {
                 <Button
                     className="btn--secondary btn--center"
                     icon="download"
-                    onClick={handleDownloadInvoice}
-                >Télécharger la facture</Button>
+                    onClick={() => history.push(`/factures/${invoice.id}/export`)}
+                >Exporter la facture</Button>
             </div>
         </> || <p>Chargement...</p>}
     </div>

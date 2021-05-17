@@ -7,6 +7,7 @@ import ResetPassword from '../pages/auth/ResetPassword';
 import { Customers } from '../pages/customers/Customers';
 import { ShowCustomer } from '../pages/customers/show/ShowCustomer';
 import Home from '../pages/Home';
+import { InvoiceExport } from '../pages/invoices/InvoiceExport';
 import { Invoices } from '../pages/invoices/Invoices';
 import { ShowInvoice } from '../pages/invoices/show/ShowInvoice';
 import {NotFound} from '../pages/NotFound';
@@ -18,6 +19,7 @@ export function Router() {
     return <BrowserRouter>
         <Switch>
             <PrivateRoute path={["/paramètres", "/paramètres/sécurité"]} component={Settings} />
+            <PrivateRoute path="/factures/:id/export" noLayout={true} component={InvoiceExport} />
             <PrivateRoute path="/factures/:id" component={ShowInvoice} />
             <PrivateRoute path="/factures" component={Invoices} />
             <PrivateRoute path="/clients/:id" component={ShowCustomer} />

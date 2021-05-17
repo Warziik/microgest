@@ -4,17 +4,25 @@ import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import { useAuth } from "../hooks/useAuth";
 
-export function PrivateRoute({ ...routeProps }: RouteProps) {
+interface Props extends RouteProps {
+    noLayout?: boolean;
+}
+
+export function PrivateRoute({ noLayout = false, ...rest }: Props) {
     const { isAuthenticated } = useAuth();
 
     if (isAuthenticated) {
-        return <div className="container">
-            <Sidebar />
-            <Topbar />
-            <main className="main">
-                <Route {...routeProps} />
-            </main>
-        </div>
+        if (noLayout) {
+            return <Route {...rest} />
+        } else {
+            return <div className="container">
+                <Sidebar />
+                <Topbar />
+                <main className="main">
+                    <Route {...rest} />
+                </main>
+            </div>
+        }
     } else {
         return <Redirect to="/connexion" />
     }

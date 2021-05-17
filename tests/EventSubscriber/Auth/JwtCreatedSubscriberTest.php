@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\EventSubsriber\Auth;
+namespace App\Tests\EventSubscriber\Auth;
 
 use App\Entity\User;
 use App\EventSubscriber\Auth\JwtCreatedSubscriber;
@@ -46,7 +46,8 @@ class JwtCreatedSubscriberTest extends TestCase
     public function testTryChangeJwtPayloadWithoutValidUser(): void
     {
         $mockJwtCreatedEvent = $this->createMock(JWTCreatedEvent::class);
-        $invalidUser = new class() {
+        $invalidUser = new class()
+        {
         };
 
         $mockJwtCreatedEvent->expects($this->once())->method('getUser')

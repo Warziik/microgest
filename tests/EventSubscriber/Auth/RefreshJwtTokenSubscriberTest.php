@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\EventSubsriber\Auth;
+namespace App\Tests\EventSubscriber\Auth;
 
 use App\EventSubscriber\Auth\RefreshJwtTokenSubscriber;
 use PHPUnit\Framework\TestCase;

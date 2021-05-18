@@ -121,6 +121,7 @@ class Customer
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['invoices:read'])]
     #[Assert\NotBlank]
     private ?User $owner = null;
 

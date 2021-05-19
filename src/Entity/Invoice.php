@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  * @ORM\Table(name="invoices")
- * @ORM\HasLifecycleCallbacks
  */
 #[
     ApiResource(
@@ -65,7 +64,7 @@ class Invoice
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['invoices:read', 'invoices:write', 'invoice:update', 'allInvoices:read'])]
+    #[Groups(['invoices:read', 'invoices:write', 'allInvoices:read'])]
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
@@ -102,7 +101,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
-        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -124,7 +122,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
-        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -137,7 +134,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
-        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -150,7 +146,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
-        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -190,7 +185,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
-        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -204,7 +198,6 @@ class Invoice
     }
 
     /* Returns the total amount of all the services prices */
-
     #[Groups(['invoices:read', 'customers_invoices_subresource', 'allInvoices:read', 'users_customers_subresource'])]
     public function getTotalAmount()
     {
@@ -340,14 +333,6 @@ class Invoice
         $this->serviceDoneAt = $serviceDoneAt;
 
         return $this;
-    }
-
-    /** @ORM\PrePersist */
-    public function prePersist(): void
-    {
-        if (null === $this->getStatus()) {
-            $this->setStatus('NEW');
-        }
     }
 
     /**

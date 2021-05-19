@@ -10,9 +10,15 @@
   }
 }
 
-.addEditInvoiceModal {
+.addInvoiceModal {
   .modal__content {
     width: 100rem;
+  }
+}
+
+.editInvoiceModal {
+  .modal__content {
+    width: 50rem;
   }
 }
 

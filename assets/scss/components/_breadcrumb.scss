@@ -1,0 +1,28 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  &__item {
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 700;
+
+      transition: color 0.3s ease-in;
+      &:hover {
+        color: var(--primary-color-hover);
+      }
+    }
+    &--active {
+      font-weight: 600;
+    }
+  }
+  color: var(--text-color);
+  &__separator {
+    svg {
+      height: 1rem;
+      max-width: 1rem;
+      transform: rotate(90deg);
+    }
+  }
+}

@@ -58,7 +58,7 @@ export function EditInvoiceForm({ invoiceToEdit, editInvoice }: Props) {
     mode: "onTouched",
     resolver: yupResolver(schema),
     defaultValues: {
-      status: invoiceToEdit?.status ?? "NEW",
+      status: invoiceToEdit.status ?? "NEW",
       sentAt: invoiceToEdit?.sentAt ? invoiceToEdit.sentAt.substr(0, 19) : null,
       paidAt: invoiceToEdit?.paidAt ? invoiceToEdit.paidAt.substr(0, 19) : null,
     },
@@ -83,7 +83,7 @@ export function EditInvoiceForm({ invoiceToEdit, editInvoice }: Props) {
       formData.paidAt
     );
     if (isSuccess) {
-      toast("success", "La facture a bien été modifiée.");
+      toast("success", "La facture a bien été mise à jour.");
       editInvoice(data as Invoice);
       onClose();
     } else {
@@ -105,10 +105,9 @@ export function EditInvoiceForm({ invoiceToEdit, editInvoice }: Props) {
   });
 
   return (
-    <form className="addEditInvoiceForm" onSubmit={onSubmit}>
+    <form className="editInvoiceForm" onSubmit={onSubmit}>
       <SelectInput
         error={errors.status}
-        className="customerSelectInput"
         label="Statut"
         options={selectStatusOptions}
         {...register("status")}
@@ -132,8 +131,8 @@ export function EditInvoiceForm({ invoiceToEdit, editInvoice }: Props) {
         />
       )}
 
-      <Button isLoading={isSubmitting} icon="edit">
-        Éditer
+      <Button isLoading={isSubmitting} center={true} htmlType="submit">
+        Mettre à jour
       </Button>
     </form>
   );

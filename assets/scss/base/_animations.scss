@@ -1,100 +1,117 @@
 @keyframes rotate-spinner {
-    0% {
-        transform: scale(1) rotate(360deg);
-    }
+  0% {
+    transform: scale(1) rotate(360deg);
+  }
 
-    50% {
-        transform: scale(.5) rotate(-360deg);
-    }
+  50% {
+    transform: scale(0.5) rotate(-360deg);
+  }
 
-    100% {
-        transform: scale(1) rotate(360deg);
-    }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
 }
 
 @keyframes toast-in-right {
-    from {
-        transform: translateX(100%);
-    }
+  from {
+    transform: translateX(100%);
+  }
 
-    to {
-        transform: translateX(0);
-    }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes toast-in-right-leave {
-    from {
-        transform: translateX(0);
-    }
+  from {
+    transform: translateX(0);
+  }
 
-    to {
-        transform: translateX(100%);
-    }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes toast-in-left {
-    from {
-        transform: translateX(-100%);
-    }
+  from {
+    transform: translateX(-100%);
+  }
 
-    to {
-        transform: translateX(0);
-    }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes toast-in-left-leave {
-    from {
-        transform: translateX(0);
-    }
+  from {
+    transform: translateX(0);
+  }
 
-    to {
-        transform: translateX(-100%);
-    }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes toast-trackProgress {
-    0% {
-        transform: scaleX(1);
-    }
+  0% {
+    transform: scaleX(1);
+  }
 
-    100% {
-        transform: scaleX(0);
-    }
+  100% {
+    transform: scaleX(0);
+  }
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-
 
 @keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
-@keyframes modalSlideTop {
-    from {
-        transform: translateY(-50px);
-    }
-    to {
-        transform: translateY(0px);
-    }
+@keyframes modalJumpToCenter {
+  from {
+    transform: translateY(200%);
+  }
+  to {
+    transform: translateY(0px);
+  }
 }
 
-@keyframes modalSlideBottom {
-    from {
-        transform: translateY(0px);
-    }
-    to {
-        transform: translateY(50px);
-    }
+@keyframes modalJumpToBottom {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(200%);
+  }
+}
+
+@keyframes modalSlideToLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0px);
+  }
+}
+
+@keyframes modalSlideToRight {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }

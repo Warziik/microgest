@@ -7,10 +7,12 @@ import { deleteInvoice, fetchInvoice } from "../../../services/InvoiceService";
 import { Invoice, InvoiceService } from "../../../types/Invoice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
-import Icon from "../../../components/Icon";
+import { Icon } from "../../../components/Icon";
 import { EditInvoiceForm } from "../EditInvoiceForm";
 import { Modal } from "../../../components/Modal";
 import { Tooltip } from "../../../components/Tooltip";
+import { GenerateInvoice } from "../../../components/GenerateInvoice";
+import { Breadcrumb } from "../../../components/Breadcrumb";
 
 type MatchParams = {
   id: string;
@@ -80,178 +82,205 @@ export function ShowInvoice() {
   };
 
   return (
-    <div className="showInvoice">
-      {invoice && (
-        <Modal
-          isOpen={showDeleteInvoiceModal}
-          onClose={closeDeleteInvoiceModal}
-          title="Supprimer la facture"
-          className="deleteInvoiceModal"
-        >
-          <p>
-            Êtes-vous sûr de vouloir supprimer la facture ? (action
-            irréversible)
-          </p>
-          <div className="deleteInvoiceModal__ctas">
-            <Button
-              className="btn--secondary"
-              onClick={closeDeleteInvoiceModal}
-              icon="close"
-            >
-              Annuler
-            </Button>
-            <Button
-              className="btn--primary"
-              onClick={handleDeleteBtn}
-              icon="trash"
-            >
-              Supprimer
-            </Button>
-          </div>
-        </Modal>
-      )}
-      {invoice && (
-        <Modal
-          isOpen={showEditInvoiceModal}
-          onClose={closeEditInvoiceModal}
-          title="Éditer la facture"
-          className="editInvoiceModal"
-        >
-          <EditInvoiceForm invoiceToEdit={invoice} editInvoice={editInvoice} />
-        </Modal>
-      )}
-      {(invoice && (
-        <>
-          <div className="showInvoice__details">
-            <div className="showInvoice__title">
-              <h2>Facture n°{invoice.chrono}</h2>
-              <Badge status={invoice.status} />
-            </div>
-
-            <div className="showInvoice__ctas">
+    <>
+      <div className="showInvoice">
+        {invoice && (
+          <Modal
+            isOpen={showDeleteInvoiceModal}
+            onClose={closeDeleteInvoiceModal}
+            title="Supprimer la facture"
+            className="deleteInvoiceModal"
+          >
+            <p>
+              Êtes-vous sûr de vouloir supprimer la facture ? (action
+              irréversible)
+            </p>
+            <div className="deleteInvoiceModal__ctas">
               <Button
-                icon="edit"
-                className="btn--outline"
-                onClick={openEditInvoiceModal}
-                ref={openEditInvoiceModalBtn}
+                type="contrast"
+                onClick={closeDeleteInvoiceModal}
+                icon="close"
               >
-                Éditer
+                Annuler
               </Button>
-
-              <Tooltip
-                isActive={invoice.status !== "NEW"}
-                content="Vous ne pouvez pas supprimer une facture qui a été envoyée, payée ou annulée."
-                position="bottom"
-              >
-                <Button
-                  icon="trash"
-                  className="btn--outline-danger"
-                  disabled={invoice.status !== "NEW"}
-                  ref={openDeleteInvoiceModalBtn}
-                  onClick={
-                    invoice.status === "NEW"
-                      ? openDeleteInvoiceModal
-                      : undefined
-                  }
-                >
-                  Supprimer
-                </Button>
-              </Tooltip>
+              <Button onClick={handleDeleteBtn} icon="trash" color="danger">
+                Supprimer
+              </Button>
             </div>
+          </Modal>
+        )}
+        {invoice && (
+          <Modal
+            isOpen={showEditInvoiceModal}
+            onClose={closeEditInvoiceModal}
+            title={`Éditer la facture n°${invoice.chrono}`}
+            className="editInvoiceModal"
+          >
+            <EditInvoiceForm
+              invoiceToEdit={invoice}
+              editInvoice={editInvoice}
+            />
+          </Modal>
+        )}
+        {(invoice && (
+          <>
+            <Breadcrumb
+              previousPage={{ name: "Mes factures", path: "/factures" }}
+              currentPage={`Facture n°${invoice.chrono}`}
+            />
+            <div className="showInvoice__main">
+              <div className="showInvoice__header">
+                <div className="showInvoice__header-title">
+                  <h1>Facture n°{invoice.chrono}</h1>
+                  <p>Créée {dayjs(invoice.createdAt).fromNow()} </p>
+                </div>
+                <div className="showInvoice__header-status">
+                  <Badge status={invoice.status} />
+                  {invoice.status === "SENT" && (
+                    <p>Envoyée le {dayjs(invoice.sentAt).format("LLLL")}</p>
+                  )}
+                  {invoice.status === "PAID" && (
+                    <p>Payée le {dayjs(invoice.paidAt).format("LLLL")}</p>
+                  )}
+                </div>
+                <div className="showInvoice__header-ctas">
+                  <Button
+                    type="contrast"
+                    center={true}
+                    icon="download"
+                    onClick={() =>
+                      history.push(`/facture/${invoice.id}/export`)
+                    }
+                  >
+                    Exporter la facture
+                  </Button>
+                  <Button
+                    icon="edit"
+                    type="outline"
+                    onClick={openEditInvoiceModal}
+                    ref={openEditInvoiceModalBtn}
+                  >
+                    Éditer
+                  </Button>
 
-            <div className="showInvoice__customer">
-              <h4>Client associé</h4>
-              <div className="showInvoice__customer-details">
-                <img
-                  src="https://via.placeholder.com/48"
-                  alt={`Photo de ${invoice.customer.firstname} ${invoice.customer.lastname}`}
-                />
-                <h3>
-                  {invoice.customer.type === "PERSON"
-                    ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
-                    : invoice.customer.company}
-                </h3>
-                <p>{invoice.customer.email}</p>
-                <Link
-                  to={`/clients/${invoice.customer.id}`}
-                  className="link-btn"
-                >
-                  Voir plus
-                  <Icon name="arrow-left" />
-                </Link>
+                  <Tooltip
+                    isActive={invoice.status !== "NEW"}
+                    content="Vous ne pouvez pas supprimer une facture qui a été envoyée, payée ou annulée."
+                    position="left"
+                  >
+                    <Button
+                      icon="trash"
+                      type="outline"
+                      color="danger"
+                      disabled={invoice.status !== "NEW"}
+                      ref={openDeleteInvoiceModalBtn}
+                      onClick={
+                        invoice.status === "NEW"
+                          ? openDeleteInvoiceModal
+                          : undefined
+                      }
+                    >
+                      Supprimer
+                    </Button>
+                  </Tooltip>
+                </div>
               </div>
-            </div>
 
-            <div className="showInvoice__info">
-              <p>Prestations réalisées</p>
-              <p>
-                {invoice.services.map((service: InvoiceService) => (
-                  <span key={service.id}>{service.name}</span>
-                )) || "-"}
-              </p>
-            </div>
+              <div className="showInvoice__details">
+                <div className="showInvoice__details-item">
+                  <h3>Client associé</h3>
+                  <div className="showInvoice__customer">
+                    <img src="https://via.placeholder.com/32" alt="" />
+                    <p>
+                      {invoice.customer.type === "PERSON"
+                        ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
+                        : invoice.customer.company}
+                    </p>
+                    <Link
+                      to={`/client/${invoice.customer.id}`}
+                      className="link-btn"
+                    >
+                      Voir plus
+                      <Icon name="arrow-left" />
+                    </Link>
+                  </div>
+                </div>
 
-            <div className="showInvoice__info">
-              <p>Date d&lsquo;envoi</p>
-              <p>
-                {(invoice.sentAt && dayjs(invoice.sentAt).format("LLLL")) ||
-                  "-"}
-              </p>
-            </div>
+                <div className="showInvoice__details-item">
+                  <h3>Détails</h3>
+                  <div className="customers__item-main-data">
+                    <p>Date d&lsquo;émission</p>
+                    <p>{dayjs(invoice.createdAt).format("LLL")}</p>
+                  </div>
+                  <div className="customers__item-main-data">
+                    <p>Date d&lsquo;exécution</p>
+                    <p>{dayjs(invoice.paymentDeadline).format("LL")}</p>
+                  </div>
+                  <div className="customers__item-main-data">
+                    <p>Date limite de règlement</p>
+                    <p>{dayjs(invoice.paymentDeadline).format("LL")}</p>
+                  </div>
+                  <div className="customers__item-main-data">
+                    <p>Taux de pénalité en cas de retard</p>
+                    <p>{invoice.paymentDelayRate}%</p>
+                  </div>
+                </div>
 
-            <div className="showInvoice__info">
-              <p>Date de paiement</p>
-              <p>
-                {(invoice.paidAt && dayjs(invoice.paidAt).fromNow()) || "-"}
-              </p>
-            </div>
+                {/*                 <div className="showInvoice__details-item">
+                  <h3>Méthodes de paiement</h3>
+                </div> */}
 
-            <div className="showInvoice__info">
-              <p>Date d&lsquo;exécution</p>
-              <p>
-                {(invoice.serviceDoneAt &&
-                  dayjs(invoice.serviceDoneAt).format("LLLL")) ||
-                  "-"}
-              </p>
-            </div>
+                <div className="showInvoice__details-item">
+                  <h3>Prestations réalisées</h3>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Nom</th>
+                        <th>Qté</th>
+                        <th>Prix (HT)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invoice.services.map(
+                        (service: InvoiceService, index: number) => (
+                          <tr key={index}>
+                            <td>{service.name}</td>
+                            <td>{service.quantity}</td>
+                            <td>{service.unitPrice}</td>
+                          </tr>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-            <div className="showInvoice__info">
-              <p>Date limite de règlement</p>
-              <p>
-                {(invoice.paymentDeadline &&
-                  dayjs(invoice.paymentDeadline).format("LLLL")) ||
-                  "-"}
-              </p>
+              <div className="showInvoice__display">
+                <GenerateInvoice invoice={invoice} />
+              </div>
+              {/*           <div className="showInvoice__other">
+            <h3>Envoi de la facture par mail</h3>
+            <p>
+              Vous pouvez envoyer la facture par mail au client en y écrivant un
+              message ci-dessous. Le mail sera ensuite envoyé à l’adresse email
+              liée au client.
+            </p>
+            <form>
+              <TextInput
+                ref={undefined}
+                type="textarea"
+                name="message"
+                error={undefined}
+              />
+              <Button icon="send" center={true} disabled={true}>
+                Envoyer
+              </Button>
+            </form>
+          </div> */}
             </div>
-
-            <div className="showInvoice__info">
-              <p>Taux de pénalité en cas de retard</p>
-              <p>
-                {(invoice.paymentDelayRate && `${invoice.paymentDelayRate}%`) ||
-                  "-"}
-              </p>
-            </div>
-
-            <div className="showInvoice__amount">
-              <p>Montant total (HT)</p>
-              <p>
-                {new Intl.NumberFormat("fr-FR", {
-                  style: "currency",
-                  currency: "EUR",
-                }).format(invoice.totalAmount)}
-              </p>
-            </div>
-
-            <Button
-              className="btn--secondary btn--center"
-              icon="download"
-              onClick={() => history.push(`/factures/${invoice.id}/export`)}
-            >
-              Exporter la facture
-            </Button>
-          </div>
-        </>
-      )) || <p>Chargement...</p>}
-    </div>
+          </>
+        )) || <p>Chargement...</p>}
+      </div>
+    </>
   );
 }

@@ -1,3 +1,7 @@
+button[type="submit"] {
+  margin-top: 2.4rem;
+}
+
 .btn {
   display: flex;
   align-items: center;
@@ -31,15 +35,15 @@
 
 .btn--onlyIcon {
   svg {
-    margin-right: 0;
+    margin-right: 0 !important;
   }
 }
 
-.btn--primary {
+.btn-fill--primary--normal {
   @extend .btn;
   background-color: var(--primary-color);
   &:hover {
-    background-color: var(--primary-color-darker);
+    background-color: var(--primary-color-hover);
   }
   &:disabled {
     background-color: var(--primary-color-disabled);
@@ -50,7 +54,19 @@
   }
 }
 
-.btn--outline {
+.btn-fill--danger--normal {
+  @extend .btn;
+  background-color: var(--error-color);
+  &:disabled {
+    background-color: var(--error-color-disabled);
+
+    &:hover {
+      background-color: var(--error-color-disabled);
+    }
+  }
+}
+
+.btn-outline--primary--normal {
   @extend .btn;
   background-color: transparent;
   border: 1px solid var(--primary-color);
@@ -58,7 +74,7 @@
 
   transition: background-color 0.3s ease-in-out;
   &:hover {
-    background-color: var(--primary-color-a05);
+    background-color: var(--primary-color-a1);
   }
 
   &:disabled {
@@ -69,23 +85,23 @@
       background-color: transparent;
     }
   }
+}
 
-  &-danger {
-    @extend .btn--outline;
-    border-color: var(--error-color);
-    color: var(--error-color);
-    &:hover {
-      background-color: var(--error-color-contrast);
-    }
+.btn-outline--danger--normal {
+  @extend .btn-outline--primary--normal;
+  border-color: var(--error-color);
+  color: var(--error-color);
+  &:hover {
+    background-color: var(--error-color-contrast);
+  }
 
-    &:disabled {
-      color: var(--error-color-disabled);
-      border-color: var(--error-color-disabled);
-    }
+  &:disabled {
+    color: var(--error-color-disabled);
+    border-color: var(--error-color-disabled);
   }
 }
 
-.btn--secondary {
+.btn-contrast--primary--normal {
   @extend .btn;
 
   background-color: var(--primary-color-a1);
@@ -97,7 +113,7 @@
   }
 }
 
-.btn--secondary-accent {
+.btn-contrast--accent--normal {
   @extend .btn;
 
   background-color: var(--accent-color-a1);
@@ -109,7 +125,7 @@
   }
 }
 
-.btn--secondary-small {
+.btn-contrast--primary--small {
   display: flex;
   align-items: center;
   padding: 0.8rem 1.6rem;
@@ -122,13 +138,31 @@
 
   svg {
     margin-right: 0.8rem;
-    width: 1.6rem;
-    height: 1.6rem;
+    max-width: 1.6rem;
+    max-height: 1.6rem;
   }
 
   transition: background-color 0.3s ease-out;
   &:hover {
     background-color: var(--primary-color-a16);
+  }
+}
+
+.btn-contrast--danger--small {
+  @extend .btn-contrast--primary--small;
+  color: var(--error-color);
+  background-color: var(--error-color-contrast);
+  &:hover {
+    background-color: var(--error-color-a16);
+  }
+}
+
+.btn-contrast--accent--small {
+  @extend .btn-contrast--primary--small;
+  background-color: var(--accent-color-a1);
+  color: var(--accent-color);
+  &:hover {
+    background-color: var(--accent-color-a16);
   }
 }
 

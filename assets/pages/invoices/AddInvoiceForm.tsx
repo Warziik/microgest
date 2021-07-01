@@ -16,6 +16,7 @@ import { ToggleInput } from "../../components/form/ToggleInput";
 import { createInvoice } from "../../services/InvoiceService";
 import { ErrorResponse } from "../../types/ErrorResponse";
 import { Violation } from "../../types/Violation";
+import { Icon } from "../../components/Icon";
 
 type Props = {
   addInvoice: (invoice: Invoice) => void;
@@ -49,17 +50,8 @@ export function AddInvoiceForm({ addInvoice }: Props) {
       yup.object().shape({
         name: yup.string().required("Ce champ est requis."),
         description: yup.string().max(255),
-        quantity: yup
-          .number()
-          .positive()
-          .integer()
-          .typeError("La quantité doit être un nombre positif.")
-          .required("Ce champ est requis."),
-        unitPrice: yup
-          .number()
-          .positive()
-          .typeError("Le prix unitaire doit être un nombre positif.")
-          .required("Ce champ est requis."),
+        quantity: yup.number().integer().required("Ce champ est requis."),
+        unitPrice: yup.number().required("Ce champ est requis."),
       })
     ),
     tvaApplicable: yup.boolean(),
@@ -82,7 +74,7 @@ export function AddInvoiceForm({ addInvoice }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       customer: selectCustomerOptions[0].value as number,
-      services: [{ name: "", description: "", quantity: 1, unitPrice: 0 }],
+      services: [{ name: "", quantity: 1, unitPrice: 0 }],
       tvaApplicable: true,
       serviceDoneAt: "",
       paymentDeadline: "",
@@ -125,7 +117,7 @@ export function AddInvoiceForm({ addInvoice }: Props) {
     if (isSuccess) {
       reset();
 
-      toast("success", "La nouvelle facture a bien été créée.");
+      toast("success", "La facture a bien été créée.");
       addInvoice(data as Invoice);
       onClose();
     } else {
@@ -147,97 +139,100 @@ export function AddInvoiceForm({ addInvoice }: Props) {
   });
 
   return (
-    <form className="addEditInvoiceForm" onSubmit={onSubmit}>
-      <SelectInput
-        error={errors.customer}
-        className="customerSelectInput"
-        label="Client associé"
-        options={selectCustomerOptions}
-        {...register("customer")}
-      />
+    <form className="addInvoiceForm" onSubmit={onSubmit}>
+      <div className="addInvoiceForm__general">
+        <h3>Général</h3>
+        <SelectInput
+          error={errors.customer}
+          label="Client"
+          options={selectCustomerOptions}
+          {...register("customer")}
+        />
+        <DatePickerInput
+          error={errors.serviceDoneAt}
+          label="Date d'exécution"
+          {...register("serviceDoneAt")}
+        />
 
-      <div className="form__group addEditInvoiceForm__services">
-        <Button
-          className="btn--secondary-small"
-          icon="add"
-          onClick={() => append({})}
-        >
-          Ajouter une prestation
-        </Button>
-        <div className="addEditInvoiceForm__services-list">
-          {fields.map((field, index: number) => {
-            return (
-              <div key={field.id} className="addEditInvoiceForm__services-item">
-                <TextInput
-                  error={errors?.services?.[index]?.name}
-                  label="Nom de la prestation"
-                  {...register(`services.${index}.name` as const)}
-                  defaultValue={field.name}
-                />
+        <DatePickerInput
+          error={errors.paymentDeadline}
+          label="Date limite de règlement"
+          {...register("paymentDeadline")}
+        />
 
-                <TextInput
-                  error={errors?.services?.[index]?.description}
-                  label="Description (facultatif)"
-                  {...register(`services.${index}.description` as const)}
-                  defaultValue={field.description ?? ""}
-                />
-
-                <TextInput
-                  error={errors?.services?.[index]?.quantity}
-                  type="number"
-                  label="Quantité"
-                  {...register(`services.${index}.quantity` as const)}
-                  defaultValue={field.quantity}
-                />
-
-                <TextInput
-                  error={errors?.services?.[index]?.unitPrice}
-                  label="Prix unitaire (HT)"
-                  {...register(`services.${index}.unitPrice` as const)}
-                  defaultValue={field.unitPrice}
-                />
-
-                <Button
-                  className="btn--outline-danger"
-                  onlyIcon={true}
-                  icon="trash"
-                  onClick={() => remove(index)}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <TextInput
+          error={errors.paymentDelayRate}
+          type="number"
+          label="Taux de pénalité en cas de retard"
+          info="Valeur en pourcentage"
+          {...register("paymentDelayRate")}
+        />
       </div>
 
-      <DatePickerInput
-        error={errors.serviceDoneAt}
-        label="Date d'exécution"
-        {...register("serviceDoneAt")}
-      />
+      <div className="addInvoiceForm__services">
+        <h3>Prestations réalisées</h3>
+        {fields.map((field, index: number) => {
+          return (
+            <div key={field.id} className="addInvoiceForm__services-item">
+              <TextInput
+                error={errors?.services?.[index]?.name}
+                label="Nom de la prestation"
+                {...register(`services.${index}.name` as const)}
+                defaultValue={field.name}
+              />
 
-      <DatePickerInput
-        error={errors.paymentDeadline}
-        label="Date limite de règlement"
-        {...register("paymentDeadline")}
-      />
+              <TextInput
+                error={errors?.services?.[index]?.quantity}
+                type="number"
+                label="Quantité"
+                {...register(`services.${index}.quantity` as const)}
+                defaultValue={field.quantity}
+              />
 
-      <TextInput
-        error={errors.paymentDelayRate}
-        type="number"
-        label="Taux de pénalité en cas de retard"
-        info="Valeur en pourcentage"
-        {...register("paymentDelayRate")}
-      />
+              <TextInput
+                error={errors?.services?.[index]?.unitPrice}
+                label="Prix unit (HT)"
+                {...register(`services.${index}.unitPrice` as const)}
+                defaultValue={field.unitPrice}
+              />
 
-      <ToggleInput
-        type="switch"
-        label="TVA non applicable"
-        {...register("tvaApplicable")}
-      />
+              <button
+                type="button"
+                className="addInvoiceForm__services-deleteBtn"
+                onClick={() => remove(index)}
+              >
+                <Icon name="trash" />
+              </button>
+            </div>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => append({ name: "", quantity: 1, unitPrice: 0 })}
+          className="addInvoiceForm__services-addBtn"
+        >
+          <Icon name="add" />
+          Ajouter une prestation
+        </button>
+      </div>
 
-      <Button isLoading={isSubmitting} icon="add">
-        Créer
-      </Button>
+      <div className="addInvoiceForm__footer">
+        <ToggleInput
+          type="switch"
+          label="TVA non applicable"
+          {...register("tvaApplicable")}
+        />
+
+        <h2 className="addInvoiceForm__totalTtc">Total TTC: 0€</h2>
+        <Button
+          isLoading={isSubmitting}
+          icon="add"
+          center={true}
+          htmlType="submit"
+        >
+          Créer la facture
+        </Button>
+      </div>
     </form>
   );
 }

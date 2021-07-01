@@ -1,10 +1,8 @@
 .tabs__list {
   display: flex;
 
-  height: 8rem;
-
-  & > * {
-    width: 100%;
+  li:not(:last-child) {
+    margin-right: 3.2rem;
   }
 }
 
@@ -19,7 +17,7 @@
 .tab__title {
   height: 100%;
   display: inline-block;
-  padding: 3.2rem 0;
+  padding-bottom: 1.6rem;
 
   display: flex;
   justify-content: center;
@@ -27,8 +25,8 @@
 
   font-family: inherit;
   font-size: inherit;
-  font-weight: 600;
-  color: var(--primary-color-dark);
+  font-weight: 400;
+  color: var(--text-color);
   text-decoration: none;
   border: none;
   background: none;
@@ -36,10 +34,13 @@
 
   border-bottom: 2px solid transparent;
 
-  transition: color 0.3s ease-in, border-bottom 0.3s ease-in;
-  &--active,
+  transition: color 0.3s ease-in, border-bottom-color 0.3s ease-in;
   &:hover {
     color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
+  }
+  &--active {
+    font-weight: 700;
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
   }
 }

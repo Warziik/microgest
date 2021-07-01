@@ -94,20 +94,21 @@ html {
 .container {
   height: 100vh;
   display: grid;
-  grid-template-columns: [sidebar-start] 24.8rem [sidebar-end main-start] 1fr [main-end];
-  grid-template-rows: [topbar-start] 9.6rem [topbar-end main-start] 1fr [main-end];
+  grid-template-columns: 30.4rem [main-start] 1fr [main-end];
+  grid-template-rows: 1fr;
 }
 
 .main {
   grid-column: main-start / main-end;
-  grid-row: main-start / main-end;
-  padding: 2.4rem;
+  grid-row: 1 / -1;
+  padding: 3.2rem;
 }
 
 hr {
-  margin: 2.4rem auto;
+  margin: 3.2rem auto;
   width: 100%;
-  border-top: 1px solid var(--border-color);
+  border: none;
+  border-top: 1px solid var(--primary-color-a16);
   border-radius: 5px;
 }
 

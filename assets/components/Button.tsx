@@ -1,24 +1,56 @@
-import React, { Ref } from 'react';
-import Icon from './Icon';
+import React, { Ref } from "react";
+import { Icon } from "./Icon";
 
 type Props = {
-    className?: string;
-    icon?: string;
-    children?: string;
-    isLoading?: boolean;
-    disabled?: boolean;
-    onlyIcon?: boolean;
-    onClick?(event: React.MouseEvent<HTMLButtonElement>): void;
-}
+  htmlType?: "button" | "submit";
+  type?: "fill" | "contrast" | "outline";
+  color?: "primary" | "accent" | "danger";
+  size?: "normal" | "small";
+  center?: boolean;
+  icon?: string;
+  children?: string;
+  isLoading?: boolean;
+  disabled?: boolean;
+  onClick?(event: React.MouseEvent<HTMLButtonElement>): void;
+};
 
-const Button = React.forwardRef(({ className = "btn--primary", icon, onlyIcon = false, isLoading = false, disabled = false, onClick, children }: Props, ref: Ref<HTMLButtonElement>) => {
-    return <button data-testid="button" ref={ref} disabled={isLoading || disabled} onClick={onClick} className={`${className} ${onlyIcon ? "btn--onlyIcon" : ""}`.trim()}>
-        {isLoading && "Chargement..." || <>
+const Button = React.forwardRef(
+  (
+    {
+      htmlType = "button",
+      icon,
+      type = "fill",
+      color = "primary",
+      size = "normal",
+      center = false,
+      isLoading = false,
+      disabled = false,
+      onClick,
+      children,
+    }: Props,
+    ref: Ref<HTMLButtonElement>
+  ) => {
+    return (
+      <button
+        type={htmlType}
+        data-testid="button"
+        ref={ref}
+        disabled={isLoading || disabled}
+        onClick={onClick}
+        className={`btn-${type}--${color}--${size} ${
+          !children ? "btn--onlyIcon" : ""
+        } ${center ? "btn--center" : ""}`.trim()}
+      >
+        {(isLoading && "Chargement...") || (
+          <>
             {icon && <Icon name={icon} />}
             {children}
-        </>}
-    </button>
-});
+          </>
+        )}
+      </button>
+    );
+  }
+);
 
 Button.displayName = "Button";
 

@@ -1,35 +1,61 @@
 .auth {
-  margin-top: 10.5rem;
-  display: grid;
-  place-items: center;
+  h1 {
+    font-size: 4.8rem;
+    text-align: center;
+  }
+
+  &__header {
+    padding: 2.4rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.6rem;
+  }
 
   &__content {
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 4.8rem;
-    padding: 0;
-
+    padding: 2.4rem;
     width: 51.2rem;
 
-    border-radius: 3.2rem;
+    border-radius: var(--radius);
     box-shadow: var(--box-shadow);
-    background-color: var(--content-background);
+    background-color: var(--container-background);
+  }
 
-    button {
-      margin: 0 auto;
-    }
+  .forgotPassword__description {
+    text-align: center;
+    margin: 1.6rem 0;
+  }
+}
 
-    .tab__panel {
-      margin-top: 0;
-    }
+.auth__completeMessage {
+  text-align: center;
+  h2 {
+    margin-bottom: 1.6rem;
+  }
+  p {
+    width: 34.4rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  &-check {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 11.2rem;
+    height: 11.2rem;
+    margin-bottom: 2.4rem;
+    border-radius: 50%;
+    background-color: var(--success-color);
+    box-shadow: 0 0 20px var(--success-color-a16);
 
-    .loginForm,
-    .registerForm {
-      padding: 2.4rem;
-    }
-
-    .loginForm {
-      .form__group:last-of-type {
-        margin-bottom: 2.4rem;
-      }
+    svg {
+      height: 3.6rem;
+      width: 4.8rem;
+      fill: #fff;
     }
   }
 }

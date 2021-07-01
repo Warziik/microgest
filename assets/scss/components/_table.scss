@@ -1,26 +1,28 @@
 .table {
   width: 100%;
+  //border-bottom: 2px solid var(--primary-color);
   thead {
     tr th {
-      padding-bottom: 1.6rem;
-      font-weight: 700;
+      padding: 1.6rem 0;
+      font-weight: 600;
+      color: var(--text-color);
     }
+    border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
   }
 
   tbody {
-    tr td {
-      padding-top: 1.6rem;
+    tr {
+      border-bottom: 1px solid var(--primary-color-a16);
+    }
+    td {
+      line-height: 1;
+      padding: 1.6rem 0;
       text-align: center;
+      color: var(--text-color-alt);
 
-      a {
-        font-weight: 600;
-        text-decoration: none;
-        color: var(--primary-color);
-        transition: color 0.3s ease-in-out;
-        &:hover {
-          color: var(--primary-color-darker);
-        }
+      button {
+        display: inline-block;
       }
     }
   }

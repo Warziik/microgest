@@ -5,40 +5,48 @@
 
   // COLORS
   --primary-color: #4d6ef5;
-  --primary-color-darker: #3b5bdb;
   --primary-color-a05: #{rgba(#4d6ef5, 0.05)};
   --primary-color-a1: #{rgba(#4d6ef5, 0.1)};
   --primary-color-a16: #{rgba(#4d6ef5, 0.16)};
-  --primary-color-disabled: #{rgba(#4d6ef5, 0.5)};
-  --primary-color-dark: #19203e;
-  --primary-color-dark-a1: #{rgba(#19203e, 0.1)};
-  --primary-color-dark-a2: #{rgba(#19203e, 0.2)};
-  --primary-color-dark-a5: #{rgba(#19203e, 0.5)};
+  --primary-color-a25: #{rgba(#4d6ef5, 0.25)};
+  --primary-color-hover: #2b50da;
+  --primary-color-disabled: #adbcfa;
+  --primary-color-dark: #24316b;
 
-  --accent-color: #be4bdb;
-  --accent-color-a1: #{rgba(#be4bdb, 0.1)};
-  --accent-color-a16: #{rgba(#be4bdb, 0.16)};
+  --accent-color: #c94cf5;
+  --accent-color-a1: #{rgba(#c94cf5, 0.1)};
+  --accent-color-a16: #{rgba(#c94cf5, 0.16)};
 
   --error-color: #c54b4b;
   --error-color-contrast: #{rgba(#c54b4b, 0.1)};
+  --error-color-a16: #{rgba(#c54b4b, 0.16)};
   --error-color-disabled: #{rgba(#c54b4b, 0.5)};
-  --warning-color: #ffb600;
-  --warning-color-contrast: #{rgba(#ffb600, 0.1)};
+  --warning-color: #c5704b;
+  --warning-color-contrast: #{rgba(#c5704b, 0.1)};
   --info-color: #00b6ff;
   --info-color-contrast: #{rgba(#00b6ff, 0.1)};
   --success-color: #4bc5a0;
   --success-color-contrast: #{rgba(#4bc5a0, 0.1)};
-  --content-background: #fff;
-  --body-background: #f8f9fa;
+  --success-color-a16: #{rgba(#4bc5a0, 0.16)};
+
+  --container-background: #fff;
+  --body-background: #f7f8fc;
+
+  // TEXT
   --text-color: var(--primary-color-dark);
-  --paragraph-color: #343a40;
-  --secondary-paragraph-color: #868e96;
-  --modal-backdrop: var(--primary-color-dark-a5);
-  --border-color: #ced4da;
-  --hr-color: #dee2e6;
+  --text-color-alt: #414b71;
 
   // OTHER
-  --radius: 1rem;
-  --input-box-shadow: 0 1px 10px var(--primary-color-a16);
-  --box-shadow: 1px 7px 20px var(--primary-color-a16);
+  --radius: 2.4rem;
+  --modal-backdrop: var(--primary-color-a25);
+  --border-color: #ced4da;
+  --hr-color: var(--primary-color-a16);
+  --box-shadow: 0 4px 20px #{rgba(#4d6ef5, 0.16)};
+  --input-color: #a5b7fa;
+  --input-box-shadow: 0 1px 10px #{rgba(#4d6ef5, 0.16)};
+  --sidebar-gradient: linear-gradient(
+    to bottom,
+    white 60%,
+    var(--primary-color) 250%
+  );
 }

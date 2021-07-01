@@ -1,0 +1,46 @@
+.stepper {
+  &__nav {
+    padding: 2.4rem;
+    margin-bottom: 2.4rem;
+    border-radius: var(--radius);
+    background-color: var(--body-background);
+    display: flex;
+    justify-content: space-between;
+    &-item {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-color);
+      &-step {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 3.2rem;
+        height: 3.2rem;
+        margin-right: 1.6rem;
+        font-weight: 700;
+        border-radius: 50%;
+        background-color: var(--container-background);
+      }
+
+      &--active &-step {
+        background-color: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 0 10px var(--primary-color-a75);
+      }
+      &--complete &-step {
+        background-color: var(--success-color);
+        color: #fff;
+      }
+    }
+  }
+
+  &__ctas {
+    margin-top: 2.4rem;
+    display: flex;
+    justify-content: space-between;
+    button {
+      margin: 0 !important;
+    }
+  }
+}

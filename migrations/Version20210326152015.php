@@ -28,9 +28,4 @@ final class Version20210326152015 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE jwt_refresh_tokens');
     }
-
-    public function isTransactional(): bool
-    {
-        return false;
-    }
 }

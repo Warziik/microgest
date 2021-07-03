@@ -28,9 +28,4 @@ final class Version20210501190928 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE users DROP phone, DROP business_name, DROP siret, DROP tva_number, DROP address, DROP city, DROP postal_code, DROP country');
     }
-
-    public function isTransactional(): bool
-    {
-        return false;
-    }
 }

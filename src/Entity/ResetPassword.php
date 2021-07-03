@@ -9,37 +9,31 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=ResetPasswordRepository::class)
- * @ORM\Table(name="users_reset_password")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: ResetPasswordRepository::class)]
+#[ORM\Table(name: "users_reset_password")]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['token'], message: 'Token invalid')]
 class ResetPassword
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?User $user = null;
 
-    /** @ORM\Column(type="string", length=255, unique=true) */
+    #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 10, max: 255)]
     private ?string $token = null;
 
-    /** @ORM\Column(type="datetime_immutable") */
+    #[ORM\Column(type: "datetime_immutable")]
     private ?DateTimeImmutable $requestedAt = null;
 
-    /** @ORM\Column(type="datetime_immutable") */
+    #[ORM\Column(type: "datetime_immutable")]
     private ?DateTimeImmutable $expiresAt = null;
 
     public function getId(): ?int
@@ -95,7 +89,7 @@ class ResetPassword
         return $this;
     }
 
-    /** @ORM\PrePersist */
+    #[ORM\PrePersist]
     public function prePersistValues()
     {
         $this->setToken(sha1(random_bytes(rand(8, 10))));

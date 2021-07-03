@@ -13,11 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=CustomerRepository::class)
- * @ORM\Table(name="customers")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[ORM\Table(name: "customers")]
+#[ORM\HasLifecycleCallbacks]
 #[
     ApiResource(
         normalizationContext: ['groups' => ['customers:read']],
@@ -38,15 +36,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 ]
 class Customer
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     #[Groups(['customers:read', 'users_customers_subresource', 'invoices:read', 'allInvoices:read'])]
     private int $id;
 
-    /** @ORM\Column(type="string", length=7) */
+    #[ORM\Column(type: "string", length: 7)]
     #[Groups([
         'customers:read',
         'customers:write',
@@ -61,81 +57,79 @@ class Customer
     )]
     private string $type;
 
-    /** @ORM\Column(type="string", length=30, nullable=true) */
+    #[ORM\Column(type: "string", length: 30, nullable: true)]
     #[Groups(['customers:read', 'customers:write', 'users_customers_subresource', 'invoices:read', 'allInvoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $firstname = null;
 
-    /** @ORM\Column(type="string", length=30, nullable=true) */
+    #[ORM\Column(type: "string", length: 30, nullable: true)]
     #[Groups(['customers:read', 'customers:write', 'users_customers_subresource', 'invoices:read', 'allInvoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $lastname = null;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private string $email;
 
-    /** @ORM\Column(type="string", length=30, nullable=true) */
+    #[ORM\Column(type: "string", length: 30, nullable: true)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $phone = null;
 
-    /** @ORM\Column(type="string", length=40, nullable=true) */
+    #[ORM\Column(type: "string", length: 40, nullable: true)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $company = null;
 
-    /** @ORM\Column(type="bigint", nullable=true) */
+    #[ORM\Column(type: "bigint", nullable: true)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Regex(pattern: "/^\d{14}$/", message: 'Le numéro SIRET doit contenir 14 chiffres.')]
     private ?string $siret = null;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
     #[Assert\NotBlank]
     private string $address;
 
-    /** @ORM\Column(type="integer") */
+    #[ORM\Column(type: "integer")]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
     #[Assert\NotBlank]
     private int $postalCode;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
     #[Assert\NotBlank]
     private string $city;
 
-    /** @ORM\Column(type="string", length=3) */
+    #[ORM\Column(type: "string", length: 3)]
     #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "customers")]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['invoices:read'])]
     #[Assert\NotBlank]
     private ?User $owner = null;
 
-    /** @ORM\Column(type="datetime") */
+    #[ORM\Column(type: "datetime")]
     #[Groups(['customers:read', 'users_customers_subresource'])]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    #[ORM\Column(type: "datetime", nullable: true)]
     #[Groups(['customers:read', 'users_customers_subresource'])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 
-    /** @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer", orphanRemoval=true, cascade={"persist"}) */
+    #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: "customer", orphanRemoval: true, cascade: ["persist"])]
     #[ApiSubresource]
     private Collection $invoices;
 
@@ -146,7 +140,6 @@ class Customer
     }
 
     /* Returns the last Invoice of the Customer for the UI */
-
     #[Groups(['users_customers_subresource'])]
     public function getLastInvoice()
     {
@@ -331,14 +324,6 @@ class Customer
     }
 
     /**
-     * @ORM\PreUpdate
-     */
-    public function updateTimestamp(): void
-    {
-        $this->setUpdatedAt(new DateTime());
-    }
-
-    /**
      * @return Collection|Invoice[]
      */
     public function getInvoices(): Collection
@@ -366,5 +351,11 @@ class Customer
         }
 
         return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function updateTimestamp(): void
+    {
+        $this->setUpdatedAt(new DateTime());
     }
 }

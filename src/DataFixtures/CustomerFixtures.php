@@ -17,16 +17,16 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i <= 200; ++$i) {
             $c = new Customer();
             $c->setType($faker->randomElement(['PERSON', 'COMPANY']));
-            $c->setFirstname('PERSON' === $c->getType() ? $faker->firstName : null);
-            $c->setLastname('PERSON' === $c->getType() ? $faker->lastName : null);
-            $c->setEmail($faker->email);
-            $c->setPhone($faker->phoneNumber);
-            $c->setCompany(0 === $i || 'PERSON' === $c->getType() ? '' : $faker->company);
+            $c->setFirstname('PERSON' === $c->getType() ? $faker->firstName() : null);
+            $c->setLastname('PERSON' === $c->getType() ? $faker->lastName() : null);
+            $c->setEmail($faker->email());
+            $c->setPhone($faker->phoneNumber());
+            $c->setCompany(0 === $i || 'PERSON' === $c->getType() ? '' : $faker->company());
             $c->setSiret('PERSON' === $c->getType() ? null : 12345678914253);
-            $c->setAddress($faker->streetAddress);
-            $c->setCity($faker->city);
-            $c->setPostalCode((int) $faker->postcode);
-            $c->setCountry($faker->countryISOAlpha3);
+            $c->setAddress($faker->streetAddress());
+            $c->setCity($faker->city());
+            $c->setPostalCode((int) $faker->postcode());
+            $c->setCountry($faker->countryISOAlpha3());
             $c->setCreatedAt($faker->dateTimeBetween('-9 days', 'now'));
             $c->setOwner(0 === $i ? $this->getReference('testUser') : $this->getReference('user-'.rand(1, 50)));
 

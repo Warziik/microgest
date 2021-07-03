@@ -27,9 +27,4 @@ final class Version20210203181910 extends AbstractMigration
     {
         $this->addSql('DROP TABLE users_reset_password');
     }
-
-    public function isTransactional(): bool
-    {
-        return false;
-    }
 }

@@ -7,20 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=InvoiceServiceRepository::class)
- */
+#[ORM\Entity(repositoryClass: InvoiceServiceRepository::class)]
+#[ORM\Table(name: "invoices_services")]
 class InvoiceService
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     #[Groups(['invoices:read', 'users_customers_subresource', 'customers_invoices_subresource', 'allInvoices:read'])]
     private int $id;
 
-    /** @ORM\Column(type="string", length=60) */
+    #[ORM\Column(type: "string", length: 60)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -33,7 +30,7 @@ class InvoiceService
     #[Assert\Length(min: 2, max: 60)]
     private string $name;
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -45,7 +42,7 @@ class InvoiceService
     #[Assert\NotBlank(allowNull: true)]
     private ?string $description = null;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    #[ORM\Column(type: "integer", nullable: true)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -57,7 +54,7 @@ class InvoiceService
     #[Assert\NotBlank(allowNull: true)]
     private ?int $quantity = null;
 
-    /** @ORM\Column(type="float") */
+    #[ORM\Column(type: "float")]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -69,10 +66,8 @@ class InvoiceService
     #[Assert\NotBlank]
     private float $unitPrice;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Invoice::class, inversedBy="services")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: "services")]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Invoice $invoice = null;
 
     public function getId(): ?int

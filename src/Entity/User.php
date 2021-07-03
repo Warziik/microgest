@@ -18,11 +18,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="users")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: "users")]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'], message: 'This email address is already in use.')]
 #[
     ApiResource(
@@ -57,70 +55,68 @@ use Symfony\Component\Validator\Constraints as Assert;
 ]
 class User implements UserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     #[Groups(['users:read'])]
     private int $id;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private string $firstname;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private string $lastname;
 
-    /** @ORM\Column(type="string", length=255, unique=true) */
+    #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Groups(['users:read', 'users:write', 'forgotPassword:write'])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['users:write', 'resetPassword:write'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     private string $password;
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[Groups(['users:read'])]
     #[Assert\Length(min: 10, max: 255)]
     private ?string $confirmationToken = null;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    #[ORM\Column(type: "datetime", nullable: true)]
     #[Groups(['users:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $confirmedAt = null;
 
-    /** @ORM\Column(type="json") */
+    #[ORM\Column(type: "json")]
     #[Groups(['users:read'])]
     private array $roles = [];
 
-    /** @ORM\Column(type="string", length=255, nullable=true) */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[Groups(['users:read', 'users:write'])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $phone = null;
 
-    /** @ORM\Column(type="string", length=40, nullable=true) */
+    #[ORM\Column(type: "string", length: 40, nullable: true)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $businessName = null;
 
-    /** @ORM\Column(type="bigint") */
+    #[ORM\Column(type: "bigint")]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     #[Assert\Regex(pattern: "/^\d{14}$/", message: 'Le numéro SIRET doit contenir 14 chiffres.')]
     private string $siret;
 
-    /** @ORM\Column(type="string", length=13, nullable=true) */
+    #[ORM\Column(type: "string", length: 13, nullable: true)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Regex(
@@ -129,38 +125,38 @@ class User implements UserInterface
     )]
     private ?string $tvaNumber = null;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     private string $address;
 
-    /** @ORM\Column(type="string", length=255) */
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     private string $city;
 
-    /** @ORM\Column(type="integer") */
+    #[ORM\Column(type: "integer")]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     private int $postalCode;
 
-    /** @ORM\Column(type="string", length=3) */
+    #[ORM\Column(type: "string", length: 3)]
     #[Groups(['users:read', 'users:write', 'invoices:read'])]
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;
 
-    /** @ORM\Column(type="datetime") */
+    #[ORM\Column(type: "datetime")]
     #[Groups(['users:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    #[ORM\Column(type: "datetime", nullable: true)]
     #[Groups(['users:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 
-    /** @ORM\OneToMany(targetEntity=Customer::class, mappedBy="owner", orphanRemoval=true, cascade={"persist"}) */
+    #[ORM\OneToMany(targetEntity: Customer::class, mappedBy: "owner", orphanRemoval: true, cascade: ["persist"])]
     #[ApiSubResource(maxDepth: 1)]
     private Collection $customers;
 
@@ -350,12 +346,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /** @ORM\PreUpdate */
-    public function updateTimestamp(): void
-    {
-        $this->setUpdatedAt(new DateTime());
-    }
-
     public function getPhone(): ?string
     {
         return $this->phone;
@@ -450,5 +440,11 @@ class User implements UserInterface
         $this->tvaNumber = $tvaNumber;
 
         return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function updateTimestamp(): void
+    {
+        $this->setUpdatedAt(new DateTime());
     }
 }

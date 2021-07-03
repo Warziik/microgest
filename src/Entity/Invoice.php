@@ -13,10 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=InvoiceRepository::class)
- * @ORM\Table(name="invoices")
- */
+#[ORM\Entity(repositoryClass: InvoiceRepository::class)]
+#[ORM\Table(name: "invoices")]
 #[
     ApiResource(
         normalizationContext: ['groups' => ['invoices:read', 'invoice:service_read']],
@@ -47,11 +45,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 ]
 class Invoice
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     #[Groups([
         'invoices:read',
         'customers_invoices_subresource',
@@ -60,15 +56,13 @@ class Invoice
     ])]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: "invoices")]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['invoices:read', 'invoices:write', 'allInvoices:read'])]
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
-    /** @ORM\Column(type="string", length=11) */
+    #[ORM\Column(type: "string", length: 11)]
     #[Groups([
         'invoices:read',
         'customers_invoices_subresource',
@@ -81,7 +75,7 @@ class Invoice
     )]
     private string $chrono;
 
-    /** @ORM\Column(type="string", length=9) */
+    #[ORM\Column(type: "string", length: 9)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -97,7 +91,7 @@ class Invoice
     )]
     private string $status;
 
-    /** @ORM\Column(type="boolean") */
+    #[ORM\Column(type: "boolean")]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -108,7 +102,7 @@ class Invoice
     #[Assert\Type('boolean')]
     private bool $tvaApplicable;
 
-    /** @ORM\Column(type="datetime") */
+    #[ORM\Column(type: "datetime")]
     #[Groups([
         'invoices:read',
         'users_customers_subresource',
@@ -118,7 +112,7 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
-    /** @ORM\Column(type="datetime") */
+    #[ORM\Column(type: "datetime")]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -130,7 +124,7 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $serviceDoneAt;
 
-    /** @ORM\Column(type="datetime") */
+    #[ORM\Column(type: "datetime")]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -142,7 +136,7 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $paymentDeadline;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    #[ORM\Column(type: "integer", nullable: true)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -159,7 +153,7 @@ class Invoice
     )]
     private ?int $paymentDelayRate = null;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    #[ORM\Column(type: "datetime", nullable: true)]
     #[Groups([
         'invoices:read',
         'invoice:update',
@@ -170,7 +164,7 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    #[ORM\Column(type: "datetime", nullable: true)]
     #[Groups([
         'invoices:read',
         'invoice:update',
@@ -181,7 +175,7 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
-    /** @ORM\OneToMany(targetEntity=InvoiceService::class, mappedBy="invoice", orphanRemoval=true, cascade={"persist", "remove"}) */
+    #[ORM\OneToMany(targetEntity: InvoiceService::class, mappedBy: "invoice", orphanRemoval: true, cascade: ["persist", "remove"])]
     #[Groups([
         'invoices:read',
         'invoices:write',

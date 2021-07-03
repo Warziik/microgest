@@ -28,9 +28,4 @@ final class Version20210207143539 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE users DROP confirmation_token, DROP confirmed_at');
     }
-
-    public function isTransactional(): bool
-    {
-        return false;
-    }
 }

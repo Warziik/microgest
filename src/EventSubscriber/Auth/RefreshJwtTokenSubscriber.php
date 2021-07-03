@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class RefreshJwtTokenSubscriber implements EventSubscriberInterface
+final class RefreshJwtTokenSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private string $refreshTokenParameterName,
@@ -30,7 +30,8 @@ class RefreshJwtTokenSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
-        if (Request::METHOD_POST === $request->getMethod() &&
+        if (
+            Request::METHOD_POST === $request->getMethod() &&
             'gesdinet_jwt_refresh_token' === $request->attributes->get('_route')
         ) {
             $request->attributes->set($this->refreshTokenParameterName, $request->cookies->get($this->cookieName));

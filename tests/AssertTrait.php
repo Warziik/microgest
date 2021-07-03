@@ -7,6 +7,7 @@ use App\DataFixtures\InvoiceFixtures;
 use App\DataFixtures\UserFixtures;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validation;
 
 trait AssertTrait
 {
@@ -17,7 +18,7 @@ trait AssertTrait
      */
     private function getAuthToken(): string
     {
-        $this->loadFixtures([UserFixtures::class, CustomerFixtures::class, InvoiceFixtures::class]);
+        $this->databaseTool->loadFixtures([UserFixtures::class, CustomerFixtures::class, InvoiceFixtures::class]);
 
         $response = static::createClient()->request(Request::METHOD_POST, '/api/authentication_token', ['json' => [
             'email' => 'testUser@localhost.dev',
@@ -36,13 +37,13 @@ trait AssertTrait
      */
     private function assertHasErrors(int $nbErrorExpected, object $entity): void
     {
-        self::bootKernel();
-        $validator = self::$container->get('validator');
+        static::bootKernel();
+        $validator = static::getContainer()->get('validator');
         $errors = $validator->validate($entity);
         $messages = [];
 
         foreach ($errors as $e) {
-            $messages[] = $e->getPropertyPath().' => '.$e->getMessage();
+            $messages[] = $e->getPropertyPath() . ' => ' . $e->getMessage();
         }
 
         $this->assertCount($nbErrorExpected, $errors, implode(', ', $messages));

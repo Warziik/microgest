@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Invoice;
 use App\Repository\CustomerRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Security\Core\Security;
 
-class CreateUpdateInvoice
+#[AsController]
+class CreateUpdateInvoice extends AbstractController
 {
     public function __construct(private Security $security, private CustomerRepository $customerRepository)
     {

@@ -1,60 +1,59 @@
 security:
-    encoders:
-        App\Entity\User:
-            algorithm: auto
+  enable_authenticator_manager: true
 
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-    providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: email
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        registration:
-            pattern: ^/api/users
-            stateless: true
-            anonymous: true
-            methods: [POST]
-        authentication:
-            pattern:  ^/api/authentication_token
-            stateless: true
-            anonymous: true
-            user_checker: App\Security\UserChecker
-            methods: [POST]
-            json_login:
-                check_path:               /api/authentication_token
-                username_path:            email
-                success_handler:          lexik_jwt_authentication.handler.authentication_success
-                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-        authentication_refresh:
-            pattern:  ^/api/authentication_token/refresh
-            stateless: true
-            anonymous: true
-        api:
-            pattern:   ^/api
-            stateless: true
-            anonymous: true
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-        main:
-            anonymous: true
-            lazy: true
-            provider: app_user_provider
+  password_hashers:
+    App\Entity\User: 'auto'
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
+  providers:
+    app_user_provider:
+      entity: { class: App\Entity\User, property: email }
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    registration:
+      pattern: ^/api/users
+      stateless: true
+      methods: [POST]
+    authentication:
+      pattern: ^/api/authentication_token
+      stateless: true
+      user_checker: App\Security\UserChecker
+      methods: [POST]
+      json_login:
+        check_path: /api/authentication_token
+        username_path: email
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+    authentication_refresh:
+      pattern: ^/api/authentication_token/refresh
+      stateless: true
+      refresh_jwt: ~
+    api:
+      pattern: ^/api
+      stateless: true
+      jwt: ~
+    main:
+      lazy: true
+      provider: app_user_provider
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    access_control:
-        - {path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE]}
-        - {path: ^/api/customers, roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, DELETE]}
-        - {path: ^/api/invoices, roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, DELETE]}
+  access_control:
+    - {path: ^/api/authentication_token, roles: PUBLIC_ACCESS},
+    - {path: ^/api/authentication_token/refresh, roles: PUBLIC_ACCESS},
+    - {path: ^/api/users, methods: [POST], roles: PUBLIC_ACCESS},
+    - {
+        path: ^/api/users,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [GET, PUT, DELETE],
+      }
+    - {
+        path: ^/api/customers,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [GET, POST, PUT, DELETE],
+      }
+    - {
+        path: ^/api/invoices,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [GET, POST, PUT, DELETE],
+      }

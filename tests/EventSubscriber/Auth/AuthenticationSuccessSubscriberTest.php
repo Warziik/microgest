@@ -44,7 +44,7 @@ class AuthenticationSuccessSubscriberTest extends TestCase
             ->method('setCookie')->with(new Cookie(
                 $cookieName,
                 'demoRefreshToken',
-                (new DateTime())->add(new DateInterval('PT'.$refreshTokenTtl.'S')),
+                (new DateTime())->add(new DateInterval('PT' . $refreshTokenTtl . 'S')),
                 '/',
                 null,
                 true,

@@ -6,10 +6,12 @@ use App\Repository\ResetPasswordRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -17,12 +19,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * @see App\OpenApi\ResetPasswordOpenApi
  */
-class ResetPassword
+#[AsController]
+class ResetPassword extends AbstractController
 {
     public function __construct(
         private UserRepository $userRepository,
         private ResetPasswordRepository $resetPasswordRepository,
-        private UserPasswordEncoderInterface $passwordEncoder,
+        private UserPasswordHasherInterface $passwordHasher,
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator
     ) {
@@ -31,7 +34,8 @@ class ResetPassword
     public function __invoke(Request $request)
     {
         $bodyContent = json_decode($request->getContent(), true);
-        if (empty($bodyContent) || !array_key_exists('password', $bodyContent) ||
+        if (
+            empty($bodyContent) || !array_key_exists('password', $bodyContent) ||
             !array_key_exists('token', $bodyContent)
         ) {
             return new JsonResponse(
@@ -81,7 +85,7 @@ class ResetPassword
         }
 
         $user = $this->userRepository->find($resetPassword->getUser()->getId());
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $bodyContent['password']));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $bodyContent['password']));
 
         $this->entityManager->remove($resetPassword);
         $this->entityManager->flush();

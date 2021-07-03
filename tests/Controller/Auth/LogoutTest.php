@@ -4,23 +4,27 @@ namespace App\Tests\Controller\Auth;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\JwtRefreshTokenFixtures;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class LogoutTest extends ApiTestCase
 {
-    use FixturesTrait;
-
     private const REVOKE_REFRESH_TOKEN_URI = '/api/authentication_token/revoke';
     private string $cookieName = '__refresh__token';
+
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->loadFixtures([JwtRefreshTokenFixtures::class]);
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([JwtRefreshTokenFixtures::class]);
     }
 
     public function testLogout(): void

@@ -4,7 +4,8 @@ namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Customer;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,12 +14,19 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CustomerTest extends ApiTestCase
 {
-    use FixturesTrait;
     use AssertTrait;
 
-    /**
-     * Test get Customer.
-     */
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+    }
+
     public function testGetCustomer(): void
     {
         $authToken = $this->getAuthToken();
@@ -103,7 +111,7 @@ class CustomerTest extends ApiTestCase
             'postalCode' => 75000,
             'country' => 'FRA',
         ]);
-        $this->assertRegExp('~^/api/customers/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/api/customers/\d+$~', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(Customer::class);
     }
 
@@ -165,7 +173,7 @@ class CustomerTest extends ApiTestCase
             '@type' => 'Customer',
             'company' => 'testCustomerCompany',
         ]);
-        $this->assertRegExp('~^/api/customers/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/api/customers/\d+$~', $response->toArray()['@id']);
         //$this->assertMatchesResourceItemJsonSchema(Customer::class);
     }
 
@@ -226,7 +234,7 @@ class CustomerTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         $this->assertNull(
-            static::$container
+            static::getContainer()
                 ->get('doctrine')
                 ->getRepository(Customer::class)
                 ->findOneBy(['email' => 'testCustomer@localhost.dev'])

@@ -4,19 +4,22 @@ namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\UserFixtures;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthTest extends ApiTestCase
 {
-    use FixturesTrait;
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
-        parent::setUp();
-        $this->loadFixtures([UserFixtures::class]);
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([UserFixtures::class]);
     }
 
     public function testLogin(): void
@@ -73,7 +76,7 @@ class AuthTest extends ApiTestCase
             'country' => 'FRA',
         ]);
 
-        $this->assertRegExp('~^/api/users/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/api/users/\d+$~', $response->toArray()['@id']);
     }
 
     public function testInvalidRegister(): void

@@ -45,7 +45,7 @@ class ClearUnconfirmedAccountsCommand extends Command
                 $output->writeln(
                     sprintf(
                         'Deleted account: <comment>%s</comment>',
-                        $deletedUser->getUsername()
+                        $deletedUser->getUserIdentifier()
                     )
                 );
             }

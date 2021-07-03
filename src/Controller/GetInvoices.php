@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\InvoiceRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Security\Core\Security;
 
-class GetInvoices
+#[AsController]
+class GetInvoices extends AbstractController
 {
     public function __construct(private Security $security, private InvoiceRepository $invoiceRepository)
     {

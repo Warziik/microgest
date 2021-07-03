@@ -35,7 +35,7 @@ final class GenerateChronoSubscriber implements EventSubscriberInterface
         if ($entity instanceof Invoice && Request::METHOD_POST === $method) {
             $lastChrono = $this->repository->findLastChrono($this->security->getUser());
             if (is_null($lastChrono) || !preg_match("/^(\d{4})-(\d{6})$/", $lastChrono)) {
-                $lastChrono = date('Y').'-000000';
+                $lastChrono = date('Y') . '-000000';
             }
 
             $chronoValues = explode('-', $lastChrono);
@@ -44,7 +44,7 @@ final class GenerateChronoSubscriber implements EventSubscriberInterface
                 $chronoValues[1] = '000000';
             }
 
-            $chrono = $chronoValues[0].'-'.str_pad(intval($chronoValues[1]) + 1, 6, '0', STR_PAD_LEFT);
+            $chrono = $chronoValues[0] . '-' . str_pad(intval($chronoValues[1]) + 1, 6, '0', STR_PAD_LEFT);
             $entity->setChrono($chrono);
         }
     }

@@ -9,7 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 
-class AuthenticationSuccessSubscriber implements EventSubscriberInterface
+final class AuthenticationSuccessSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private int $refreshTokeNTtl,
@@ -39,7 +39,7 @@ class AuthenticationSuccessSubscriber implements EventSubscriberInterface
             new Cookie(
                 $this->cookieName,
                 $refreshToken,
-                (new DateTime())->add(new DateInterval('PT'.$this->refreshTokeNTtl.'S')),
+                (new DateTime())->add(new DateInterval('PT' . $this->refreshTokeNTtl . 'S')),
                 '/',
                 null,
                 true,

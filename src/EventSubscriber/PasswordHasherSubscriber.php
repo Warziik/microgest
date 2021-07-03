@@ -8,11 +8,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-final class PasswordEncoderSubscriber implements EventSubscriberInterface
+final class PasswordHasherSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
     }
 
@@ -33,7 +33,7 @@ final class PasswordEncoderSubscriber implements EventSubscriberInterface
         $method = $event->getRequest()->getMethod();
 
         if ($entity instanceof User && (Request::METHOD_POST === $method || Request::METHOD_PUT === $method)) {
-            $entity->setPassword($this->passwordEncoder->encodePassword($entity, $entity->getPassword()));
+            $entity->setPassword($this->passwordHasher->hashPassword($entity, $entity->getPassword()));
         }
     }
 }

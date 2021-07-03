@@ -6,24 +6,28 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\UserFixtures;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ConfirmAccountTest extends ApiTestCase
 {
-    use FixturesTrait;
-
     public const CONFIRM_ACCOUNT_URI = '/api/users/2/confirm_account';
 
     private ?EntityManagerInterface $em;
+
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->loadFixtures([UserFixtures::class]);
-        $this->em = self::$container->get('doctrine')->getManager();
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([UserFixtures::class]);
+        $this->em = static::getContainer()->get('doctrine')->getManager();
     }
 
     private function getUser(): User

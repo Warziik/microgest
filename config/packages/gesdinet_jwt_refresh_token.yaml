@@ -1,6 +1,5 @@
 gesdinet_jwt_refresh_token:
-  ttl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
+  ttl: "%env(int:JWT_REFRESH_TOKEN_TTL)%"
   user_identity_field: email
   token_parameter_name: refresh_token
   user_provider: security.user.provider.concrete.app_user_provider
-  refresh_token_class: App\Entity\JwtRefreshToken

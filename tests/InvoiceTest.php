@@ -4,7 +4,8 @@ namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Invoice;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,8 +14,18 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InvoiceTest extends ApiTestCase
 {
-    use FixturesTrait;
     use AssertTrait;
+
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+    }
 
     /**
      * Test get all Invoices of the logged User.
@@ -135,7 +146,7 @@ class InvoiceTest extends ApiTestCase
                 ],
             ],
         ]);
-        $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/api/invoices/\d+$~', $response->toArray()['@id']);
     }
 
     /**
@@ -218,7 +229,7 @@ class InvoiceTest extends ApiTestCase
             '@type' => 'Invoice',
             'status' => 'PAID',
         ]);
-        $this->assertRegExp('~^/api/invoices/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/api/invoices/\d+$~', $response->toArray()['@id']);
     }
 
     /**
@@ -272,7 +283,7 @@ class InvoiceTest extends ApiTestCase
             ->request(Request::METHOD_DELETE, '/api/invoices/1', ['auth_bearer' => $authToken]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
-        $this->assertNull(static::$container->get('doctrine')->getRepository(Invoice::class)->find(1));
+        $this->assertNull(static::getContainer()->get('doctrine')->getRepository(Invoice::class)->find(1));
     }
 
     /**

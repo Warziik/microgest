@@ -3,8 +3,10 @@
 namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\DataFixtures\UserFixtures;
 use App\Entity\User;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,8 +15,19 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserTest extends ApiTestCase
 {
-    use FixturesTrait;
     use AssertTrait;
+
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([UserFixtures::class]);
+    }
 
     /**
      * Test get User.
@@ -82,7 +95,7 @@ class UserTest extends ApiTestCase
             '@type' => 'User',
             'firstname' => 'NewFirstname',
         ]);
-        $this->assertRegExp('~^/api/users/\d+$~', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('~^/api/users/\d+$~', $response->toArray()['@id']);
     }
 
     /**
@@ -133,7 +146,7 @@ class UserTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
         $this->assertNull(
-            static::$container
+            static::getContainer()
                 ->get('doctrine')
                 ->getRepository(User::class)
                 ->findOneBy(['email' => 'testUser@localhost.dev'])

@@ -7,7 +7,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class JwtCreatedSubscriber implements EventSubscriberInterface
+final class JwtCreatedSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
@@ -30,7 +30,8 @@ class JwtCreatedSubscriber implements EventSubscriberInterface
         $payload['id'] = $user->getId();
         $payload['firstname'] = $user->getFirstname();
         $payload['lastname'] = $user->getLastname();
-        $payload['email'] = $user->getUsername();
+        $payload['username'] = $user->getUserIdentifier();
+        $payload['email'] = $user->getUserIdentifier();
 
         $event->setData($payload);
     }

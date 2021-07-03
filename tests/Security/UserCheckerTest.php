@@ -4,18 +4,23 @@ namespace App\Tests\Security;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\UserFixtures;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserCheckerTest extends ApiTestCase
 {
-    use FixturesTrait;
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->loadFixtures([UserFixtures::class]);
+
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([UserFixtures::class]);
     }
 
     public function testLoginWithoutConfirmingItsAccount(): void

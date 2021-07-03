@@ -7,25 +7,27 @@ use App\DataFixtures\ResetPasswordFixtures;
 use App\DataFixtures\UserFixtures;
 use App\Entity\ResetPassword;
 use Doctrine\ORM\EntityManagerInterface;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResetPasswordTest extends ApiTestCase
 {
-    use FixturesTrait;
-
     private const RESET_PASSWORD_URI = '/api/users/reset_password';
-
     private ?EntityManagerInterface $em;
+
+    /** @var AbstractDatabaseTool */
+    protected $databaseTool;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        self::bootKernel();
-        $this->loadFixtures([UserFixtures::class, ResetPasswordFixtures::class]);
-        $this->em = self::$container->get('doctrine')->getManager();
+        static::bootKernel();
+        $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
+        $this->databaseTool->loadFixtures([UserFixtures::class, ResetPasswordFixtures::class]);
+        $this->em = static::getContainer()->get('doctrine')->getManager();
     }
 
     /**

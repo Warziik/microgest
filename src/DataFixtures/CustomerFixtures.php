@@ -28,7 +28,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             $c->setPostalCode((int) $faker->postcode());
             $c->setCountry($faker->countryISOAlpha3());
             $c->setCreatedAt($faker->dateTimeBetween('-9 days', 'now'));
-            $c->setOwner(0 === $i ? $this->getReference('testUser') : $this->getReference('user-'.rand(1, 50)));
+            $c->setOwner(0 === $i ? $this->getReference('testUser') : $this->getReference('user-' . rand(1, 50)));
 
             $manager->persist($c);
             0 === $i ? $this->addReference('testCustomer', $c) : $this->addReference("customer-$i", $c);

@@ -7,11 +7,11 @@ use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    public function __construct(private UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
     }
 
@@ -25,7 +25,7 @@ class UserFixtures extends Fixture
             $u->setLastname($faker->lastName());
             $u->setEmail(0 === $i ? 'testUser@localhost.dev' : $faker->email());
             $u->setPhone($faker->randomElement([null, $faker->phoneNumber()]));
-            $u->setPassword($this->passwordEncoder->encodePassword($u, 'demo1234'));
+            $u->setPassword($this->passwordHasher->hashPassword($u, 'demo1234'));
             $u->setCreatedAt(new DateTime());
             $u->setConfirmationToken(null);
             $u->setConfirmedAt($faker->dateTimeBetween('now', '+1 week'));

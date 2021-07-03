@@ -175,7 +175,12 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
-    #[ORM\OneToMany(targetEntity: InvoiceService::class, mappedBy: "invoice", orphanRemoval: true, cascade: ["persist", "remove"])]
+    #[ORM\OneToMany(
+        targetEntity: InvoiceService::class,
+        mappedBy: "invoice",
+        orphanRemoval: true,
+        cascade: ["persist", "remove"]
+    )]
     #[Groups([
         'invoices:read',
         'invoices:write',

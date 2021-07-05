@@ -3,6 +3,8 @@
 namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\DataFixtures\CustomerFixtures;
+use App\DataFixtures\UserFixtures;
 use App\Entity\Customer;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -30,6 +32,7 @@ class CustomerTest extends ApiTestCase
     public function testGetCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         static::createClient()->request(Request::METHOD_GET, '/api/customers/1', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -56,6 +59,7 @@ class CustomerTest extends ApiTestCase
     public function testGetUnownedCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         static::createClient()->request(Request::METHOD_GET, '/api/customers/3', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -157,6 +161,7 @@ class CustomerTest extends ApiTestCase
     public function testUpdateCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         $response = static::createClient()->request(
             Request::METHOD_PUT,
@@ -195,6 +200,7 @@ class CustomerTest extends ApiTestCase
     public function testUpdateUnownedCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         static::createClient()->request(
             Request::METHOD_PUT,
@@ -212,6 +218,7 @@ class CustomerTest extends ApiTestCase
     public function testUpdateInvalidCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         static::createClient()->request(
             Request::METHOD_PUT,
@@ -230,6 +237,8 @@ class CustomerTest extends ApiTestCase
     public function testDeleteCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
+
         static::createClient()->request(Request::METHOD_DELETE, '/api/customers/1', ['auth_bearer' => $authToken]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
@@ -256,6 +265,7 @@ class CustomerTest extends ApiTestCase
     public function testDeleteUnownedCustomer(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         static::createClient()->request(Request::METHOD_DELETE, '/api/customers/9', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);

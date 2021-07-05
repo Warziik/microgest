@@ -19,7 +19,7 @@ class UserFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i <= 50; ++$i) {
+        for ($i = 0; $i <= 10; ++$i) {
             $u = new User();
             $u->setFirstname($faker->firstName());
             $u->setLastname($faker->lastName());

@@ -4,6 +4,7 @@ namespace App\Tests\Entity;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Customer;
+use App\Entity\Devis;
 use App\Entity\Invoice;
 use App\Tests\AssertTrait;
 use DateTime;
@@ -12,23 +13,27 @@ use TypeError;
 /**
  * Unit tests.
  */
-class InvoiceTest extends ApiTestCase
+class DevisTest extends ApiTestCase
 {
     use AssertTrait;
 
     /**
      * Return a valid Invoice Entity.
+     *
+     * @return Invoice
      */
-    private function getEntity(): Invoice
+    private function getEntity(): Devis
     {
-        return (new Invoice())
-            ->setChrono('F-2021-000001')
+        return (new Devis())
+            ->setChrono('D-2021-000001')
             ->setStatus('NEW')
-            ->setTvaApplicable(false)
-            ->setServiceDoneAt(new DateTime('-1 week'))
-            ->setPaymentDeadline(new DateTime('+40 days'))
-            ->setPaymentDelayRate(3)
+            ->setValidityDate(new DateTime("+1 month"))
             ->setCreatedAt(new DateTime())
+            ->setWorkStartDate(new DateTime('+2 weeks'))
+            ->setWorkDuration("2 weeks")
+            ->setPaymentDeadline(new DateTime('+2 months'))
+            ->setPaymentDelayRate(3)
+            ->setTvaApplicable(false)
             ->setCustomer(new Customer());
     }
 
@@ -36,7 +41,7 @@ class InvoiceTest extends ApiTestCase
     {
         $this->expectException(TypeError::class);
 
-        $this->assertHasErrors(0, $this->getEntity()->setChrono('F-2021-000000'));
+        $this->assertHasErrors(0, $this->getEntity()->setChrono('D-2021-000000'));
 
         $this->assertHasErrors(1, $this->getEntity()->setChrono(null));
         $this->assertHasErrors(1, $this->getEntity()->setChrono(''));
@@ -49,11 +54,38 @@ class InvoiceTest extends ApiTestCase
 
         $this->assertHasErrors(0, $this->getEntity()->setStatus('NEW'));
         $this->assertHasErrors(0, $this->getEntity()->setStatus('SENT'));
-        $this->assertHasErrors(0, $this->getEntity()->setStatus('PAID'));
+        $this->assertHasErrors(0, $this->getEntity()->setStatus('SIGNED'));
         $this->assertHasErrors(0, $this->getEntity()->setStatus('CANCELLED'));
 
         $this->assertHasErrors(1, $this->getEntity()->setStatus(null));
         $this->assertHasErrors(1, $this->getEntity()->setStatus('invalid_status'));
+    }
+
+    public function testValidityDateConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setValidityDate(new DateTime()));
+
+        $this->assertHasErrors(1, $this->getEntity()->setValidityDate(null));
+    }
+
+    public function testWorkStartDateConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setWorkStartDate(new DateTime()));
+
+        $this->assertHasErrors(1, $this->getEntity()->setWorkStartDate(null));
+    }
+
+    public function testWorkDurationConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setWorkDuration("1 week"));
+
+        $this->assertHasErrors(1, $this->getEntity()->setWorkDuration(null));
     }
 
     public function testTvaApplicableConstraints(): void
@@ -64,15 +96,6 @@ class InvoiceTest extends ApiTestCase
         $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(false));
 
         $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(null));
-    }
-
-    public function testServiceDoneAtConstraints(): void
-    {
-        $this->expectException(\TypeError::class);
-
-        $this->assertHasErrors(0, $this->getEntity()->setServiceDoneAt(new DateTime()));
-
-        $this->assertHasErrors(1, $this->getEntity()->setServiceDoneAt(null));
     }
 
     public function testPaymentDeadlineConstraints(): void
@@ -95,10 +118,10 @@ class InvoiceTest extends ApiTestCase
         $this->assertHasErrors(1, $this->getEntity()->setPaymentDelayRate('invalid_payment_delay_rate'));
     }
 
-    public function testPaidAtConstraints(): void
+    public function testSignedAtConstraints(): void
     {
-        $this->assertHasErrors(0, $this->getEntity()->setPaidAt(new DateTime()));
-        $this->assertHasErrors(0, $this->getEntity()->setPaidAt(null));
+        $this->assertHasErrors(0, $this->getEntity()->setSignedAt(new DateTime()));
+        $this->assertHasErrors(0, $this->getEntity()->setSignedAt(null));
     }
 
     public function testSentAtConstraints(): void

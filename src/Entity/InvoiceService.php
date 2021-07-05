@@ -14,7 +14,15 @@ class InvoiceService
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    #[Groups(['invoices:read', 'users_customers_subresource', 'customers_invoices_subresource', 'allInvoices:read'])]
+    #[Groups([
+        'invoices:read',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+        'devis:read',
+        'customers_devis_subresource',
+        'allDevis:read'
+    ])]
     private int $id;
 
     #[ORM\Column(type: "string", length: 60)]
@@ -25,6 +33,11 @@ class InvoiceService
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
+        'devis:read',
+        'devis:write',
+        'devis:update',
+        'customers_devis_subresource',
+        'allDevis:read'
     ])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 60)]
@@ -38,6 +51,11 @@ class InvoiceService
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
+        'devis:read',
+        'devis:write',
+        'devis:update',
+        'customers_devis_subresource',
+        'allDevis:read'
     ])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $description = null;
@@ -50,6 +68,11 @@ class InvoiceService
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
+        'devis:read',
+        'devis:write',
+        'devis:update',
+        'customers_devis_subresource',
+        'allDevis:read'
     ])]
     #[Assert\NotBlank(allowNull: true)]
     private ?int $quantity = null;
@@ -62,13 +85,20 @@ class InvoiceService
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
+        'devis:read',
+        'devis:write',
+        'devis:update',
+        'customers_devis_subresource',
+        'allDevis:read'
     ])]
     #[Assert\NotBlank]
     private float $unitPrice;
 
     #[ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: "services")]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Invoice $invoice = null;
+
+    #[ORM\ManyToOne(targetEntity: Devis::class, inversedBy: "services")]
+    private ?Devis $devis = null;
 
     public function getId(): ?int
     {
@@ -131,6 +161,18 @@ class InvoiceService
     public function setInvoice(?Invoice $invoice): self
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getDevis(): ?Devis
+    {
+        return $this->devis;
+    }
+
+    public function setDevis(?Devis $devis): self
+    {
+        $this->devis = $devis;
 
         return $this;
     }

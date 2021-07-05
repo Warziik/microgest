@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Devis;
 use App\Entity\Invoice;
 use App\Repository\CustomerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,9 +19,9 @@ class CreateUpdateInvoice extends AbstractController
     }
 
     /**
-     * Check that the User did not tried to set an Invoice for a Customer he didn't own.
+     * Check that the User did not tried to set an Invoice or a Devis for a Customer he didn't own.
      */
-    public function __invoke(Invoice $data)
+    public function __invoke(Invoice|Devis $data)
     {
         $user = $this->security->getUser();
         $userCustomers = $this->customerRepository->findBy(['owner' => $user]);
@@ -39,7 +40,7 @@ class CreateUpdateInvoice extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_UNAUTHORIZED,
-                    'message' => "You cannot set an invoice for a customer you don't own.",
+                    'message' => "You cannot set an invoice or a devis for a customer you don't own.",
                 ],
                 Response::HTTP_UNAUTHORIZED
             );

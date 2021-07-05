@@ -46,14 +46,19 @@ security:
         path: ^/api/users,
         roles: IS_AUTHENTICATED_FULLY,
         methods: [GET, PUT, DELETE],
-      }
+      },
     - {
         path: ^/api/customers,
         roles: IS_AUTHENTICATED_FULLY,
         methods: [GET, POST, PUT, DELETE],
-      }
+      },
     - {
         path: ^/api/invoices,
+        roles: IS_AUTHENTICATED_FULLY,
+        methods: [GET, POST, PUT, DELETE],
+      },
+    - {
+        path: ^/api/devis,
         roles: IS_AUTHENTICATED_FULLY,
         methods: [GET, POST, PUT, DELETE],
       }

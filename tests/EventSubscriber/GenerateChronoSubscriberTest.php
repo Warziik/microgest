@@ -6,6 +6,7 @@ use App\Entity\Customer;
 use App\Entity\Invoice;
 use App\Entity\User;
 use App\EventSubscriber\GenerateChronoSubscriber;
+use App\Repository\DevisRepository;
 use App\Repository\InvoiceRepository;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -37,10 +38,12 @@ class GenerateChronoSubscriberTest extends TestCase
         $securityMock = $this->createMock(Security::class);
         $securityMock->expects($this->once())->method('getUser')->willReturn(new User());
 
-        $repositoryMock = $this->createMock(InvoiceRepository::class);
-        $repositoryMock->expects($this->once())->method('findLastChrono');
+        $invoiceRepositoryMock = $this->createMock(InvoiceRepository::class);
+        $invoiceRepositoryMock->expects($this->once())->method('findLastChrono');
 
-        $subscriber = new GenerateChronoSubscriber($securityMock, $repositoryMock);
+        $devisRepositoryMock = $this->createMock(DevisRepository::class);
+
+        $subscriber = new GenerateChronoSubscriber($securityMock, $invoiceRepositoryMock, $devisRepositoryMock);
 
         $kernel = $this->createMock(HttpKernelInterface::class);
         $request = new Request();

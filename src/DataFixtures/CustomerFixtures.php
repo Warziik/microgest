@@ -14,7 +14,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i <= 200; ++$i) {
+        for ($i = 0; $i <= 40; ++$i) {
             $c = new Customer();
             $c->setType($faker->randomElement(['PERSON', 'COMPANY']));
             $c->setFirstname('PERSON' === $c->getType() ? $faker->firstName() : null);
@@ -28,7 +28,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             $c->setPostalCode((int) $faker->postcode());
             $c->setCountry($faker->countryISOAlpha3());
             $c->setCreatedAt($faker->dateTimeBetween('-9 days', 'now'));
-            $c->setOwner(0 === $i ? $this->getReference('testUser') : $this->getReference('user-' . rand(1, 50)));
+            $c->setOwner(0 === $i ? $this->getReference('testUser') : $this->getReference('user-' . rand(1, 10)));
 
             $manager->persist($c);
             0 === $i ? $this->addReference('testCustomer', $c) : $this->addReference("customer-$i", $c);

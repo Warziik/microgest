@@ -133,10 +133,15 @@ class Customer
     #[ApiSubresource]
     private Collection $invoices;
 
+    #[ORM\OneToMany(targetEntity: Devis::class, mappedBy: "customer", orphanRemoval: true, cascade: ["persist"])]
+    #[ApiSubresource]
+    private Collection $devis;
+
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
         $this->invoices = new ArrayCollection();
+        $this->devis = new ArrayCollection();
     }
 
     /* Returns the last Invoice of the Customer for the UI */
@@ -357,5 +362,35 @@ class Customer
     public function updateTimestamp(): void
     {
         $this->setUpdatedAt(new DateTime());
+    }
+
+    /**
+     * @return Collection|Devis[]
+     */
+    public function getDevis(): Collection
+    {
+        return $this->devis;
+    }
+
+    public function addDevi(Devis $devi): self
+    {
+        if (!$this->devis->contains($devi)) {
+            $this->devis[] = $devi;
+            $devi->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevi(Devis $devi): self
+    {
+        if ($this->devis->removeElement($devi)) {
+            // set the owning side to null (unless already changed)
+            if ($devi->getCustomer() === $this) {
+                $devi->setCustomer(null);
+            }
+        }
+
+        return $this;
     }
 }

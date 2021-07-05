@@ -62,7 +62,7 @@ class Invoice
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
-    #[ORM\Column(type: "string", length: 11)]
+    #[ORM\Column(type: "string", length: 13)]
     #[Groups([
         'invoices:read',
         'customers_invoices_subresource',
@@ -70,8 +70,8 @@ class Invoice
         'allInvoices:read',
     ])]
     #[Assert\Regex(
-        pattern: "/^(\d{4})-(\d{6})$/",
-        message: "Le chrono n'est pas au format valide (format accepté: YYYY-0000)."
+        pattern: "/^F-(\d{4})-(\d{6})$/",
+        message: "Le chrono n'est pas au format valide (exemple: F-2021-0001)."
     )]
     private string $chrono;
 
@@ -92,6 +92,8 @@ class Invoice
     private string $status;
 
     #[ORM\Column(type: "boolean")]
+    #[Assert\NotNull]
+    #[Assert\Type('boolean')]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -99,20 +101,21 @@ class Invoice
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
-    #[Assert\Type('boolean')]
     private bool $tvaApplicable;
 
     #[ORM\Column(type: "datetime")]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
         'invoices:read',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
-    #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
     #[ORM\Column(type: "datetime")]
+    #[Assert\NotBlank]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -120,11 +123,11 @@ class Invoice
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
-    #[Assert\NotBlank]
-    #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $serviceDoneAt;
 
     #[ORM\Column(type: "datetime")]
+    #[Assert\NotBlank]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
         'invoices:read',
         'invoices:write',
@@ -132,18 +135,9 @@ class Invoice
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
-    #[Assert\NotBlank]
-    #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $paymentDeadline;
 
     #[ORM\Column(type: "integer", nullable: true)]
-    #[Groups([
-        'invoices:read',
-        'invoices:write',
-        'users_customers_subresource',
-        'customers_invoices_subresource',
-        'allInvoices:read',
-    ])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Range(
         min: 0,
@@ -151,9 +145,17 @@ class Invoice
         notInRangeMessage: "Le taux des péanlités de retard ou d'absence de paiement doit être
         un pourcentage compris entre {{ min }} et {{ max }}."
     )]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
     private ?int $paymentDelayRate = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
         'invoices:read',
         'invoice:update',
@@ -161,10 +163,10 @@ class Invoice
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
-    #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $sentAt = null;
 
     #[ORM\Column(type: "datetime", nullable: true)]
+    #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
         'invoices:read',
         'invoice:update',
@@ -172,7 +174,6 @@ class Invoice
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
-    #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $paidAt = null;
 
     #[ORM\OneToMany(

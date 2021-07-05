@@ -26,7 +26,6 @@ class UserTest extends ApiTestCase
 
         static::bootKernel();
         $this->databaseTool = static::getContainer()->get(DatabaseToolCollection::class)->get();
-        $this->databaseTool->loadFixtures([UserFixtures::class]);
     }
 
     /**

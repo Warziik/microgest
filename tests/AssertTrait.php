@@ -2,12 +2,9 @@
 
 namespace App\Tests;
 
-use App\DataFixtures\CustomerFixtures;
-use App\DataFixtures\InvoiceFixtures;
 use App\DataFixtures\UserFixtures;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Validation;
 
 trait AssertTrait
 {
@@ -18,7 +15,7 @@ trait AssertTrait
      */
     private function getAuthToken(): string
     {
-        $this->databaseTool->loadFixtures([UserFixtures::class, CustomerFixtures::class, InvoiceFixtures::class]);
+        $this->databaseTool->loadFixtures([UserFixtures::class]);
 
         $response = static::createClient()->request(Request::METHOD_POST, '/api/authentication_token', ['json' => [
             'email' => 'testUser@localhost.dev',

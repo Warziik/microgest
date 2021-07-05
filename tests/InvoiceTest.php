@@ -3,6 +3,8 @@
 namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\DataFixtures\CustomerFixtures;
+use App\DataFixtures\InvoiceFixtures;
 use App\Entity\Invoice;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -33,6 +35,7 @@ class InvoiceTest extends ApiTestCase
     public function testGetAllInvoices(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([InvoiceFixtures::class]);
 
         static::createClient()->request(Request::METHOD_GET, '/api/invoices', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -56,6 +59,7 @@ class InvoiceTest extends ApiTestCase
     public function testGetInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class, InvoiceFixtures::class]);
 
         static::createClient()->request(Request::METHOD_GET, '/api/invoices/1', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -83,6 +87,7 @@ class InvoiceTest extends ApiTestCase
     public function testGetUnownedInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class, InvoiceFixtures::class]);
 
         static::createClient()->request(Request::METHOD_GET, '/api/invoices/18', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
@@ -109,6 +114,8 @@ class InvoiceTest extends ApiTestCase
     public function testCreateInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
+
         $response = static::createClient()
             ->request(Request::METHOD_POST, '/api/invoices', ['auth_bearer' => $authToken, 'json' => [
                 'status' => 'SENT',
@@ -191,6 +198,8 @@ class InvoiceTest extends ApiTestCase
     public function testCreateInvoiceForCustomerYouDontOwn(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([CustomerFixtures::class]);
+
         static::createClient()
             ->request(Request::METHOD_POST, '/api/invoices', ['auth_bearer' => $authToken, 'json' => [
                 'status' => 'SENT',
@@ -205,7 +214,7 @@ class InvoiceTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => "You cannot set an invoice for a customer you don't own.",
+            'message' => "You cannot set an invoice or a devis for a customer you don't own.",
         ]);
     }
 
@@ -215,6 +224,7 @@ class InvoiceTest extends ApiTestCase
     public function testUpdateInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([InvoiceFixtures::class]);
 
         $response = static::createClient()
             ->request(Request::METHOD_PUT, '/api/invoices/1', ['auth_bearer' => $authToken, 'json' => [
@@ -250,6 +260,7 @@ class InvoiceTest extends ApiTestCase
     public function testUpdateUnownedInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([InvoiceFixtures::class]);
 
         static::createClient()
             ->request(Request::METHOD_PUT, '/api/invoices/3', ['auth_bearer' => $authToken, 'json' => [
@@ -265,6 +276,7 @@ class InvoiceTest extends ApiTestCase
     public function testUpdateInvalidInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([InvoiceFixtures::class]);
 
         static::createClient()
             ->request(Request::METHOD_PUT, '/api/invoices/1', ['auth_bearer' => $authToken, 'json' => [
@@ -279,6 +291,8 @@ class InvoiceTest extends ApiTestCase
     public function testDeleteInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([InvoiceFixtures::class]);
+
         static::createClient()
             ->request(Request::METHOD_DELETE, '/api/invoices/1', ['auth_bearer' => $authToken]);
 
@@ -302,6 +316,7 @@ class InvoiceTest extends ApiTestCase
     public function testDeleteUnownedInvoice(): void
     {
         $authToken = $this->getAuthToken();
+        $this->databaseTool->loadFixtures([InvoiceFixtures::class]);
 
         static::createClient()
             ->request(Request::METHOD_DELETE, '/api/invoices/9', ['auth_bearer' => $authToken]);

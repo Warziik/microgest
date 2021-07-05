@@ -16,10 +16,10 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
         $faker = Factory::create('fr_FR');
 
         $c = 1;
-        for ($index = 0; $index < 300; ++$index) {
+        for ($index = 0; $index < 100; ++$index) {
             $i = new Invoice();
 
-            $i->setChrono(date('Y') . '-' . str_pad($c, 6, '0', STR_PAD_LEFT));
+            $i->setChrono('F-' . date('Y') . '-' . str_pad($c, 6, '0', STR_PAD_LEFT));
             $i->setStatus($faker->randomElement(['NEW', 'SENT', 'PAID', 'CANCELLED']));
             $i->setTvaApplicable($faker->randomElement([true, false]));
             $i->setServiceDoneAt($faker->dateTimeBetween('-2 weeks', '-1 week'));
@@ -32,7 +32,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
                 0 === $index ?
                     $this->getReference('testCustomer')
                     :
-                    $this->getReference('customer-' . rand(1, 200))
+                    $this->getReference('customer-' . rand(1, 40))
             );
 
             $manager->persist($i);

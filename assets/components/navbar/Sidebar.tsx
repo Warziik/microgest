@@ -6,7 +6,7 @@ import { NavSubItem } from "./NavSubItem";
 import { Icon } from "../Icon";
 
 export function Sidebar() {
-  const { userData, logout } = useAuth();
+  const { logout } = useAuth();
   const toast = useToast();
 
   const handleLogout = async () => {
@@ -17,10 +17,11 @@ export function Sidebar() {
 
   return (
     <div className="sidebar">
-      <div className="sidebar__userDetails">
-        <img src="https://via.placeholder.com/120x120" alt="" />
-        <h2>{`${userData.firstname} ${userData.lastname}`}</h2>
-      </div>
+      <img
+        className="sidebar__logo"
+        src="../logo.svg"
+        alt="Logo de Microgest"
+      />
       {/* TODO: Light / Dark theme switch */}
       {/* TODO: Searchbar */}
       <nav className="sidebar__nav">
@@ -36,7 +37,7 @@ export function Sidebar() {
           <NavSubItem to="/404" name="Factures d'acomptes" />
           <NavSubItem to="/404" name="Avoirs" />
         </NavItem>
-        {/* <NavItem to="/factures" icon="settings" name="Mes devis" /> */}
+        <NavItem to="/devis" exactPath={false} icon="devis" name="Mes devis" />
         <hr />
         <NavItem
           to="/paramètres"

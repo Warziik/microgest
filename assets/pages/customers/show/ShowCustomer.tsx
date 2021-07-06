@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import { Badge } from "../../../components/Badge";
 import { Button } from "../../../components/Button";
 import { useToast } from "../../../hooks/useToast";
 import {
@@ -18,9 +16,11 @@ import { Option, SelectInput } from "../../../components/form/SelectInput";
 import { useForm } from "react-hook-form";
 import { Modal } from "../../../components/Modal";
 import { AddEditCustomerForm } from "../AddEditCustomerForm";
-import { Tabs } from "../../../components/tab/Tabs";
-import { Tab } from "../../../components/tab/Tab";
 import { Breadcrumb } from "../../../components/Breadcrumb";
+import { Devis } from "../../../types/Devis";
+import { InvoicesData } from "../../invoices/InvoicesData";
+import { DevisData } from "../../devis/DevisData";
+import { fetchAllDevisOfCustomer } from "../../../services/DevisService";
 
 type MatchParams = {
   id: string;
@@ -30,17 +30,10 @@ export function ShowCustomer() {
   const { id } = useParams<MatchParams>();
   const history = useHistory();
   const toast = useToast();
-  const allInvoicesRef = useRef(null);
-  const draftsRef = useRef(null);
-  const dueRef = useRef(null);
-
-  const { register, watch } = useForm<{ dataType: "INVOICES" | "DEVIS" }>({
-    mode: "onChange",
-    defaultValues: { dataType: "INVOICES" },
-  });
 
   const [customer, setCustomer] = useState<Customer>();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [devis, setDevis] = useState<Devis[]>([]);
 
   const [showEditCustomerModal, setShowEditCustomerModal] = useState(false);
   const openEditCustomerModalBtn = useRef<HTMLButtonElement>(null);
@@ -48,14 +41,21 @@ export function ShowCustomer() {
   const [showDeleteCustomerModal, setShowDeleteCustomerModal] = useState(false);
   const openDeleteCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
+  const { register, watch } = useForm<{
+    dataType: "INVOICES" | "PRE_INVOICES" | "AVOIRS" | "DEVIS";
+  }>({
+    mode: "onChange",
+    defaultValues: { dataType: "INVOICES" },
+  });
+
   const selectDataTypeOptions: Option[] = [
     { value: "INVOICES", label: "Afficher les factures associées" },
     {
       value: "PRE_INVOICES",
-      label: "Afficher les Factures d’acomptes associées",
+      label: "Afficher les factures d’acomptes associées",
     },
-    { value: "DEVIS", label: "Afficher les devis associés" },
     { value: "AVOIRS", label: "Afficher les avoirs associés" },
+    { value: "DEVIS", label: "Afficher les devis associés" },
   ];
 
   useEffect(() => {
@@ -72,6 +72,12 @@ export function ShowCustomer() {
               (values: [boolean, Collection<Invoice> | any]) => {
                 const [isSuccess, data] = values;
                 if (isSuccess) setInvoices(data["hydra:member"]);
+              }
+            );
+            fetchAllDevisOfCustomer(customerData.id).then(
+              (values: [boolean, Collection<Devis> | any]) => {
+                const [isSuccess, data] = values;
+                if (isSuccess) setDevis(data["hydra:member"]);
               }
             );
           } else {
@@ -242,11 +248,18 @@ export function ShowCustomer() {
         </div>
 
         <div className="showCustomer__taskBar">
-          {(invoices && (
+          {(customer && (
             <>
               <p>
-                <strong>{invoices.length}</strong> factures associées.
+                <strong>
+                  {(watch("dataType") === "INVOICES" && invoices.length) ||
+                    (watch("dataType") === "DEVIS" && devis.length) ||
+                    (watch("dataType") === "PRE_INVOICES" && "0") ||
+                    (watch("dataType") === "AVOIRS" && "0")}
+                </strong>{" "}
+                documents trouvés.
               </p>
+
               <form>
                 <SelectInput
                   error={undefined}
@@ -257,13 +270,14 @@ export function ShowCustomer() {
               <Button icon="filter" type="outline" disabled={true}>
                 Filtrer
               </Button>
-              {/*               <Button icon="download" type="contrast">
+              {/*               <Button icon="download" type="contrast" disabled={true}>
                 Exporter au format Excel
               </Button>
               <Button
                 icon="download"
                 type="contrast"
                 color="accent"
+                disabled={true}
               >
                 Exporter au format PDF
               </Button> */}
@@ -272,67 +286,21 @@ export function ShowCustomer() {
         </div>
 
         {watch("dataType") === "INVOICES" && (
-          <Tabs defaultActiveTab={0}>
-            <Tab title={"Toutes les factures"} tabRef={allInvoicesRef}>
-              <div className="invoices__list">
-                <div className="invoices__list-header">
-                  <h3>Factures</h3>
-                  <p>{invoices.length} factures émises</p>
-                </div>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Chrono</th>
-                      <th>Statut</th>
-                      <th>Montant total (HT)</th>
-                      <th>Date d&lsquo;exécution</th>
-                      <th>Date d&lsquo;émission</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {invoices.map((invoice: Invoice, index: number) => (
-                      <tr key={index}>
-                        <td>
-                          <Link className="link" to={`/facture/${invoice.id}`}>
-                            {invoice.chrono}
-                          </Link>
-                        </td>
-                        <td>
-                          <Badge status={invoice.status} />
-                        </td>
-                        <td>
-                          {new Intl.NumberFormat("fr-FR", {
-                            style: "currency",
-                            currency: "EUR",
-                          }).format(invoice.totalAmount)}
-                        </td>
-                        <td>
-                          {(invoice.serviceDoneAt &&
-                            dayjs(invoice.serviceDoneAt).fromNow()) ||
-                            "-"}
-                        </td>
-                        <td>
-                          {(invoice.createdAt &&
-                            dayjs(invoice.createdAt).fromNow()) ||
-                            "-"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Tab>
-            <Tab title={"Brouillons"} tabRef={draftsRef}>
-              <div className="invoices__list">
-                <p>Aucune facture brouillon pour le moment.</p>
-              </div>
-            </Tab>
-            <Tab title={"Impayées"} tabRef={dueRef}>
-              <div className="invoices__list">
-                <p>Aucune facture impayée pour le moment.</p>
-              </div>
-            </Tab>
-          </Tabs>
+          <InvoicesData invoices={invoices} />
+        )}
+        {watch("dataType") === "DEVIS" && <DevisData devis={devis} />}
+        {watch("dataType") === "PRE_INVOICES" && (
+          <div className="invoices__list">
+            <p>
+              Les factures d&lsquo;acomptes ne sont pas disponibles pour le
+              moment.
+            </p>
+          </div>
+        )}
+        {watch("dataType") === "AVOIRS" && (
+          <div className="invoices__list">
+            <p>Les avoirs ne sont pas disponibles pour le moment.</p>
+          </div>
         )}
       </div>
     </>

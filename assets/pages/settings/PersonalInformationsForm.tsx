@@ -109,11 +109,6 @@ export function PersonalInformationsForm() {
     <div className="settings__personalInformations">
       <form className="settings__personalInformations-form" onSubmit={onSubmit}>
         <div className="settings__personalInformations-nameForm">
-          {/*           <img
-            src="https://via.placeholder.com/144"
-            alt="Your profile picture."
-          /> */}
-
           <TextInput
             error={errors.firstname}
             label="Prénom"

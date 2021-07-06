@@ -5,6 +5,7 @@ import ConfirmAccount from "../pages/auth/ConfirmAccount";
 import { ResetPassword } from "../pages/auth/ResetPassword";
 import { Customers } from "../pages/customers/Customers";
 import { ShowCustomer } from "../pages/customers/show/ShowCustomer";
+import { Devis } from "../pages/devis/Devis";
 import Home from "../pages/Home";
 import { InvoiceExport } from "../pages/invoices/InvoiceExport";
 import { Invoices } from "../pages/invoices/Invoices";
@@ -21,6 +22,10 @@ export function Router() {
         <PrivateRoute
           path={["/paramètres", "/paramètres/sécurité"]}
           component={Settings}
+        />
+        <PrivateRoute
+          path={["/devis", "/devis/brouillons"]}
+          component={Devis}
         />
         <PrivateRoute
           path="/facture/:id/export"

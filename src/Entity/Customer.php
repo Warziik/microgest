@@ -39,7 +39,14 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    #[Groups(['customers:read', 'users_customers_subresource', 'invoices:read', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+        ])]
     private int $id;
 
     #[ORM\Column(type: "string", length: 7)]
@@ -49,6 +56,8 @@ class Customer
         'invoices:read',
         'users_customers_subresource',
         'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
     ])]
     #[Assert\NotBlank]
     #[Assert\Choice(
@@ -58,13 +67,29 @@ class Customer
     private string $type;
 
     #[ORM\Column(type: "string", length: 30, nullable: true)]
-    #[Groups(['customers:read', 'customers:write', 'users_customers_subresource', 'invoices:read', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $firstname = null;
 
     #[ORM\Column(type: "string", length: 30, nullable: true)]
-    #[Groups(['customers:read', 'customers:write', 'users_customers_subresource', 'invoices:read', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(min: 2, max: 30)]
     private ?string $lastname = null;
@@ -81,7 +106,15 @@ class Customer
     private ?string $phone = null;
 
     #[ORM\Column(type: "string", length: 40, nullable: true)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $company = null;

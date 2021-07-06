@@ -147,7 +147,10 @@ class DevisTest extends ApiTestCase
             'workDuration' => '1 week',
             'paymentDelayRate' => null,
             'tvaApplicable' => false,
-            'customer' => '/api/customers/1',
+            'customer' => [
+                '@id' => '/api/customers/1',
+                '@type' => 'Customer'
+            ],
             'services' => [
                 [
                     'name' => "Création d'un site internet",

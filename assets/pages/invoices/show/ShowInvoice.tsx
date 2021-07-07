@@ -214,7 +214,7 @@ export function ShowInvoice() {
                   </div>
                   <div className="customers__item-main-data">
                     <p>Date d&lsquo;exécution</p>
-                    <p>{dayjs(invoice.paymentDeadline).format("LL")}</p>
+                    <p>{dayjs(invoice.serviceDoneAt).format("LL")}</p>
                   </div>
                   <div className="customers__item-main-data">
                     <p>Date limite de règlement</p>

@@ -60,7 +60,7 @@ export function DevisData({
               {devis.map((devis: Devis, index: number) => (
                 <tr key={index}>
                   <td>
-                    <Link className="link" to={`/devis/${devis.id}`}>
+                    <Link className="link" to={`/devis-détails/${devis.id}`}>
                       {devis.chrono}
                     </Link>
                   </td>
@@ -88,7 +88,7 @@ export function DevisData({
                     <Button
                       type="contrast"
                       size="small"
-                      onClick={() => push(`/devis/${devis.id}/export`)}
+                      onClick={() => push(`/devis-détails/${devis.id}/export`)}
                     >
                       Exporter
                     </Button>

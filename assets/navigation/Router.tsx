@@ -15,6 +15,7 @@ import { NotFound } from "../pages/NotFound";
 import { Settings } from "../pages/settings/Settings";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { ShowDevis } from "../pages/devis/show/ShowDevis";
 
 export function Router() {
   return (
@@ -24,15 +25,18 @@ export function Router() {
           path={["/paramètres", "/paramètres/sécurité"]}
           component={Settings}
         />
+
         <PrivateRoute
-          path="/devis/:id/export"
+          path="/devis-détails/:id/export"
           noLayout={true}
           component={DevisExport}
         />
+        <PrivateRoute path="/devis-détails/:id" component={ShowDevis} />
         <PrivateRoute
           path={["/devis", "/devis/brouillons"]}
           component={Devis}
         />
+
         <PrivateRoute
           path="/facture/:id/export"
           noLayout={true}
@@ -43,8 +47,10 @@ export function Router() {
           path={["/factures", "/factures/brouillons", "/factures/impayées"]}
           component={Invoices}
         />
+
         <PrivateRoute path="/client/:id" component={ShowCustomer} />
         <PrivateRoute path="/clients" component={Customers} />
+
         <PrivateRoute exact path="/" component={Home} />
 
         <PublicRoute

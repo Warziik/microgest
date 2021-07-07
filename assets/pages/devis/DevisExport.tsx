@@ -28,7 +28,7 @@ export function DevisExport() {
           document.title = `Devis n°${data.chrono} - Microgest`;
 
           window.addEventListener("afterprint", () => {
-            history.push(`/devis/${data.id}`);
+            history.push(`/devis-détails/${data.id}`);
           });
           window.print();
         } else {

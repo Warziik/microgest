@@ -46,15 +46,15 @@ class Customer
         'allInvoices:read',
         'devis:read',
         'allDevis:read'
-        ])]
+    ])]
     private int $id;
 
     #[ORM\Column(type: "string", length: 7)]
     #[Groups([
         'customers:read',
         'customers:write',
-        'invoices:read',
         'users_customers_subresource',
+        'invoices:read',
         'allInvoices:read',
         'devis:read',
         'allDevis:read'
@@ -95,13 +95,29 @@ class Customer
     private ?string $lastname = null;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+    ])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private string $email;
 
     #[ORM\Column(type: "string", length: 30, nullable: true)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     private ?string $phone = null;
 
@@ -120,35 +136,67 @@ class Customer
     private ?string $company = null;
 
     #[ORM\Column(type: "bigint", nullable: true)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource', 'allInvoices:read'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'allInvoices:read',
+        'devis:read',
+        'allDevis:read'
+    ])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Regex(pattern: "/^\d{14}$/", message: 'Le numéro SIRET doit contenir 14 chiffres.')]
     private ?string $siret = null;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'devis:read'
+    ])]
     #[Assert\NotBlank]
     private string $address;
 
     #[ORM\Column(type: "integer")]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'devis:read'
+    ])]
     #[Assert\NotBlank]
     private int $postalCode;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'devis:read'
+    ])]
     #[Assert\NotBlank]
     private string $city;
 
     #[ORM\Column(type: "string", length: 3)]
-    #[Groups(['customers:read', 'customers:write', 'invoices:read', 'users_customers_subresource'])]
+    #[Groups([
+        'customers:read',
+        'customers:write',
+        'users_customers_subresource',
+        'invoices:read',
+        'devis:read'
+    ])]
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "customers")]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['invoices:read'])]
+    #[Groups(['invoices:read', "devis:read"])]
     #[Assert\NotBlank]
     private ?User $owner = null;
 

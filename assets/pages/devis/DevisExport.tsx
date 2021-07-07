@@ -2,44 +2,42 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Spinner } from "../../components/Spinner";
 import { useToast } from "../../hooks/useToast";
-import { fetchInvoice } from "../../services/InvoiceService";
-import { Invoice } from "../../types/Invoice";
 import { GenerateExportableDocument } from "../../components/GenerateExportableDocument";
+import { Devis } from "../../types/Devis";
+import { fetchDevis } from "../../services/DevisService";
 
 type MatchParams = {
   id: string;
 };
 
-export function InvoiceExport() {
+export function DevisExport() {
   const { id } = useParams<MatchParams>();
   const history = useHistory();
   const toast = useToast();
 
-  const [invoice, setInvoice] = useState<Invoice>();
+  const [devis, setDevis] = useState<Devis>();
 
   useEffect(() => {
     if (Number.isNaN(id)) {
       history.push("/");
     } else {
-      fetchInvoice(parseInt(id)).then((values: [boolean, Invoice]) => {
+      fetchDevis(parseInt(id)).then((values: [boolean, Devis]) => {
         const [isSuccess, data] = values;
         if (isSuccess) {
-          setInvoice(data);
-          document.title = `Facture n°${data.chrono} - Microgest`;
+          setDevis(data);
+          document.title = `Devis n°${data.chrono} - Microgest`;
 
           window.addEventListener("afterprint", () => {
-            history.push(`/facture/${data.id}`);
+            history.push(`/devis/${data.id}`);
           });
           window.print();
         } else {
-          toast("error", "La facture n'a pu être trouvée.");
+          toast("error", "Le devis n'a pu être trouvé.");
           history.push("/");
         }
       });
     }
   }, [id, history, toast]);
 
-  return (
-    (invoice && <GenerateExportableDocument data={invoice} />) || <Spinner />
-  );
+  return (devis && <GenerateExportableDocument data={devis} />) || <Spinner />;
 }

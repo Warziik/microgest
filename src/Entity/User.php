@@ -63,19 +63,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private string $firstname;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 30)]
     private string $lastname;
 
     #[ORM\Column(type: "string", length: 255, unique: true)]
-    #[Groups(['users:read', 'users:write', 'forgotPassword:write'])]
+    #[Groups(['users:read', 'users:write', 'forgotPassword:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
@@ -106,19 +106,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column(type: "string", length: 40, nullable: true)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $businessName = null;
 
     #[ORM\Column(type: "bigint")]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     #[Assert\Regex(pattern: "/^\d{14}$/", message: 'Le numéro SIRET doit contenir 14 chiffres.')]
     private string $siret;
 
     #[ORM\Column(type: "string", length: 13, nullable: true)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Regex(
         pattern: "/^([A-Z]{2})(\d{2})(\d{9})$/",
@@ -127,22 +127,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $tvaNumber = null;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     private string $address;
 
     #[ORM\Column(type: "string", length: 255)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     private string $city;
 
     #[ORM\Column(type: "integer")]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     private int $postalCode;
 
     #[ORM\Column(type: "string", length: 3)]
-    #[Groups(['users:read', 'users:write', 'invoices:read'])]
+    #[Groups(['users:read', 'users:write', 'invoices:read', 'devis:read'])]
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;

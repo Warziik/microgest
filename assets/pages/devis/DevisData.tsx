@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Tabs } from "../../components/tab/Tabs";
 import { Tab } from "../../components/tab/Tab";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { Badge } from "../../components/Badge";
 import { Devis } from "../../types/Devis";
 import { Button } from "../../components/Button";
@@ -18,6 +18,7 @@ export function DevisData({
   displayCustomer = false,
   displayUrls = false,
 }: Props) {
+  const { push } = useHistory();
   const { pathname } = useLocation();
   const allDevisRef = useRef(null);
   const draftsRef = useRef(null);
@@ -84,7 +85,11 @@ export function DevisData({
                     {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
                   </td>
                   <td>
-                    <Button type="contrast" size="small" disabled={true}>
+                    <Button
+                      type="contrast"
+                      size="small"
+                      onClick={() => push(`/devis/${devis.id}/export`)}
+                    >
                       Exporter
                     </Button>
                   </td>

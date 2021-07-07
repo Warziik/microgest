@@ -11,7 +11,7 @@ import { Icon } from "../../../components/Icon";
 import { EditInvoiceForm } from "../EditInvoiceForm";
 import { Modal } from "../../../components/Modal";
 import { Tooltip } from "../../../components/Tooltip";
-import { GenerateInvoice } from "../../../components/GenerateInvoice";
+import { GenerateExportableDocument } from "../../../components/GenerateExportableDocument";
 import { Breadcrumb } from "../../../components/Breadcrumb";
 
 type MatchParams = {
@@ -256,7 +256,7 @@ export function ShowInvoice() {
               </div>
 
               <div className="showInvoice__display">
-                <GenerateInvoice invoice={invoice} />
+                <GenerateExportableDocument data={invoice} />
               </div>
               {/*           <div className="showInvoice__other">
             <h3>Envoi de la facture par mail</h3>

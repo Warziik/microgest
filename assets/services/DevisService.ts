@@ -25,7 +25,7 @@ export function fetchAllDevisOfCustomer(
   });
 }
 
-export function fetchInvoice(id: number): Promise<[boolean, Devis]> {
+export function fetchDevis(id: number): Promise<[boolean, Devis]> {
   return DataAccess.request(`${DEVIS_URI}/${id}`, {
     method: "GET",
   });

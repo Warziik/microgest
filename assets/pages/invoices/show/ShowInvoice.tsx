@@ -137,10 +137,16 @@ export function ShowInvoice() {
                 <div className="showInvoice__header-status">
                   <Badge status={invoice.status} />
                   {invoice.status === "SENT" && (
-                    <p>Envoyée le {dayjs(invoice.sentAt).format("LLLL")}</p>
+                    <p>
+                      Envoyée le{" "}
+                      {dayjs(invoice.sentAt).format("dddd DD MMMM YYYY")}
+                    </p>
                   )}
                   {invoice.status === "PAID" && (
-                    <p>Payée le {dayjs(invoice.paidAt).format("LLLL")}</p>
+                    <p>
+                      Payée le{" "}
+                      {dayjs(invoice.paidAt).format("dddd DD MMMM YYYY")}
+                    </p>
                   )}
                 </div>
                 <div className="showInvoice__header-ctas">

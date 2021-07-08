@@ -13,6 +13,8 @@ import { Icon } from "../../../components/Icon";
 import { GenerateExportableDocument } from "../../../components/GenerateExportableDocument";
 import { Breadcrumb } from "../../../components/Breadcrumb";
 import { Modal } from "../../../components/Modal";
+import { EditDevisForm } from "../EditDevisForm";
+import { Tooltip } from "../../../components/Tooltip";
 
 type MatchParams = {
   id: string;
@@ -24,6 +26,10 @@ export function ShowDevis() {
   const toast = useToast();
 
   const [devis, setDevis] = useState<Devis>();
+
+  const [showEditDevisModal, setShowEditDevisModal] = useState(false);
+  const openEditDevisModalBtn = useRef<HTMLButtonElement>(null);
+  const editDevis = (devis: Devis) => setDevis(devis);
 
   const [showDeleteDevisModal, setShowDeleteInvoiceModal] = useState(false);
   const openDeleteDevisModalBtn = useRef<HTMLButtonElement>(null);
@@ -48,6 +54,13 @@ export function ShowDevis() {
   useEffect(() => {
     document.title = `Devis n°${devis?.chrono} - Microgest`;
   }, [devis]);
+
+  const openEditDevisModal = () => setShowEditDevisModal(true);
+
+  const closeEditDevisModal = () => {
+    setShowEditDevisModal(false);
+    openEditDevisModalBtn.current?.focus();
+  };
 
   const closeDeleteDevisModal = () => {
     setShowDeleteInvoiceModal(false);
@@ -95,6 +108,16 @@ export function ShowDevis() {
           </div>
         </Modal>
       )}
+      {devis && (
+        <Modal
+          isOpen={showEditDevisModal}
+          onClose={closeEditDevisModal}
+          title={`Éditer le devis n°${devis.chrono}`}
+          className="editInvoiceModal"
+        >
+          <EditDevisForm devisToEdit={devis} editDevis={editDevis} />
+        </Modal>
+      )}
       {(devis && (
         <>
           <Breadcrumb
@@ -110,10 +133,14 @@ export function ShowDevis() {
               <div className="showInvoice__header-status">
                 <Badge status={devis.status} />
                 {devis.status === "SENT" && (
-                  <p>Envoyé le {dayjs(devis.sentAt).format("LLLL")}</p>
+                  <p>
+                    Envoyé le {dayjs(devis.sentAt).format("dddd DD MMMM YYYY")}
+                  </p>
                 )}
                 {devis.status === "SIGNED" && (
-                  <p>Signé le {dayjs(devis.signedAt).format("LLLL")}</p>
+                  <p>
+                    Signé le {dayjs(devis.signedAt).format("dddd DD MMMM YYYY")}
+                  </p>
                 )}
               </div>
               <div className="showInvoice__header-ctas">
@@ -128,22 +155,33 @@ export function ShowDevis() {
                   Exporter le devis
                 </Button>
 
-                <Button icon="edit" type="outline" disabled={true}>
+                <Button
+                  icon="edit"
+                  type="outline"
+                  onClick={openEditDevisModal}
+                  ref={openEditDevisModalBtn}
+                >
                   Éditer
                 </Button>
 
-                <Button
-                  icon="trash"
-                  type="outline"
-                  color="danger"
-                  disabled={devis.status !== "NEW"}
-                  ref={openDeleteDevisModalBtn}
-                  onClick={
-                    devis.status === "NEW" ? openDeleteDevisModal : undefined
-                  }
+                <Tooltip
+                  isActive={devis.status !== "NEW"}
+                  content="Vous ne pouvez pas supprimer un devis qui a été envoyé, signé ou annulé."
+                  position="left"
                 >
-                  Supprimer
-                </Button>
+                  <Button
+                    icon="trash"
+                    type="outline"
+                    color="danger"
+                    disabled={devis.status !== "NEW"}
+                    ref={openDeleteDevisModalBtn}
+                    onClick={
+                      devis.status === "NEW" ? openDeleteDevisModal : undefined
+                    }
+                  >
+                    Supprimer
+                  </Button>
+                </Tooltip>
               </div>
             </div>
 

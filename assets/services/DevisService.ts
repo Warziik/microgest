@@ -32,6 +32,27 @@ export function fetchDevis(id: number): Promise<[boolean, Devis]> {
 }
 
 /**
+ * Send a PUT request to update an existing Devis.
+ *
+ * @param id The Devis's id
+ */
+export function updateDevis(
+  id: number,
+  status: string,
+  sentAt: string | null,
+  signedAt: string | null
+): Promise<[boolean, Devis | ErrorResponse]> {
+  return DataAccess.request(`${DEVIS_URI}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      status,
+      sentAt,
+      signedAt,
+    }),
+  });
+}
+
+/**
  * Send a DELETE request to delete the Devis.
  *
  * @param id The Devis's id

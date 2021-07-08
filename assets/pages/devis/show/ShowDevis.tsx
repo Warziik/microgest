@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useToast } from "../../../hooks/useToast";
-import { fetchDevis } from "../../../services/DevisService";
+import { deleteDevis, fetchDevis } from "../../../services/DevisService";
 import { Devis } from "../../../types/Devis";
 import { InvoiceService } from "../../../types/Invoice";
 import dayjs from "dayjs";
@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { Icon } from "../../../components/Icon";
 import { GenerateExportableDocument } from "../../../components/GenerateExportableDocument";
 import { Breadcrumb } from "../../../components/Breadcrumb";
+import { Modal } from "../../../components/Modal";
 
 type MatchParams = {
   id: string;
@@ -23,6 +24,10 @@ export function ShowDevis() {
   const toast = useToast();
 
   const [devis, setDevis] = useState<Devis>();
+
+  const [showDeleteDevisModal, setShowDeleteInvoiceModal] = useState(false);
+  const openDeleteDevisModalBtn = useRef<HTMLButtonElement>(null);
+  const openDeleteDevisModal = () => setShowDeleteInvoiceModal(true);
 
   useEffect(() => {
     if (Number.isNaN(id)) {
@@ -44,8 +49,52 @@ export function ShowDevis() {
     document.title = `Devis n°${devis?.chrono} - Microgest`;
   }, [devis]);
 
+  const closeDeleteDevisModal = () => {
+    setShowDeleteInvoiceModal(false);
+    openDeleteDevisModalBtn.current?.focus();
+  };
+
+  const handleDeleteBtn = async () => {
+    if (devis) {
+      const [isSuccess] = await deleteDevis(devis.id);
+      if (isSuccess) {
+        history.push("/devis");
+        toast("success", "Le devis a bien été supprimé.");
+      } else {
+        toast(
+          "error",
+          "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard."
+        );
+      }
+    }
+  };
+
   return (
     <div className="showInvoice">
+      {devis && (
+        <Modal
+          isOpen={showDeleteDevisModal}
+          onClose={closeDeleteDevisModal}
+          title="Supprimer le devis"
+          className="deleteInvoiceModal"
+        >
+          <p>
+            Êtes-vous sûr de vouloir supprimer le devis ? (action irréversible)
+          </p>
+          <div className="deleteInvoiceModal__ctas">
+            <Button
+              type="contrast"
+              onClick={closeDeleteDevisModal}
+              icon="close"
+            >
+              Annuler
+            </Button>
+            <Button onClick={handleDeleteBtn} icon="trash" color="danger">
+              Supprimer
+            </Button>
+          </div>
+        </Modal>
+      )}
       {(devis && (
         <>
           <Breadcrumb
@@ -87,7 +136,11 @@ export function ShowDevis() {
                   icon="trash"
                   type="outline"
                   color="danger"
-                  disabled={true}
+                  disabled={devis.status !== "NEW"}
+                  ref={openDeleteDevisModalBtn}
+                  onClick={
+                    devis.status === "NEW" ? openDeleteDevisModal : undefined
+                  }
                 >
                   Supprimer
                 </Button>

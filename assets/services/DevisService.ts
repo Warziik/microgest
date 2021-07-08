@@ -30,3 +30,14 @@ export function fetchDevis(id: number): Promise<[boolean, Devis]> {
     method: "GET",
   });
 }
+
+/**
+ * Send a DELETE request to delete the Devis.
+ *
+ * @param id The Devis's id
+ */
+export function deleteDevis(id: number): Promise<[boolean, []]> {
+  return DataAccess.request(`${DEVIS_URI}/${id}`, {
+    method: "DELETE",
+  });
+}

@@ -7,7 +7,7 @@ on:
 
 jobs:
   web-deploy:
-    name: 🚀 Deploy
+    name: 🚀 Deploy to the moon!
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,6 +15,7 @@ jobs:
 
       - name: Compile Assets
         run: |-
+          touch .env.local && echo "API_URL=\"'https://microgest.alex-chesnay.fr/api'\"" > .env.local
           yarn install
           yarn build
 
@@ -23,13 +24,11 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
             cd microgest
             git pull origin master
-            php ../composer.phar install
-            php bin/console d:m:m --no-interaction
 
       - name: Copy assets
         uses: garygrossgarten/github-action-scp@release
@@ -38,5 +37,5 @@ jobs:
           remote: microgest/public/build
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}

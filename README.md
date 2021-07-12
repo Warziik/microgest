@@ -1,6 +1,7 @@
 # MicroGest
 
 [![CI](https://github.com/Warziik/microgest/actions/workflows/ci.yml/badge.svg)](https://github.com/Warziik/microgest/actions/workflows/ci.yml)
+[![Deployment](https://github.com/Warziik/microgest/actions/workflows/cd.yml/badge.svg)](https://github.com/Warziik/microgest/actions/workflows/cd.yml)
 
 Tableau de bord facilitant la gestion des clients et des factures de sa micro-entreprise.
 

@@ -15,7 +15,6 @@ jobs:
 
       - name: Compile Assets
         run: |-
-          touch .env.local && echo API_URL="'https://microgest.alex-chesnay.fr/api'" > .env.local
           yarn install
           yarn build
 
@@ -29,7 +28,8 @@ jobs:
           script: |
             cd microgest
             git pull origin master
-            git status
+            php ../composer.phar install
+            php bin/console d:m:m --no-interaction
 
       - name: Copy assets
         uses: garygrossgarten/github-action-scp@release

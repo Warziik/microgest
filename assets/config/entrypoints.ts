@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api";
+const API_URL = process.env.API_URL;
 
 export const AUTH_URI = `${API_URL}/authentication_token`;
 

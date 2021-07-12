@@ -10,10 +10,7 @@ Exécuter les commandes ci-dessous à la racine du projet (prérequis [Docker](h
 
 ```
 make install
-# installe les dépendances PHP et JavaScript
-
-make db
-# crée la base de données et exécute les migrations
+# installe les dépendances PHP et JavaScript, crée la base de données et exécute les migrations
 
 make fixtures
 # génère les fausses données pour les entités doctrine (optionnel)

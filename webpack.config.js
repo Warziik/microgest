@@ -1,3 +1,5 @@
+require("dotenv").config({ path: __dirname + "/.env.local" });
+
 const Encore = require("@symfony/webpack-encore");
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -43,6 +45,9 @@ Encore
 
   .enableReactPreset()
   .enableSassLoader()
-  .enableTypeScriptLoader();
+  .enableTypeScriptLoader()
+  .configureDefinePlugin((options) => {
+    options["process.env"].API_URL = process.env.API_URL;
+  });
 
 module.exports = Encore.getWebpackConfig();

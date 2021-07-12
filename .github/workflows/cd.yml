@@ -1,0 +1,42 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  web-deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Compile Assets
+        run: |-
+          touch .env.local && echo API_URL="'https://microgest.alex-chesnay.fr/api'" > .env.local
+          yarn install
+          yarn build
+
+      - name: SSH scripts
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd microgest
+            git pull origin master
+            git status
+
+      - name: Copy assets
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: public/build
+          remote: microgest/public/build
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}

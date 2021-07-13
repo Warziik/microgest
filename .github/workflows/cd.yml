@@ -32,7 +32,10 @@ jobs:
             git reset --hard origin/master
             git pull origin master
             sed -i 's/JSON NOT NULL/TEXT NOT NULL/' migrations/Version20210115144755.php
+            sed -i 's/email VARCHAR(255)/email VARCHAR(191)/' migrations/Version20210115144755.php
+            sed -i 's/token VARCHAR(255)/token VARCHAR(191)/' migrations/Version20210203181910.php
             /usr/local/php8.0/bin/php ../composer.phar install
+            /usr/local/php8.0/bin/php bin/console d:m:m --no-interaction
 
       - name: Copy assets
         uses: garygrossgarten/github-action-scp@release

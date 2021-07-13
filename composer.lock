@@ -1400,21 +1400,22 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "3.1.4",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "207210c57f6c15835e8d6228075cd235bd061efc"
+                "reference": "072c11c1dcfced4505e29a0487b06ea774c403f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/207210c57f6c15835e8d6228075cd235bd061efc",
-                "reference": "207210c57f6c15835e8d6228075cd235bd061efc",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/072c11c1dcfced4505e29a0487b06ea774c403f4",
+                "reference": "072c11c1dcfced4505e29a0487b06ea774c403f4",
                 "shasum": ""
             },
             "require": {
                 "composer/package-versions-deprecated": "^1.8",
                 "doctrine/dbal": "^2.11",
+                "doctrine/deprecations": "^0.5.3",
                 "doctrine/event-manager": "^1.0",
                 "friendsofphp/proxy-manager-lts": "^1.0",
                 "php": "^7.2 || ^8.0",
@@ -1435,6 +1436,7 @@
                 "phpstan/phpstan-strict-rules": "^0.12",
                 "phpstan/phpstan-symfony": "^0.12",
                 "phpunit/phpunit": "^8.5 || ^9.4",
+                "symfony/cache": "^5.3",
                 "symfony/process": "^3.4 || ^4.0 || ^5.0",
                 "symfony/yaml": "^3.4 || ^4.0 || ^5.0"
             },
@@ -1484,7 +1486,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/migrations/issues",
-                "source": "https://github.com/doctrine/migrations/tree/3.1.4"
+                "source": "https://github.com/doctrine/migrations/tree/3.2.0"
             },
             "funding": [
                 {
@@ -1500,7 +1502,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-15T18:57:30+00:00"
+            "time": "2021-07-05T07:06:31+00:00"
         },
         {
             "name": "doctrine/orm",
@@ -2039,16 +2041,16 @@
         },
         {
             "name": "gesdinet/jwt-refresh-token-bundle",
-            "version": "v1.0.0-beta",
+            "version": "v1.0.0-beta2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/markitosgv/JWTRefreshTokenBundle.git",
-                "reference": "3a84970834c9c00aaa99ca25a2f554ed109c7688"
+                "reference": "a30e372b8f2325e26aacd706edf65045556c7e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/markitosgv/JWTRefreshTokenBundle/zipball/3a84970834c9c00aaa99ca25a2f554ed109c7688",
-                "reference": "3a84970834c9c00aaa99ca25a2f554ed109c7688",
+                "url": "https://api.github.com/repos/markitosgv/JWTRefreshTokenBundle/zipball/a30e372b8f2325e26aacd706edf65045556c7e9b",
+                "reference": "a30e372b8f2325e26aacd706edf65045556c7e9b",
                 "shasum": ""
             },
             "require": {
@@ -2065,8 +2067,7 @@
                 "symfony/security-bundle": "^3.4|^4.0|^5.2",
                 "symfony/security-core": "^3.4|^4.4|^5.2",
                 "symfony/security-guard": "^3.4|^4.4|^5.2",
-                "symfony/security-http": "^3.4|^4.4|^5.2",
-                "symfony/validator": "^3.4|^4.4|^5.2"
+                "symfony/security-http": "^3.4|^4.4|^5.2"
             },
             "conflict": {
                 "doctrine/persistence": "<1.3.3"
@@ -2076,7 +2077,9 @@
                 "doctrine/mongodb-odm-bundle": "^3.4|^4.0",
                 "doctrine/orm": "^2.4.8",
                 "doctrine/persistence": "^1.3.3|^2.0",
-                "phpspec/phpspec": "^3.0|^4.0|^5.0|^6.0|^7.0"
+                "matthiasnoback/symfony-dependency-injection-test": "^3.0|^4.0",
+                "phpspec/phpspec": "^5.0|^6.0|^7.0",
+                "phpunit/phpunit": "^7.5|^8.5|^9.5"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -2087,7 +2090,10 @@
             "autoload": {
                 "psr-4": {
                     "Gesdinet\\JWTRefreshTokenBundle\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2105,22 +2111,22 @@
             ],
             "support": {
                 "issues": "https://github.com/markitosgv/JWTRefreshTokenBundle/issues",
-                "source": "https://github.com/markitosgv/JWTRefreshTokenBundle/tree/v1.0.0-beta"
+                "source": "https://github.com/markitosgv/JWTRefreshTokenBundle/tree/v1.0.0-beta2"
             },
-            "time": "2021-07-01T11:50:35+00:00"
+            "time": "2021-07-12T19:00:48+00:00"
         },
         {
             "name": "laminas/laminas-code",
-            "version": "4.4.0",
+            "version": "4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "2b0bb59ade31a045fd3ff0097dc558bb896f6596"
+                "reference": "54251ab2b16c41c6980387839496b235f5f6e10b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/2b0bb59ade31a045fd3ff0097dc558bb896f6596",
-                "reference": "2b0bb59ade31a045fd3ff0097dc558bb896f6596",
+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/54251ab2b16c41c6980387839496b235f5f6e10b",
+                "reference": "54251ab2b16c41c6980387839496b235f5f6e10b",
                 "shasum": ""
             },
             "require": {
@@ -2174,7 +2180,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-06-17T13:39:43+00:00"
+            "time": "2021-07-09T11:58:40+00:00"
         },
         {
             "name": "lcobucci/clock",
@@ -2313,16 +2319,16 @@
         },
         {
             "name": "lexik/jwt-authentication-bundle",
-            "version": "v2.12.2",
+            "version": "v2.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lexik/LexikJWTAuthenticationBundle.git",
-                "reference": "8081ff6df6d9a8358124aa68a7105e9bb978d54e"
+                "reference": "7fb85afb1a63bb7e518a369baa355599f822ff43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/8081ff6df6d9a8358124aa68a7105e9bb978d54e",
-                "reference": "8081ff6df6d9a8358124aa68a7105e9bb978d54e",
+                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/7fb85afb1a63bb7e518a369baa355599f822ff43",
+                "reference": "7fb85afb1a63bb7e518a369baa355599f822ff43",
                 "shasum": ""
             },
             "require": {
@@ -2408,7 +2414,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lexik/LexikJWTAuthenticationBundle/issues",
-                "source": "https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.2"
+                "source": "https://github.com/lexik/LexikJWTAuthenticationBundle/tree/v2.12.3"
             },
             "funding": [
                 {
@@ -2420,20 +2426,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-03T14:11:12+00:00"
+            "time": "2021-07-07T09:06:05+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084"
+                "reference": "df991fd88693ab703aa403413d83e15f688dae33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
-                "reference": "1cb1cde8e8dd0f70cc0fe51354a59acad9302084",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/df991fd88693ab703aa403413d83e15f688dae33",
+                "reference": "df991fd88693ab703aa403413d83e15f688dae33",
                 "shasum": ""
             },
             "require": {
@@ -2452,7 +2458,7 @@
                 "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpspec/prophecy": "^1.6.1",
-                "phpstan/phpstan": "^0.12.59",
+                "phpstan/phpstan": "^0.12.91",
                 "phpunit/phpunit": "^8.5",
                 "predis/predis": "^1.1",
                 "rollbar/rollbar": "^1.3",
@@ -2504,7 +2510,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.2.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.3.0"
             },
             "funding": [
                 {
@@ -2516,7 +2522,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-14T13:15:25+00:00"
+            "time": "2021-07-05T11:34:13+00:00"
         },
         {
             "name": "namshi/jose",
@@ -8374,16 +8380,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.14.1",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1"
+                "reference": "89c6201c74db25fa759ff16e78a4d8f32547770e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1",
-                "reference": "ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/89c6201c74db25fa759ff16e78a4d8f32547770e",
+                "reference": "89c6201c74db25fa759ff16e78a4d8f32547770e",
                 "shasum": ""
             },
             "require": {
@@ -8433,9 +8439,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v.1.14.1"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.15.0"
             },
-            "time": "2021-03-30T06:27:33+00:00"
+            "time": "2021-07-06T20:39:40+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -8509,16 +8515,16 @@
         },
         {
             "name": "liip/test-fixtures-bundle",
-            "version": "2.0.0-alpha5",
+            "version": "2.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liip/LiipTestFixturesBundle.git",
-                "reference": "5ffd76bcc4d85cbd5a3df6233ab7001e8cd313bc"
+                "reference": "8894a6debf22df1ad2251207818f17c54acc18d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipTestFixturesBundle/zipball/5ffd76bcc4d85cbd5a3df6233ab7001e8cd313bc",
-                "reference": "5ffd76bcc4d85cbd5a3df6233ab7001e8cd313bc",
+                "url": "https://api.github.com/repos/liip/LiipTestFixturesBundle/zipball/8894a6debf22df1ad2251207818f17c54acc18d7",
+                "reference": "8894a6debf22df1ad2251207818f17c54acc18d7",
                 "shasum": ""
             },
             "require": {
@@ -8585,9 +8591,9 @@
             ],
             "support": {
                 "issues": "https://github.com/liip/LiipTestFixturesBundle/issues",
-                "source": "https://github.com/liip/LiipTestFixturesBundle/tree/2.0.0-alpha5"
+                "source": "https://github.com/liip/LiipTestFixturesBundle/tree/2.0.0-beta1"
             },
-            "time": "2021-06-21T23:28:03+00:00"
+            "time": "2021-06-30T08:42:31+00:00"
         },
         {
             "name": "nikic/php-parser",

@@ -28,6 +28,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd microgest
+            git fetch --all
+            git reset --hard origin/master
             git pull origin master
 
       - name: Copy assets

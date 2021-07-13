@@ -5,6 +5,12 @@
 
 Tableau de bord facilitant la gestion des clients et des factures de sa micro-entreprise.
 
+## Démo
+
+⚠️ Application toujours en développement
+
+[DÉMO](https://microgest.alex-chesnay.fr)
+
 ## Installation (environement de développement)
 
 Exécuter les commandes ci-dessous à la racine du projet (prérequis [Docker](https://www.docker.com/) et [Docker-compose](https://docs.docker.com/compose/install/)).

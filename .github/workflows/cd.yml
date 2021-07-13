@@ -31,6 +31,7 @@ jobs:
             git fetch --all
             git reset --hard origin/master
             git pull origin master
+            sed -i 's/JSON NOT NULL/TEXT NOT NULL/' migrations/Version20210115144755.php
 
       - name: Copy assets
         uses: garygrossgarten/github-action-scp@release

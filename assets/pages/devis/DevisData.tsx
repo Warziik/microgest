@@ -40,63 +40,73 @@ export function DevisData({
         tabRef={allDevisRef}
       >
         <div className="devis__list">
-          <div className="devis__list-header">
-            <h3>Devis</h3>
-            <p>{devis.length} devis émis</p>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Chrono</th>
-                <th>Statut</th>
-                {displayCustomer && <th>Client</th>}
-                <th>Date de création</th>
-                <th>Date d&lsquo;expiration</th>
-                <th>Date de début de la prestation</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {devis.map((devis: Devis, index: number) => (
-                <tr key={index}>
-                  <td>
-                    <Link className="link" to={`/devis-détails/${devis.id}`}>
-                      {devis.chrono}
-                    </Link>
-                  </td>
-                  <td>
-                    <Badge status={devis.status} />
-                  </td>
-                  {displayCustomer && (
-                    <td>
-                      <Link
-                        className="link"
-                        to={`/client/${devis.customer.id}`}
-                      >
-                        {devis.customer.type === "PERSON"
-                          ? `${devis.customer.firstname} ${devis.customer.lastname}`
-                          : devis.customer.company}
-                      </Link>
-                    </td>
-                  )}
-                  <td>{dayjs(devis.createdAt).fromNow()}</td>
-                  <td>{dayjs(devis.validityDate).fromNow()}</td>
-                  <td>
-                    {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
-                  </td>
-                  <td>
-                    <Button
-                      type="contrast"
-                      size="small"
-                      onClick={() => push(`/devis-détails/${devis.id}/export`)}
-                    >
-                      Exporter
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {devis.length > 0 && (
+            <>
+              <div className="devis__list-header">
+                <h3>Devis</h3>
+                <p>{devis.length} devis émis</p>
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Chrono</th>
+                    <th>Statut</th>
+                    {displayCustomer && <th>Client</th>}
+                    <th>Date de création</th>
+                    <th>Date d&lsquo;expiration</th>
+                    <th>Date de début de la prestation</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {devis.map((devis: Devis, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <Link
+                          className="link"
+                          to={`/devis-détails/${devis.id}`}
+                        >
+                          {devis.chrono}
+                        </Link>
+                      </td>
+                      <td>
+                        <Badge status={devis.status} />
+                      </td>
+                      {displayCustomer && (
+                        <td>
+                          <Link
+                            className="link"
+                            to={`/client/${devis.customer.id}`}
+                          >
+                            {devis.customer.type === "PERSON"
+                              ? `${devis.customer.firstname} ${devis.customer.lastname}`
+                              : devis.customer.company}
+                          </Link>
+                        </td>
+                      )}
+                      <td>{dayjs(devis.createdAt).fromNow()}</td>
+                      <td>{dayjs(devis.validityDate).fromNow()}</td>
+                      <td>
+                        {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
+                      </td>
+                      <td>
+                        <Button
+                          type="contrast"
+                          size="small"
+                          onClick={() =>
+                            push(`/devis-détails/${devis.id}/export`)
+                          }
+                        >
+                          Exporter
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+          {devis.length === 0 && <p>Aucun devis pour le moment.</p>}
         </div>
       </Tab>
       <Tab

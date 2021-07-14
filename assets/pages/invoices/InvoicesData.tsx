@@ -43,74 +43,79 @@ export function InvoicesData({
         tabRef={allInvoicesRef}
       >
         <div className="invoices__list">
-          <div className="invoices__list-header">
-            <h3>Factures</h3>
-            <p>{invoices.length} factures émises</p>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Chrono</th>
-                <th>Statut</th>
-                {displayCustomer && <th>Client</th>}
-                <th>Montant total (HT)</th>
-                <th>Date d&lsquo;exécution</th>
-                <th>Date d&lsquo;émission</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((invoice: Invoice, index: number) => (
-                <tr key={index}>
-                  <td>
-                    <Link className="link" to={`/facture/${invoice.id}`}>
-                      {invoice.chrono}
-                    </Link>
-                  </td>
-                  <td>
-                    <Badge status={invoice.status} />
-                  </td>
-                  {displayCustomer && (
-                    <td>
-                      <Link
-                        className="link"
-                        to={`/client/${invoice.customer.id}`}
-                      >
-                        {invoice.customer.type === "PERSON"
-                          ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
-                          : invoice.customer.company}
-                      </Link>
-                    </td>
-                  )}
-                  <td>
-                    {new Intl.NumberFormat("fr-FR", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(invoice.totalAmount)}
-                  </td>
-                  <td>
-                    {(invoice.serviceDoneAt &&
-                      dayjs(invoice.serviceDoneAt).fromNow()) ||
-                      "-"}
-                  </td>
-                  <td>
-                    {(invoice.createdAt &&
-                      dayjs(invoice.createdAt).fromNow()) ||
-                      "-"}
-                  </td>
-                  <td>
-                    <Button
-                      type="contrast"
-                      size="small"
-                      onClick={() => push(`/facture/${invoice.id}/export`)}
-                    >
-                      Exporter
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {invoices.length > 0 && (
+            <>
+              <div className="invoices__list-header">
+                <h3>Factures</h3>
+                <p>{invoices.length} factures émises</p>
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Chrono</th>
+                    <th>Statut</th>
+                    {displayCustomer && <th>Client</th>}
+                    <th>Montant total (HT)</th>
+                    <th>Date d&lsquo;exécution</th>
+                    <th>Date d&lsquo;émission</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoices.map((invoice: Invoice, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <Link className="link" to={`/facture/${invoice.id}`}>
+                          {invoice.chrono}
+                        </Link>
+                      </td>
+                      <td>
+                        <Badge status={invoice.status} />
+                      </td>
+                      {displayCustomer && (
+                        <td>
+                          <Link
+                            className="link"
+                            to={`/client/${invoice.customer.id}`}
+                          >
+                            {invoice.customer.type === "PERSON"
+                              ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
+                              : invoice.customer.company}
+                          </Link>
+                        </td>
+                      )}
+                      <td>
+                        {new Intl.NumberFormat("fr-FR", {
+                          style: "currency",
+                          currency: "EUR",
+                        }).format(invoice.totalAmount)}
+                      </td>
+                      <td>
+                        {(invoice.serviceDoneAt &&
+                          dayjs(invoice.serviceDoneAt).fromNow()) ||
+                          "-"}
+                      </td>
+                      <td>
+                        {(invoice.createdAt &&
+                          dayjs(invoice.createdAt).fromNow()) ||
+                          "-"}
+                      </td>
+                      <td>
+                        <Button
+                          type="contrast"
+                          size="small"
+                          onClick={() => push(`/facture/${invoice.id}/export`)}
+                        >
+                          Exporter
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+          {invoices.length === 0 && <p>Aucune facture pour le moment.</p>}
         </div>
       </Tab>
       <Tab
@@ -119,7 +124,7 @@ export function InvoicesData({
         tabRef={draftsRef}
       >
         <div className="invoices__list">
-          <p>Aucune brouillon pour le moment.</p>
+          <p>Aucun brouillon pour le moment.</p>
         </div>
       </Tab>
       <Tab
@@ -128,7 +133,7 @@ export function InvoicesData({
         tabRef={dueRef}
       >
         <div className="invoices__list">
-          <p>Aucune impayée pour le moment.</p>
+          <p>Aucun impayé pour le moment.</p>
         </div>
       </Tab>
     </Tabs>

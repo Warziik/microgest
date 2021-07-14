@@ -167,7 +167,8 @@ export function Customers() {
               </Link>
             </footer>
           </article>
-        )) || <p>Vous n&lsquo;avez ajouté aucun client pour le moment.</p>}
+        ))}
+        {customers.length === 0 && <p>Aucun client pour le moment.</p>}
       </div>
     </div>
   );

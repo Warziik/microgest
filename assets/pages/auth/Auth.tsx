@@ -30,22 +30,29 @@ export function Auth() {
   return (
     <div className="auth">
       <div className="auth__header">
-        <Button
-          onClick={() => history.push("/inscription")}
-          type="outline"
-          disabled={pathname === REGISTER_PATH}
-          icon="user-plus"
-        >
-          {REGISTER_TITLE}
-        </Button>
-        <Button
-          onClick={() => history.push("/connexion")}
-          type="outline"
-          disabled={pathname === LOGIN_PATH}
-          icon="unlock"
-        >
-          {LOGIN_TITLE}
-        </Button>
+        <img
+          className="auth__header-logo"
+          src="../logo.svg"
+          alt="Logo de Microgest"
+        />
+        <div className="auth__header-ctas">
+          <Button
+            onClick={() => history.push("/inscription")}
+            type="outline"
+            disabled={pathname === REGISTER_PATH}
+            icon="user-plus"
+          >
+            {REGISTER_TITLE}
+          </Button>
+          <Button
+            onClick={() => history.push("/connexion")}
+            type="outline"
+            disabled={pathname === LOGIN_PATH}
+            icon="unlock"
+          >
+            {LOGIN_TITLE}
+          </Button>
+        </div>
       </div>
 
       {pathname === REGISTER_PATH && <h1>{REGISTER_TITLE}</h1>}

@@ -30,7 +30,7 @@ class CreateUpdateInvoice extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                    'message' => 'A customer must be provided.',
+                    'message' => "Un client doit être fourni.",
                 ],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
@@ -40,7 +40,7 @@ class CreateUpdateInvoice extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_UNAUTHORIZED,
-                    'message' => "You cannot set an invoice or a devis for a customer you don't own.",
+                    'message' => "Vous ne pouvez pas assigner une facture à un client que vous ne possédez pas.",
                 ],
                 Response::HTTP_UNAUTHORIZED
             );

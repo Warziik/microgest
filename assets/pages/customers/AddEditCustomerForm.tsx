@@ -113,6 +113,10 @@ export function AddEditCustomerForm({ customerToEdit, changeCustomer }: Props) {
       formData.lastname = null;
     }
 
+    if (formData.phone === "") {
+      formData.phone = null;
+    }
+
     const [isSuccess, data] = customerToEdit
       ? await updateCustomer(customerToEdit.id, {
           ...formData,

@@ -43,7 +43,7 @@ class AuthTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/json');
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => 'Invalid credentials.',
+            'message' => "Identifiant ou mot de passe invalide.",
         ]);
     }
 

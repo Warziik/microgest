@@ -41,7 +41,7 @@ class ResetPassword extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => 'Password or Token or both are missing as body parameters.',
+                    'message' => "Le password ou le token ou les deux sont manquants dans les paramètres POST de la requête.",
                 ],
                 Response::HTTP_BAD_REQUEST
             );
@@ -51,7 +51,7 @@ class ResetPassword extends AbstractController
         if (count($errors) > 0) {
             $responseData = [
                 'code' => Response::HTTP_BAD_REQUEST,
-                'message' => 'Token invalid.', 'violations' => [],
+                'message' => 'Token invalide.', 'violations' => [],
             ];
             foreach ($errors as $error) {
                 $responseData['violations'][] = $error->getMessage();
@@ -65,7 +65,7 @@ class ResetPassword extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_NOT_FOUND,
-                    'message' => 'ResetPassword resource not found.',
+                    'message' => "La ressource relative à cette fonctionnalité n'a pas été trouvée.",
                 ],
                 Response::HTTP_NOT_FOUND
             );
@@ -78,7 +78,7 @@ class ResetPassword extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_UNAUTHORIZED,
-                    'message' => 'Token has expired.',
+                    'message' => 'Token expiré.',
                 ],
                 Response::HTTP_FORBIDDEN
             );
@@ -93,7 +93,7 @@ class ResetPassword extends AbstractController
         return new JsonResponse(
             [
                 'code' => Response::HTTP_OK,
-                'message' => 'Password changed successfully.',
+                'message' => "Votre mot de passe a été changé avec succès.",
             ],
             Response::HTTP_OK
         );

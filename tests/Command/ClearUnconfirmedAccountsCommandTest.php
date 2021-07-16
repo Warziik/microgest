@@ -35,6 +35,6 @@ class ClearUnconfirmedAccountsCommandTest extends KernelTestCase
         ]);
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('Deleted account: demoUser-1@localhost.dev', $output);
+        $this->assertStringContainsString('Compte supprimé: demoUser-1@localhost.dev', $output);
     }
 }

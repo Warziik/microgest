@@ -40,7 +40,7 @@ class LogoutTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             'code' => Response::HTTP_OK,
-            'message' => 'User logged out successfully.',
+            'message' => "L'utilisateur a été déconnecté avec succès.",
         ]);
     }
 
@@ -56,7 +56,7 @@ class LogoutTest extends ApiTestCase
 
         $this->assertJsonContains([
             'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-            'message' => 'An unexpected error occurred during the process, please try again later.',
+            'message' => "Une erreur inattendue s'est produite, veuillez réessayer plus tard.",
         ]);
     }
 
@@ -67,7 +67,7 @@ class LogoutTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'No __refresh__token cookie found in the request headers.',
+            'message' => "Aucun cookie __refresh__token n'a été trouvé dans l'en-tête de la requête.",
         ]);
     }
 }

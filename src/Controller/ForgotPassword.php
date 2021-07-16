@@ -34,7 +34,7 @@ class ForgotPassword extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => 'Email address must be provided as POST parameter.',
+                    'message' => "L'adresse email doit être passé comme paramètre dans le requête POST.",
                 ],
                 Response::HTTP_BAD_REQUEST
             );
@@ -45,7 +45,7 @@ class ForgotPassword extends AbstractController
             return new JsonResponse(
                 [
                     'code' => Response::HTTP_NOT_FOUND,
-                    'message' => 'User not found.',
+                    'message' => "L'utilisateur n'a pas été trouvé.",
                 ],
                 Response::HTTP_NOT_FOUND
             );
@@ -61,7 +61,7 @@ class ForgotPassword extends AbstractController
         return new JsonResponse(
             [
                 'code' => Response::HTTP_OK,
-                'message' => 'Email sent successfully.',
+                'message' => "Le mail a été envoyé avec succès.",
             ],
             Response::HTTP_OK
         );

@@ -204,7 +204,7 @@ class DevisTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->assertJsonEquals([
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'message' => 'A customer must be provided.',
+            'message' => 'Un client doit être fourni.',
         ]);
     }
 
@@ -239,7 +239,7 @@ class DevisTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => "You cannot set an invoice or a devis for a customer you don't own.",
+            'message' => "Vous ne pouvez pas assigner une facture à un client que vous ne possédez pas.",
         ]);
     }
 

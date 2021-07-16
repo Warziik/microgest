@@ -52,7 +52,7 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertJsonContains([
             'code' => Response::HTTP_OK,
-            'message' => 'Password changed successfully.',
+            'message' => "Votre mot de passe a été changé avec succès.",
         ]);
     }
 
@@ -68,7 +68,7 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Password or Token or both are missing as body parameters.',
+            'message' => "Le password ou le token ou les deux sont manquants dans les paramètres POST de la requête.",
         ]);
     }
 
@@ -85,7 +85,7 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $this->assertJsonContains([
             'code' => Response::HTTP_NOT_FOUND,
-            'message' => 'ResetPassword resource not found.',
+            'message' => "La ressource relative à cette fonctionnalité n'a pas été trouvée.",
         ]);
     }
 
@@ -112,7 +112,7 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $this->assertJsonContains([
             'code' => Response::HTTP_NOT_FOUND,
-            'message' => 'ResetPassword resource not found.',
+            'message' => "La ressource relative à cette fonctionnalité n'a pas été trouvée.",
         ]);
     }
 
@@ -130,9 +130,9 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token invalid.',
+            'message' => 'Token invalide.',
             'violations' => [
-                'This value is too short. It should have 10 characters or more.',
+                "Cette chaîne est trop courte. Elle doit avoir au minimum 10 caractères.",
             ],
         ]);
 
@@ -145,10 +145,10 @@ class ResetPasswordTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token invalid.',
+            'message' => 'Token invalide.',
             'violations' => [
-                'This value is too short. It should have 10 characters or more.',
-                'This value should be of type string.',
+                'Cette chaîne est trop courte. Elle doit avoir au minimum 10 caractères.',
+                'Cette valeur doit être de type string.',
             ],
         ]);
     }

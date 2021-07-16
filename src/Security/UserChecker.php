@@ -17,7 +17,7 @@ class UserChecker implements UserCheckerInterface
 
         // Check that a User do not try to login without having confirmed its account
         if (!is_null($user->getConfirmationToken()) || is_null($user->getConfirmedAt())) {
-            throw new CustomUserMessageAccountStatusException('Unconfirmed account.');
+            throw new CustomUserMessageAccountStatusException("Votre compte n'est pas confirmé.");
         }
     }
 

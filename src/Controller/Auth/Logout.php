@@ -30,7 +30,7 @@ class Logout extends AbstractController
                 $response = new JsonResponse(
                     [
                         'code' => Response::HTTP_OK,
-                        'message' => 'User logged out successfully.',
+                        'message' => "L'utilisateur a été déconnecté avec succès.",
                     ],
                     Response::HTTP_OK
                 );
@@ -39,7 +39,7 @@ class Logout extends AbstractController
                 $response = new JsonResponse(
                     [
                         'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                        'message' => 'An unexpected error occurred during the process, please try again later.',
+                        'message' => "Une erreur inattendue s'est produite, veuillez réessayer plus tard.",
                     ],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
@@ -51,7 +51,7 @@ class Logout extends AbstractController
         return new JsonResponse(
             [
                 'code' => Response::HTTP_BAD_REQUEST,
-                'message' => 'No __refresh__token cookie found in the request headers.',
+                'message' => "Aucun cookie __refresh__token n'a été trouvé dans l'en-tête de la requête.",
             ],
             Response::HTTP_BAD_REQUEST
         );

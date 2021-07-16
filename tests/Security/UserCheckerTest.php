@@ -33,7 +33,7 @@ class UserCheckerTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/json');
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => 'Unconfirmed account.',
+            'message' => "Votre compte n'est pas confirmé.",
         ]);
     }
 }

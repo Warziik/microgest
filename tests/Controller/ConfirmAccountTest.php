@@ -45,7 +45,7 @@ class ConfirmAccountTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertJsonContains([
             'code' => Response::HTTP_OK,
-            'message' => 'Account confirmed successfully.',
+            'message' => "Votre compte a été confirmé avec succès.",
         ]);
     }
 
@@ -58,7 +58,7 @@ class ConfirmAccountTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token is missing as body parameter.',
+            'message' => "Le token est manquant dans les paramètres POST de la requête.",
         ]);
     }
 
@@ -71,7 +71,7 @@ class ConfirmAccountTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertJsonContains([
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token is invalid.',
+            'message' => 'Token invalide.',
         ]);
     }
 
@@ -90,7 +90,7 @@ class ConfirmAccountTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
         $this->assertJsonContains([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => 'Your account is already confirmed.',
+            'message' => 'Votre compte est déjà confirmé.',
         ]);
     }
 }

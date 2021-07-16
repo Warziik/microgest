@@ -36,7 +36,7 @@ class ClearUnconfirmedAccountsCommand extends Command
             $datetime = new DateTime($datetime);
         }
 
-        $output->writeln('Cleaning unconfirmed accounts...');
+        $output->writeln('Suppression des comptes non confirmés...');
 
         [$isSuccess, $deletedUsers] = $this->userRepository->clearUnconfirmedAccounts($datetime);
 
@@ -44,7 +44,7 @@ class ClearUnconfirmedAccountsCommand extends Command
             foreach ($deletedUsers as $deletedUser) {
                 $output->writeln(
                     sprintf(
-                        'Deleted account: <comment>%s</comment>',
+                        'Compte supprimé: <comment>%s</comment>',
                         $deletedUser->getUserIdentifier()
                     )
                 );

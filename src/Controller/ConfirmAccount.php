@@ -25,7 +25,7 @@ class ConfirmAccount extends AbstractController
         // ERROR: No token provided as body parameter
         if (empty($bodyContent) || !array_key_exists('token', $bodyContent)) {
             return new JsonResponse(
-                ['code' => Response::HTTP_BAD_REQUEST, 'message' => 'Token is missing as body parameter.'],
+                ['code' => Response::HTTP_BAD_REQUEST, 'message' => "Le token est manquant dans les paramètres POST de la requête."],
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -39,7 +39,7 @@ class ConfirmAccount extends AbstractController
             }
 
             return new JsonResponse(
-                ['code' => Response::HTTP_UNAUTHORIZED, 'message' => 'Your account is already confirmed.'],
+                ['code' => Response::HTTP_UNAUTHORIZED, 'message' => 'Votre compte est déjà confirmé.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -47,7 +47,7 @@ class ConfirmAccount extends AbstractController
         // ERROR: Token provided as body parameter do not match with the User's confirmation token
         if ($data->getConfirmationToken() !== $bodyContent['token']) {
             return new JsonResponse(
-                ['code' => Response::HTTP_BAD_REQUEST, 'message' => 'Token is invalid.'],
+                ['code' => Response::HTTP_BAD_REQUEST, 'message' => 'Token invalide.'],
                 Response::HTTP_BAD_REQUEST
             );
         }
@@ -60,7 +60,7 @@ class ConfirmAccount extends AbstractController
         $this->entityManager->flush();
 
         return new JsonResponse(
-            ['code' => Response::HTTP_OK, 'message' => 'Account confirmed successfully.'],
+            ['code' => Response::HTTP_OK, 'message' => "Votre compte a été confirmé avec succès."],
             Response::HTTP_OK
         );
     }

@@ -1,6 +1,6 @@
 import { CUSTOMERS_URI, DEVIS_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
-import { Devis } from "../types/Devis";
+import { Devis, DevisFormData } from "../types/Devis";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { DataAccess } from "../utils/dataAccess";
 
@@ -28,6 +28,25 @@ export function fetchAllDevisOfCustomer(
 export function fetchDevis(id: number): Promise<[boolean, Devis]> {
   return DataAccess.request(`${DEVIS_URI}/${id}`, {
     method: "GET",
+  });
+}
+
+/**
+ * Send a POST request to create a new Devis.
+ *
+ * @param customerId The Customer's id
+ * @param data Devis's data
+ */
+export function createDevis(
+  customerId: number,
+  data: DevisFormData
+): Promise<[boolean, Devis | ErrorResponse]> {
+  return DataAccess.request(DEVIS_URI, {
+    method: "POST",
+    body: JSON.stringify({
+      ...data,
+      customer: `/api/customers/${customerId}`,
+    }),
   });
 }
 

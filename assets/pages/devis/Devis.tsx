@@ -1,12 +1,17 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { fetchAllDevisOfUser } from "../../services/DevisService";
 import { Collection } from "../../types/Collection";
 import { Devis } from "../../types/Devis";
 import { Button } from "../../components/Button";
 import { DevisData } from "./DevisData";
+import { Modal } from "../../components/Modal";
+import { AddDevisForm } from "./AddDevisForm";
 
 export function Devis() {
   const [devis, setDevis] = useState<Devis[]>([]);
+  const [showCreateDevisModal, setShowCreateDevisModal] =
+    useState<boolean>(false);
+  const openCreateDevisModalBtn = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     document.title = "Mes devis - Microgest";
@@ -35,12 +40,33 @@ export function Devis() {
     fetchDevis();
   }, [fetchDevis]);
 
+  const addDevis = (newDevis: Devis) => setDevis([...devis, newDevis]);
+
+  const closeCreateDevisModal = () => {
+    setShowCreateDevisModal(false);
+    openCreateDevisModalBtn.current?.focus();
+  };
+
+  const openCreateDevisModal = () => setShowCreateDevisModal(true);
+
   return (
     <div className="devis">
+      <Modal
+        position="right"
+        isOpen={showCreateDevisModal}
+        onClose={closeCreateDevisModal}
+        title="Nouveau devis"
+      >
+        <AddDevisForm addDevis={addDevis} />
+      </Modal>
       <div className="devis__header">
         <h1>Vos devis</h1>
         <div className="devis__header-ctas">
-          <Button icon="add" disabled={true}>
+          <Button
+            onClick={openCreateDevisModal}
+            ref={openCreateDevisModalBtn}
+            icon="add"
+          >
             Créer un nouveau devis
           </Button>
           {/*         <div className="invoices__pagination">

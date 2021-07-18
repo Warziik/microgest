@@ -19,3 +19,15 @@ export interface Devis {
   createdAt: string;
   services: InvoiceService[];
 }
+
+export interface DevisFormData {
+  customer: number;
+  status: string;
+  validityDate: string;
+  workStartDate: string;
+  workDuration: string;
+  paymentDeadline: string;
+  paymentDelayRate: number;
+  services: InvoiceService[];
+  tvaApplicable: boolean;
+}

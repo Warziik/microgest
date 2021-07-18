@@ -47,7 +47,7 @@ export function ResetPassword() {
     const [isSuccess, data] = await resetPassword(password, token);
 
     if (isSuccess) {
-      toast("success", "Votre mot de passe a bien été mis à jour.");
+      toast("success", data.message);
       history.push("/");
     } else {
       if (Object.prototype.hasOwnProperty.call(data, "message")) {

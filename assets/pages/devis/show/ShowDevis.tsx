@@ -220,7 +220,7 @@ export function ShowDevis() {
                   <p>{dayjs(devis.paymentDeadline).format("LL")}</p>
                 </div>
                 <div className="customers__item-main-data">
-                  <p>Date de début de la/les prestation(s)</p>
+                  <p>Date de début de/des prestation(s)</p>
                   <p>{dayjs(devis.workStartDate).format("LL")}</p>
                 </div>
                 <div className="customers__item-main-data">

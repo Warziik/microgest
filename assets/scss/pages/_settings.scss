@@ -1,51 +1,34 @@
 .settings {
   &__personalInformations,
+  &__company,
   &__security {
-    border-radius: var(--radius);
+    width: 48.8rem;
     padding: 2.4rem;
+    border-radius: var(--radius);
     background-color: var(--container-background);
   }
 
-  &__security {
-    width: 40%;
-  }
-
   &__personalInformations {
-    width: 65%;
     &-form {
       display: grid;
-      //grid-template-columns: repeat(2, 1fr);
-      gap: 2.4rem 3.2rem;
+      gap: 2.4rem 0;
       button {
-        //grid-column: 1 / -1;
         margin-top: 0;
       }
     }
 
     &-nameForm {
-      grid-column: 1 / 1;
-      grid-row: 1 / 2;
-    }
-    &-contactForm {
-      grid-column: 1 / 1;
-      grid-row: 2 / 3;
-    }
-    &-companyForm {
-      grid-column: 2 / -1;
-      grid-row: 1 / 2;
+      display: flex;
+      gap: 1.6rem;
+      .form__group {
+        margin-bottom: 0;
+      }
     }
     &-addressForm {
-      grid-column: 2 / -1;
-      grid-row: 2 / 3;
-
       &-city {
         display: grid;
         grid-template-columns: 60% 40%;
         gap: 1.6rem;
-      }
-
-      .form__group:last-child {
-        margin-bottom: 0;
       }
     }
   }

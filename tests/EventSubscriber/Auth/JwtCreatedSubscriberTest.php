@@ -21,9 +21,7 @@ class JwtCreatedSubscriberTest extends TestCase
         $mockUser = $this->createMock(User::class);
 
         $mockUser->expects($this->once())->method('getId')->willReturn(1);
-        $mockUser->expects($this->once())->method('getFirstname')->willReturn('Alex');
-        $mockUser->expects($this->once())->method('getLastname')->willReturn('Demo');
-        $mockUser->expects($this->exactly(2))->method('getUserIdentifier')->willReturn('demoUser@localhost.dev');
+        $mockUser->expects($this->once())->method('getUserIdentifier')->willReturn('demoUser@localhost.dev');
 
         $mockJwtCreatedEvent->expects($this->once())->method('getData')
             ->willReturn(['roles' => ['ROLE_USER'], 'username' => 'demoUser@localhost.dev']);
@@ -32,11 +30,8 @@ class JwtCreatedSubscriberTest extends TestCase
 
         $mockJwtCreatedEvent->expects($this->once())->method('setData')
             ->with([
-                'username' => 'demoUser@localhost.dev',
                 'id' => 1,
-                'firstname' => 'Alex',
-                'lastname' => 'Demo',
-                'email' => 'demoUser@localhost.dev',
+                'username' => 'demoUser@localhost.dev'
             ]);
 
         $jwtCreatedSubscriber = new JwtCreatedSubscriber();

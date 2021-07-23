@@ -28,10 +28,7 @@ final class JwtCreatedSubscriber implements EventSubscriberInterface
         unset($payload['roles']);
 
         $payload['id'] = $user->getId();
-        $payload['firstname'] = $user->getFirstname();
-        $payload['lastname'] = $user->getLastname();
         $payload['username'] = $user->getUserIdentifier();
-        $payload['email'] = $user->getUserIdentifier();
 
         $event->setData($payload);
     }

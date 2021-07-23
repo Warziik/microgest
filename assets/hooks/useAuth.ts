@@ -7,42 +7,54 @@ import { Violation } from "../types/Violation";
 import MemoryJwt from "../utils/memoryJwt";
 
 export function useAuth() {
-    const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useContext(AuthContext);
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData } =
+    useContext(AuthContext);
 
-    const login = async (email: string, password: string): Promise<[boolean, Record<string, any | Violation>]> => {
-        const [isSuccess, data] = await authenticate(email, password);
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<[boolean, Record<string, any | Violation>]> => {
+    const [isSuccess, data] = await authenticate(email, password);
 
-        if (isSuccess) {
-            const decodedToken: JwtToken = jwtDecode(data.token);
-            MemoryJwt.setToken(data.token);
-            setUserData({
-                id: decodedToken.id,
-                firstname: decodedToken.firstname,
-                lastname: decodedToken.lastname,
-                email: decodedToken.username
-            });
-            setIsAuthenticated(true);
-        }
-
-        return [isSuccess, data];
+    if (isSuccess) {
+      const decodedToken: JwtToken = jwtDecode(data.token);
+      MemoryJwt.setToken(data.token);
+      setUserData({
+        id: decodedToken.id,
+        firstname: data.userData.firstname,
+        lastname: data.userData.lastname,
+        email: data.userData.email,
+        phone: data.userData.phone,
+        businessName: data.userData.businessName,
+        siret: data.userData.siret,
+        tvaNumber: data.userData.tvaNumber,
+        address: data.userData.address,
+        city: data.userData.city,
+        postalCode: data.userData.postalCode,
+        country: data.userData.country,
+      });
+      setIsAuthenticated(true);
     }
 
-    const logout = async () => {
-        const [isSuccess, data] = await revokeRefreshToken();
+    return [isSuccess, data];
+  };
 
-        if (isSuccess) {
-            MemoryJwt.eraseToken();
-            setIsAuthenticated(false);
-        }
+  const logout = async () => {
+    const [isSuccess, data] = await revokeRefreshToken();
 
-        return [isSuccess, data];
+    if (isSuccess) {
+      MemoryJwt.eraseToken();
+      setIsAuthenticated(false);
     }
 
-    return {
-        login,
-        logout,
-        isAuthenticated,
-        userData,
-        setUserData
-    }
+    return [isSuccess, data];
+  };
+
+  return {
+    login,
+    logout,
+    isAuthenticated,
+    userData,
+    setUserData,
+  };
 }

@@ -37,7 +37,7 @@
         max-width: 2rem;
         max-height: 1.6rem;
 
-        fill: var(--input-color);
+        fill: var(--text-color);
       }
     }
   }
@@ -67,7 +67,7 @@
   &__label {
     display: block;
     margin-bottom: 0.8rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--text-color);
   }
 

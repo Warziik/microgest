@@ -2,12 +2,14 @@
 
 namespace App\EventSubscriber\Auth;
 
+use App\Entity\User;
 use DateInterval;
 use DateTime;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class AuthenticationSuccessSubscriber implements EventSubscriberInterface
 {
@@ -33,6 +35,12 @@ final class AuthenticationSuccessSubscriber implements EventSubscriberInterface
      */
     public function onAuthenticationSuccess(AuthenticationSuccessEvent $event)
     {
+        $user = $event->getUser();
+
+        if (!$user instanceof User) {
+            return;
+        }
+
         $refreshToken = $event->getData()[$this->refreshTokenParameterName];
         $response = $event->getResponse();
         $response->headers->setCookie(
@@ -46,6 +54,22 @@ final class AuthenticationSuccessSubscriber implements EventSubscriberInterface
                 true
             )
         );
-        $event->setData(['token' => $event->getData()['token']]);
+
+        $event->setData([
+            'userData' => [
+                'id' => $user->getId(),
+                'firstname' => $user->getFirstname(),
+                'lastname' => $user->getLastname(),
+                'email' => $user->getEmail(),
+                'phone' => $user->getPhone(),
+                'businessName' => $user->getBusinessName(),
+                'siret' => $user->getSiret(),
+                'tvaNumber' => $user->getTvaNumber(),
+                'address' => $user->getAddress(),
+                'city' => $user->getCity(),
+                'postalCode' => $user->getPostalCode(),
+                'country' => $user->getCountry()
+            ],
+            'token' => $event->getData()['token']]);
     }
 }

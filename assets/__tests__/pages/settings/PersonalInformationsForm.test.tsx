@@ -7,20 +7,10 @@ describe("Settings Personal informations form", () => {
     render(<PersonalInformationsForm />);
   });
 
-  it("should display too short value error", async () => {
-    const firstnameInput: HTMLElement = screen.getByRole("textbox", {
-      name: "Prénom",
-    });
-    const lastnameInput: HTMLElement = screen.getByRole("textbox", {
-      name: "Nom de famille",
-    });
-
-    fireEvent.input(firstnameInput, { target: { value: "" } });
-    fireEvent.input(lastnameInput, { target: { value: "" } });
-
+  it("should display fields errors", async () => {
     fireEvent.submit(screen.getByText("Mettre à jour"));
 
-    expect(await screen.findAllByRole("alert")).toHaveLength(2);
+    expect(await screen.findAllByRole("alert")).toHaveLength(7);
     expect(
       screen.getByText("Le prénom doit contenir au minimum 3 caractères.")
     ).toBeInTheDocument();
@@ -29,5 +19,9 @@ describe("Settings Personal informations form", () => {
         "Le nom de famille doit contenir au minimum 3 caractères."
       )
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("Le code postal doit contenir 5 chiffres.")
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Ce champ est requis.")).toHaveLength(4);
   });
 });

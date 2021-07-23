@@ -32,7 +32,12 @@ final class PasswordHasherSubscriber implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
+        $bodyContent = json_decode($event->getRequest()->getContent(), true);
+
         if ($entity instanceof User && (Request::METHOD_POST === $method || Request::METHOD_PUT === $method)) {
+            if ($method === Request::METHOD_PUT && !array_key_exists('password', $bodyContent)) {
+                return;
+            }
             $entity->setPassword($this->passwordHasher->hashPassword($entity, $entity->getPassword()));
         }
     }

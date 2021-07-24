@@ -21,10 +21,7 @@ export function Router() {
   return (
     <BrowserRouter>
       <Switch>
-        <PrivateRoute
-          path={["/paramètres", "/paramètres/sécurité"]}
-          component={Settings}
-        />
+        <PrivateRoute path="/paramètres" component={Settings} />
 
         <PrivateRoute
           path="/devis-détails/:id/export"
@@ -32,10 +29,7 @@ export function Router() {
           component={DevisExport}
         />
         <PrivateRoute path="/devis-détails/:id" component={ShowDevis} />
-        <PrivateRoute
-          path={["/devis", "/devis/brouillons"]}
-          component={Devis}
-        />
+        <PrivateRoute path="/devis" component={Devis} />
 
         <PrivateRoute
           path="/facture/:id/export"
@@ -43,10 +37,7 @@ export function Router() {
           component={InvoiceExport}
         />
         <PrivateRoute path="/facture/:id" component={ShowInvoice} />
-        <PrivateRoute
-          path={["/factures", "/factures/brouillons", "/factures/impayées"]}
-          component={Invoices}
-        />
+        <PrivateRoute path="/factures" component={Invoices} />
 
         <PrivateRoute path="/client/:id" component={ShowCustomer} />
         <PrivateRoute path="/clients" component={Customers} />

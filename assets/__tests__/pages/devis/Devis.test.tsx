@@ -68,7 +68,12 @@ describe("Devis Page", () => {
   });
 
   it("should render the Devis in the table", () => {
-    expect(screen.getByText("D-2021-000001").tagName).toBe("A");
-    expect(screen.getByText("D-2021-000002").tagName).toBe("A");
+    expect(screen.getAllByText("D-2021-000001")).toHaveLength(2);
+    expect(screen.getAllByText("D-2021-000001")[0].tagName).toBe("A");
+    expect(screen.getAllByText("D-2021-000001")[1].tagName).toBe("A");
+
+    expect(screen.getAllByText("D-2021-000002")).toHaveLength(2);
+    expect(screen.getAllByText("D-2021-000002")[0].tagName).toBe("A");
+    expect(screen.getAllByText("D-2021-000002")[1].tagName).toBe("A");
   });
 });

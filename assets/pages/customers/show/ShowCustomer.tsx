@@ -256,8 +256,8 @@ export function ShowCustomer() {
                     (watch("dataType") === "DEVIS" && devis.length) ||
                     (watch("dataType") === "PRE_INVOICES" && "0") ||
                     (watch("dataType") === "AVOIRS" && "0")}
-                </strong>{" "}
-                documents trouvés.
+                </strong>
+                document(s) trouvé(s).
               </p>
 
               <form>

@@ -22,20 +22,19 @@ export function InvoicesData({
   const { pathname } = useLocation();
   const { push } = useHistory();
 
-  //const [draftsInvoices, setDraftsInvoices] = useState<Invoice[]>();
   const [unpaidInvoices, setUnpaidInvoices] = useState<Invoice[]>();
 
   const allInvoicesRef = useRef(null);
-  const draftsRef = useRef(null);
   const unpaidRef = useRef(null);
+  const draftsRef = useRef(null);
 
   const getDefaultTab = () => {
     switch (pathname) {
       case "/factures":
         return 0;
-      case "/factures/brouillons":
-        return 1;
       case "/factures/impayées":
+        return 1;
+      case "/factures/brouillons":
         return 2;
     }
   };
@@ -129,15 +128,6 @@ export function InvoicesData({
         </div>
       </Tab>
       <Tab
-        title={"Brouillons"}
-        url={displayUrls ? "/factures/brouillons" : undefined}
-        tabRef={draftsRef}
-      >
-        <div className="invoices__list">
-          <p>Aucun brouillon pour le moment.</p>
-        </div>
-      </Tab>
-      <Tab
         title={"Impayées"}
         url={displayUrls ? "/factures/impayées" : undefined}
         tabRef={unpaidRef}
@@ -146,9 +136,9 @@ export function InvoicesData({
           {unpaidInvoices && unpaidInvoices.length > 0 && (
             <>
               <div className="invoices__list-header">
-                <h3>Factures</h3>
+                <h3>Factures impayées</h3>
                 <p>
-                  {unpaidInvoices.length}{" "}
+                  {unpaidInvoices.length}
                   {unpaidInvoices.length === 1
                     ? "facture impayée"
                     : "factures impayées"}
@@ -214,7 +204,18 @@ export function InvoicesData({
               </table>
             </>
           )}
-          {unpaidInvoices?.length === 0 && <p>Aucun impayé pour le moment.</p>}
+          {unpaidInvoices?.length === 0 && (
+            <p>Aucune facture impayée pour le moment.</p>
+          )}
+        </div>
+      </Tab>
+      <Tab
+        title={"Brouillons"}
+        url={displayUrls ? "/factures/brouillons" : undefined}
+        tabRef={draftsRef}
+      >
+        <div className="invoices__list">
+          <p>Les brouillons ne sont pas disponibles pour le moment.</p>
         </div>
       </Tab>
     </Tabs>

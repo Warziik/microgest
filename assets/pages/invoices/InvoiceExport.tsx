@@ -28,7 +28,7 @@ export function InvoiceExport() {
           document.title = `Facture n°${data.chrono} - Microgest`;
 
           window.addEventListener("afterprint", () => {
-            history.push(`/facture/${data.id}`);
+            setTimeout(() => history.push(`/facture/${data.id}`), 1);
           });
           window.print();
         } else {

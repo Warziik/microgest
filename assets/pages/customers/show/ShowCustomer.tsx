@@ -257,7 +257,7 @@ export function ShowCustomer() {
                     (watch("dataType") === "PRE_INVOICES" && "0") ||
                     (watch("dataType") === "AVOIRS" && "0")}
                 </strong>
-                document(s) trouvé(s).
+                &nbsp;document(s) trouvé(s).
               </p>
 
               <form>

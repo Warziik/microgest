@@ -4,7 +4,7 @@
     width: 200%;
     position: absolute;
     padding: 1.6rem;
-    border-radius: var(--radius);
+    border-radius: calc(var(--radius) / 3);
     background-color: var(--primary-color-dark);
     color: #fff;
     line-height: 1.4;

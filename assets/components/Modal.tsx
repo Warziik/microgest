@@ -75,7 +75,10 @@ export function Modal({
       aria-hidden={!isOpen}
       aria-modal={isOpen}
       role="dialog"
-      style={{ visibility: isOpen ? "visible" : "hidden" }}
+      style={{
+        visibility: isOpen ? "visible" : "hidden",
+        pointerEvents: isOpen ? "auto" : "none",
+      }}
       onAnimationEnd={onAnimationEnd}
       onClick={handleClickOutside}
     >

@@ -23,6 +23,7 @@ fetchMock.mockResponse(
         sentAt: "2021-03-26T11:48:18+00:00",
         paidAt: null,
         paymentDeadline: "2021-03-26T11:48:18+00:00",
+        createdAt: "2021-03-26T11:48:18+00:00",
       },
       {
         id: 2,
@@ -37,6 +38,7 @@ fetchMock.mockResponse(
         sentAt: "2021-03-26T11:48:18+00:00",
         paidAt: null,
         paymentDeadline: "2021-03-26T11:48:18+00:00",
+        createdAt: "2021-03-26T11:48:18+00:00",
       },
     ],
   })

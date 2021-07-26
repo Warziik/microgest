@@ -25,6 +25,11 @@
       display: flex;
       align-items: center;
       gap: 1.6rem;
+    }
+    .table {
+      margin-top: 2.4rem;
+    }
+    &:not(:last-child) {
       margin-bottom: 2.4rem;
     }
   }

@@ -21,6 +21,7 @@ export function DevisData({
   const { push } = useHistory();
   const { pathname } = useLocation();
 
+  const [allDevis, setAllDevis] = useState<Record<string, any>>();
   const [expiredDevis, setExpiredDevis] = useState<Devis[]>();
 
   const allDevisRef = useRef(null);
@@ -46,6 +47,17 @@ export function DevisData({
           new Date().toISOString().slice(0, 19)
       )
     );
+    const monthlyDevis: { [k: string]: Devis[] } = {};
+    for (let i = 0; i < dayjs().get("M") + 1; i++) {
+      monthlyDevis[i.toString()] = devis.filter(
+        (devis: Devis) =>
+          parseInt(devis.createdAt.slice(5, 7)) - 1 === i &&
+          parseInt(devis.createdAt.slice(0, 4)) === dayjs().get("y")
+      );
+    }
+    setAllDevis({
+      [dayjs().get("y").toString()]: monthlyDevis,
+    });
   }, [devis]);
 
   return (
@@ -55,75 +67,94 @@ export function DevisData({
         url={displayUrls ? "/devis" : undefined}
         tabRef={allDevisRef}
       >
-        <div className="devis__list">
-          {devis.length > 0 && (
-            <>
-              <div className="devis__list-header">
-                <h3>Devis</h3>
-                <p>{devis.length} devis émis</p>
-              </div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Chrono</th>
-                    <th>Statut</th>
-                    {displayCustomer && <th>Client</th>}
-                    <th>Date de création</th>
-                    <th>Date d&lsquo;expiration</th>
-                    <th>Date de début de la prestation</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {devis.map((devis: Devis, index: number) => (
-                    <tr key={index}>
-                      <td>
-                        <Link
-                          className="link"
-                          to={`/devis-détails/${devis.id}`}
-                        >
-                          {devis.chrono}
-                        </Link>
-                      </td>
-                      <td>
-                        <Badge status={devis.status} />
-                      </td>
-                      {displayCustomer && (
-                        <td>
-                          <Link
-                            className="link"
-                            to={`/client/${devis.customer.id}`}
-                          >
-                            {devis.customer.type === "PERSON"
-                              ? `${devis.customer.firstname} ${devis.customer.lastname}`
-                              : devis.customer.company}
-                          </Link>
-                        </td>
-                      )}
-                      <td>{dayjs(devis.createdAt).fromNow()}</td>
-                      <td>{dayjs(devis.validityDate).fromNow()}</td>
-                      <td>
-                        {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
-                      </td>
-                      <td>
-                        <Button
-                          type="contrast"
-                          size="small"
-                          onClick={() =>
-                            push(`/devis-détails/${devis.id}/export`)
-                          }
-                        >
-                          Exporter
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
+        <>
+          {devis.length > 0 &&
+            allDevis &&
+            Object.keys(allDevis[dayjs().get("y")])
+              .reverse()
+              .map((key: string, index: number) => (
+                <div key={index} className="devis__list">
+                  <div className="devis__list-header">
+                    <h3>{dayjs.months()[parseInt(key)]}</h3>
+                    <p>
+                      <strong>{allDevis[dayjs().get("y")][key].length}</strong>
+                      &nbsp;devis émis
+                    </p>
+                  </div>
+                  {allDevis[dayjs().get("y")][key].length > 0 && (
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>Jour</th>
+                          <th>Chrono</th>
+                          <th>Statut</th>
+                          {displayCustomer && <th>Client</th>}
+                          <th>Date de création</th>
+                          <th>Date d&lsquo;expiration</th>
+                          <th>Date de début de la prestation</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {allDevis[dayjs().get("y")][key].map(
+                          (devis: Devis, index: number) => (
+                            <tr key={index}>
+                              <td>{dayjs(devis.createdAt).format("DD")}</td>
+                              <td>
+                                <Link
+                                  className="link"
+                                  to={`/facture/${devis.id}`}
+                                >
+                                  {devis.chrono}
+                                </Link>
+                              </td>
+                              <td>
+                                <Badge status={devis.status} />
+                              </td>
+                              {displayCustomer && (
+                                <td>
+                                  <Link
+                                    className="link"
+                                    to={`/client/${devis.customer.id}`}
+                                  >
+                                    {devis.customer.type === "PERSON"
+                                      ? `${devis.customer.firstname} ${devis.customer.lastname}`
+                                      : devis.customer.company}
+                                  </Link>
+                                </td>
+                              )}
+                              <td>{dayjs(devis.createdAt).fromNow()}</td>
+                              <td>{dayjs(devis.validityDate).fromNow()}</td>
+                              <td>
+                                {dayjs(devis.workStartDate).format(
+                                  "dddd DD MMMM YYYY"
+                                )}
+                              </td>
+                              <td>
+                                <Button
+                                  type="contrast"
+                                  size="small"
+                                  onClick={() =>
+                                    push(`/devis-détails/${devis.id}/export`)
+                                  }
+                                >
+                                  Exporter
+                                </Button>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              ))}
+          {devis.length === 0 && (
+            <div className="devis__list">
+              <p>Aucun devis pour le moment.</p>
+            </div>
           )}
-          {devis.length === 0 && <p>Aucun devis pour le moment.</p>}
-        </div>
+        </>
       </Tab>
       <Tab
         title={"Expirés"}
@@ -136,8 +167,9 @@ export function DevisData({
               <div className="devis__list-header">
                 <h3>Devis expirés</h3>
                 <p>
-                  {expiredDevis.length}
-                  {expiredDevis.length === 1 ? "devis expiré" : "devis expirés"}
+                  <strong>{expiredDevis.length}</strong>
+                  &nbsp;
+                  {expiredDevis.length <= 1 ? "devis expiré" : "devis expirés"}
                 </p>
               </div>
               <table className="table">

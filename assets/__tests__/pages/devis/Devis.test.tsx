@@ -28,6 +28,7 @@ fetchMock.mockResponse(
         paymentDelayRate: 0,
         services: [{ name: "", quantity: 1, unitPrice: 0 }],
         tvaApplicable: true,
+        createdAt: "2021-03-26T11:48:18+00:00",
       },
       {
         id: 2,
@@ -47,6 +48,7 @@ fetchMock.mockResponse(
         paymentDelayRate: 0,
         services: [{ name: "", quantity: 1, unitPrice: 0 }],
         tvaApplicable: true,
+        createdAt: "2021-03-26T11:48:18+00:00",
       },
     ],
   })

@@ -68,8 +68,7 @@ export function DevisData({
         tabRef={allDevisRef}
       >
         <>
-          {devis.length > 0 &&
-            allDevis &&
+          {allDevis &&
             Object.keys(allDevis[dayjs().get("y")])
               .reverse()
               .map((key: string, index: number) => (
@@ -149,11 +148,6 @@ export function DevisData({
                   )}
                 </div>
               ))}
-          {devis.length === 0 && (
-            <div className="devis__list">
-              <p>Aucun devis pour le moment.</p>
-            </div>
-          )}
         </>
       </Tab>
       <Tab

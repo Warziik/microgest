@@ -120,7 +120,6 @@ export function AddDevisForm({ addDevis }: Props) {
   }, [userData.id]);
 
   const onSubmit = handleSubmit(async (formData: FormData) => {
-    console.log("SUBMITTED DATA", formData);
     const [isSuccess, data] = await createDevis(formData.customer, {
       ...formData,
       status: "NEW",

@@ -6,6 +6,7 @@ import { Badge } from "../../components/Badge";
 import { Devis } from "../../types/Devis";
 import { Button } from "../../components/Button";
 import dayjs from "dayjs";
+import { Icon } from "../../components/Icon";
 
 type Props = {
   devis: Devis[];
@@ -22,7 +23,9 @@ export function DevisData({
   const { pathname } = useLocation();
 
   const [allDevis, setAllDevis] = useState<Record<string, any>>();
-  const [sortReverse, setSortReverse] = useState<boolean>(false);
+  const [sortableType, setSortableType] = useState<"normal" | "reverse">(
+    "reverse"
+  );
 
   const [expiredDevis, setExpiredDevis] = useState<Devis[]>();
 
@@ -61,7 +64,8 @@ export function DevisData({
       });
     }
     setAllDevis({
-      [dayjs().get("y").toString()]: monthlyDevis,
+      [dayjs().get("y").toString()]:
+        sortableType === "normal" ? monthlyDevis : monthlyDevis.reverse(),
     });
   }, [devis]);
 
@@ -69,9 +73,9 @@ export function DevisData({
     if (allDevis) {
       setAllDevis({
         [dayjs().get("y").toString()]:
-          allDevis[dayjs().get("y").toString()].sort(),
+          allDevis[dayjs().get("y").toString()].reverse(),
       });
-      setSortReverse(!sortReverse);
+      setSortableType(() => (sortableType === "normal" ? "reverse" : "normal"));
     }
   };
 
@@ -87,91 +91,91 @@ export function DevisData({
             <>
               <div className="devis__filter-ctas">
                 <button onClick={handleSort}>
-                  Trier par ordre {sortReverse ? "décroissant" : "croissant"}
+                  <Icon name="filter" />
+                  Trier par ordre&nbsp;
+                  {sortableType === "normal" ? "décroissant" : "croissant"}
                 </button>
               </div>
-              {allDevis[dayjs().get("y")]
-                .reverse()
-                .map(
-                  (
-                    object: { monthId: number; devis: Devis[] },
-                    index: number
-                  ) => (
-                    <div key={index} className="devis__list">
-                      <div className="devis__list-header">
-                        <h3>{dayjs.months()[object.monthId]}</h3>
-                        <p>
-                          <strong>{object.devis.length}</strong>
-                          &nbsp;devis émis
-                        </p>
-                      </div>
-                      {object.devis.length > 0 && (
-                        <table className="table">
-                          <thead>
-                            <tr>
-                              <th>Jour</th>
-                              <th>Chrono</th>
-                              <th>Statut</th>
-                              {displayCustomer && <th>Client</th>}
-                              <th>Date de création</th>
-                              <th>Date d&lsquo;expiration</th>
-                              <th>Date de début de la prestation</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {object.devis.map((devis: Devis, index: number) => (
-                              <tr key={index}>
-                                <td>{dayjs(devis.createdAt).format("DD")}</td>
+              {allDevis[dayjs().get("y")].map(
+                (
+                  object: { monthId: number; devis: Devis[] },
+                  index: number
+                ) => (
+                  <div key={index} className="devis__list">
+                    <div className="devis__list-header">
+                      <h3>{dayjs.months()[object.monthId]}</h3>
+                      <p>
+                        <strong>{object.devis.length}</strong>
+                        &nbsp;devis émis
+                      </p>
+                    </div>
+                    {object.devis.length > 0 && (
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th>Jour</th>
+                            <th>Chrono</th>
+                            <th>Statut</th>
+                            {displayCustomer && <th>Client</th>}
+                            <th>Date de création</th>
+                            <th>Date d&lsquo;expiration</th>
+                            <th>Date de début de la prestation</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {object.devis.map((devis: Devis, index: number) => (
+                            <tr key={index}>
+                              <td>{dayjs(devis.createdAt).format("DD")}</td>
+                              <td>
+                                <Link
+                                  className="link"
+                                  to={`/facture/${devis.id}`}
+                                >
+                                  {devis.chrono}
+                                </Link>
+                              </td>
+                              <td>
+                                <Badge status={devis.status} />
+                              </td>
+                              {displayCustomer && (
                                 <td>
                                   <Link
                                     className="link"
-                                    to={`/facture/${devis.id}`}
+                                    to={`/client/${devis.customer.id}`}
                                   >
-                                    {devis.chrono}
+                                    {devis.customer.type === "PERSON"
+                                      ? `${devis.customer.firstname} ${devis.customer.lastname}`
+                                      : devis.customer.company}
                                   </Link>
                                 </td>
-                                <td>
-                                  <Badge status={devis.status} />
-                                </td>
-                                {displayCustomer && (
-                                  <td>
-                                    <Link
-                                      className="link"
-                                      to={`/client/${devis.customer.id}`}
-                                    >
-                                      {devis.customer.type === "PERSON"
-                                        ? `${devis.customer.firstname} ${devis.customer.lastname}`
-                                        : devis.customer.company}
-                                    </Link>
-                                  </td>
+                              )}
+                              <td>{dayjs(devis.createdAt).fromNow()}</td>
+                              <td>{dayjs(devis.validityDate).fromNow()}</td>
+                              <td>
+                                {dayjs(devis.workStartDate).format(
+                                  "dddd DD MMMM YYYY"
                                 )}
-                                <td>{dayjs(devis.createdAt).fromNow()}</td>
-                                <td>{dayjs(devis.validityDate).fromNow()}</td>
-                                <td>
-                                  {dayjs(devis.workStartDate).format(
-                                    "dddd DD MMMM YYYY"
-                                  )}
-                                </td>
-                                <td>
-                                  <Button
-                                    type="contrast"
-                                    size="small"
-                                    onClick={() =>
-                                      push(`/devis-détails/${devis.id}/export`)
-                                    }
-                                  >
-                                    Exporter
-                                  </Button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      )}
-                    </div>
-                  )
-                )}
+                              </td>
+                              <td>
+                                <Button
+                                  type="contrast"
+                                  size="small"
+                                  onClick={() =>
+                                    push(`/devis-détails/${devis.id}/export`)
+                                  }
+                                >
+                                  Exporter
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )
+              )}
             </>
           )}
         </>

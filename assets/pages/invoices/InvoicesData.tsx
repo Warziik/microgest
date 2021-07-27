@@ -7,6 +7,7 @@ import { Badge } from "../../components/Badge";
 import { Button } from "../../components/Button";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { Icon } from "../../components/Icon";
 
 type Props = {
   invoices: Invoice[];
@@ -23,7 +24,9 @@ export function InvoicesData({
   const { push } = useHistory();
 
   const [allInvoices, setAllInvoices] = useState<Record<string, any>>();
-  const [sortReverse, setSortReverse] = useState<boolean>(false);
+  const [sortableType, setSortableType] = useState<"normal" | "reverse">(
+    "reverse"
+  );
 
   const [unpaidInvoices, setUnpaidInvoices] = useState<Invoice[]>();
 
@@ -62,7 +65,8 @@ export function InvoicesData({
       });
     }
     setAllInvoices({
-      [dayjs().get("y").toString()]: monthlyInvoices,
+      [dayjs().get("y").toString()]:
+        sortableType === "normal" ? monthlyInvoices : monthlyInvoices.reverse(),
     });
   }, [invoices]);
 
@@ -70,9 +74,9 @@ export function InvoicesData({
     if (allInvoices) {
       setAllInvoices({
         [dayjs().get("y").toString()]:
-          allInvoices[dayjs().get("y").toString()].sort(),
+          allInvoices[dayjs().get("y").toString()].reverse(),
       });
-      setSortReverse(!sortReverse);
+      setSortableType(() => (sortableType === "normal" ? "reverse" : "normal"));
     }
   };
 
@@ -88,106 +92,104 @@ export function InvoicesData({
             <>
               <div className="invoices__filter-ctas">
                 <button onClick={handleSort}>
-                  Trier par ordre {sortReverse ? "décroissant" : "croissant"}
+                  <Icon name="filter" />
+                  Trier par ordre&nbsp;
+                  {sortableType === "normal" ? "décroissant" : "croissant"}
                 </button>
               </div>
-              {allInvoices[dayjs().get("y")]
-                .reverse()
-                .map(
-                  (
-                    object: { monthId: number; invoices: Invoice[] },
-                    index: number
-                  ) => (
-                    <div key={index} className="invoices__list">
-                      <div className="invoices__list-header">
-                        <h3>{dayjs.months()[object.monthId]}</h3>
-                        <p>
-                          <strong>{object.invoices.length}</strong>
-                          &nbsp;
-                          {object.invoices.length <= 1
-                            ? "facture émise"
-                            : "factures émises"}
-                        </p>
-                      </div>
+              {allInvoices[dayjs().get("y")].map(
+                (
+                  object: { monthId: number; invoices: Invoice[] },
+                  index: number
+                ) => (
+                  <div key={index} className="invoices__list">
+                    <div className="invoices__list-header">
+                      <h3>{dayjs.months()[object.monthId]}</h3>
+                      <p>
+                        <strong>{object.invoices.length}</strong>
+                        &nbsp;
+                        {object.invoices.length <= 1
+                          ? "facture émise"
+                          : "factures émises"}
+                      </p>
+                    </div>
 
-                      {object.invoices.length > 0 && (
-                        <table className="table">
-                          <thead>
-                            <tr>
-                              <th>Jour</th>
-                              <th>Chrono</th>
-                              <th>Statut</th>
-                              {displayCustomer && <th>Client</th>}
-                              <th>Montant total (HT)</th>
-                              <th>Date d&lsquo;exécution</th>
-                              <th>Date limite de paiement</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {object.invoices.map(
-                              (invoice: Invoice, index: number) => (
-                                <tr key={index}>
-                                  <td>
-                                    {dayjs(invoice.createdAt).format("DD")}
-                                  </td>
+                    {object.invoices.length > 0 && (
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th>Jour</th>
+                            <th>Chrono</th>
+                            <th>Statut</th>
+                            {displayCustomer && <th>Client</th>}
+                            <th>Montant total (HT)</th>
+                            <th>Date d&lsquo;exécution</th>
+                            <th>Date limite de paiement</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {object.invoices.map(
+                            (invoice: Invoice, index: number) => (
+                              <tr key={index}>
+                                <td>{dayjs(invoice.createdAt).format("DD")}</td>
+                                <td>
+                                  <Link
+                                    className="link"
+                                    to={`/facture/${invoice.id}`}
+                                  >
+                                    {invoice.chrono}
+                                  </Link>
+                                </td>
+                                <td>
+                                  <Badge status={invoice.status} />
+                                </td>
+                                {displayCustomer && (
                                   <td>
                                     <Link
                                       className="link"
-                                      to={`/facture/${invoice.id}`}
+                                      to={`/client/${invoice.customer.id}`}
                                     >
-                                      {invoice.chrono}
+                                      {invoice.customer.type === "PERSON"
+                                        ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
+                                        : invoice.customer.company}
                                     </Link>
                                   </td>
-                                  <td>
-                                    <Badge status={invoice.status} />
-                                  </td>
-                                  {displayCustomer && (
-                                    <td>
-                                      <Link
-                                        className="link"
-                                        to={`/client/${invoice.customer.id}`}
-                                      >
-                                        {invoice.customer.type === "PERSON"
-                                          ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
-                                          : invoice.customer.company}
-                                      </Link>
-                                    </td>
+                                )}
+                                <td>
+                                  {new Intl.NumberFormat("fr-FR", {
+                                    style: "currency",
+                                    currency: "EUR",
+                                  }).format(invoice.totalAmount)}
+                                </td>
+                                <td>
+                                  {dayjs(invoice.serviceDoneAt).fromNow()}
+                                </td>
+                                <td>
+                                  {dayjs(invoice.paymentDeadline).format(
+                                    "dddd DD MMMM YYYY"
                                   )}
-                                  <td>
-                                    {new Intl.NumberFormat("fr-FR", {
-                                      style: "currency",
-                                      currency: "EUR",
-                                    }).format(invoice.totalAmount)}
-                                  </td>
-                                  <td>
-                                    {dayjs(invoice.serviceDoneAt).fromNow()}
-                                  </td>
-                                  <td>
-                                    {dayjs(invoice.paymentDeadline).format(
-                                      "dddd DD MMMM YYYY"
-                                    )}
-                                  </td>
-                                  <td>
-                                    <Button
-                                      type="contrast"
-                                      size="small"
-                                      onClick={() =>
-                                        push(`/facture/${invoice.id}/export`)
-                                      }
-                                    >
-                                      Exporter
-                                    </Button>
-                                  </td>
-                                </tr>
-                              )
-                            )}
-                          </tbody>
-                        </table>
-                      )}
-                    </div>
-                  )
-                )}
+                                </td>
+                                <td>
+                                  <Button
+                                    type="contrast"
+                                    size="small"
+                                    onClick={() =>
+                                      push(`/facture/${invoice.id}/export`)
+                                    }
+                                  >
+                                    Exporter
+                                  </Button>
+                                </td>
+                              </tr>
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )
+              )}
             </>
           )}
         </>

@@ -32,6 +32,7 @@ export function useAuth() {
         city: data.userData.city,
         postalCode: data.userData.postalCode,
         country: data.userData.country,
+        createdAt: data.userData.createdAt,
       });
       setIsAuthenticated(true);
     }

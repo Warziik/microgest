@@ -267,9 +267,6 @@ export function ShowCustomer() {
                   {...register("dataType")}
                 />
               </form>
-              <Button icon="filter" type="outline" disabled={true}>
-                Filtrer
-              </Button>
               {/*               <Button icon="download" type="contrast" disabled={true}>
                 Exporter au format Excel
               </Button>

@@ -58,4 +58,5 @@ export interface UserData {
   city: string;
   postalCode: number;
   country: string;
+  createdAt: string;
 }

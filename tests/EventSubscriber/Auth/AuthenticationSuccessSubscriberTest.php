@@ -48,6 +48,7 @@ class AuthenticationSuccessSubscriberTest extends TestCase
         $mockUser->expects($this->once())->method('getCity');
         $mockUser->expects($this->once())->method('getPostalCode');
         $mockUser->expects($this->once())->method('getCountry');
+        $mockUser->expects($this->once())->method('getCreatedAt')->willReturn(new DateTime());
 
         $mockAuthenticationSuccessEvent->expects($this->once())
             ->method('getResponse')->willReturn($mockResponse);

@@ -68,7 +68,8 @@ final class AuthenticationSuccessSubscriber implements EventSubscriberInterface
                 'address' => $user->getAddress(),
                 'city' => $user->getCity(),
                 'postalCode' => $user->getPostalCode(),
-                'country' => $user->getCountry()
+                'country' => $user->getCountry(),
+                'createdAt' => ($user->getCreatedAt())->format("Y-m-d")
             ],
             'token' => $event->getData()['token']]);
     }

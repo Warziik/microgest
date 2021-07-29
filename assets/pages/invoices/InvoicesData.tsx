@@ -8,11 +8,19 @@ import { Button } from "../../components/Button";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { Icon } from "../../components/Icon";
+import { useForm } from "react-hook-form";
+import { Option, SelectInput } from "../../components/form/SelectInput";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {
   invoices: Invoice[];
   displayCustomer?: boolean;
   displayUrls?: boolean;
+};
+
+type MonthlyInvoices = {
+  monthId: number;
+  invoices: Invoice[];
 };
 
 export function InvoicesData({
@@ -22,17 +30,27 @@ export function InvoicesData({
 }: Props) {
   const { pathname } = useLocation();
   const { push } = useHistory();
+  const { userData } = useAuth();
 
-  const [allInvoices, setAllInvoices] = useState<Record<string, any>>();
-  const [sortableType, setSortableType] = useState<"normal" | "reverse">(
-    "reverse"
-  );
+  const [allInvoices, setAllInvoices] =
+    useState<Record<string, MonthlyInvoices[]>>();
+  const [sortableTypeReverse, setSortableTypeReverse] = useState<
+    Record<string, boolean>
+  >({});
+  const [selectYearOptions, setSelectYearOptions] = useState<Option[]>([]);
 
   const [unpaidInvoices, setUnpaidInvoices] = useState<Invoice[]>();
 
   const allInvoicesRef = useRef(null);
   const unpaidRef = useRef(null);
   const draftsRef = useRef(null);
+
+  const { register, watch } = useForm<{
+    year: number;
+  }>({
+    mode: "onChange",
+    defaultValues: { year: dayjs().get("y") },
+  });
 
   const getDefaultTab = () => {
     switch (pathname) {
@@ -53,30 +71,59 @@ export function InvoicesData({
           new Date().toISOString().slice(0, 19)
       )
     );
-    const monthlyInvoices = [];
-    for (let i = 0; i < dayjs().get("M") + 1; i++) {
-      monthlyInvoices.push({
-        monthId: i,
-        invoices: invoices.filter(
-          (invoice: Invoice) =>
-            parseInt(invoice.createdAt.slice(5, 7)) - 1 === i &&
-            parseInt(invoice.createdAt.slice(0, 4)) === dayjs().get("y")
-        ),
-      });
+
+    const years: number[] = [dayjs().get("y")];
+    for (let i = 0; i < dayjs().diff(userData.createdAt, "y"); i++) {
+      years.push(dayjs().get("y") - (i + 1));
     }
-    setAllInvoices({
-      [dayjs().get("y").toString()]:
-        sortableType === "normal" ? monthlyInvoices : monthlyInvoices.reverse(),
+    setSelectYearOptions(
+      years.map((value: number) => {
+        return { value, label: value.toString() };
+      })
+    );
+
+    const initialSortableTypes: Record<number, boolean> = {};
+    years.forEach((value: number) => {
+      initialSortableTypes[value] = true;
     });
+    setSortableTypeReverse(initialSortableTypes);
+
+    const totalInvoices: Record<string, MonthlyInvoices[]> = {};
+    for (let yearI = 0; yearI < years.length; yearI++) {
+      totalInvoices[years[yearI]] = [];
+
+      for (let i = 0; i < 12; i++) {
+        if (years[yearI] === dayjs().get("y") && dayjs().get("M") + 1 === i) {
+          break;
+        }
+
+        totalInvoices[years[yearI]].push({
+          monthId: i,
+          invoices: invoices.filter(
+            (invoice: Invoice) =>
+              parseInt(invoice.createdAt.slice(5, 7)) - 1 === i &&
+              parseInt(invoice.createdAt.slice(0, 4)) === years[yearI]
+          ),
+        });
+      }
+      if (sortableTypeReverse[years[yearI]]) {
+        totalInvoices[years[yearI]].reverse();
+      }
+    }
+
+    setAllInvoices(totalInvoices);
   }, [invoices]);
 
   const handleSort = () => {
     if (allInvoices) {
       setAllInvoices({
-        [dayjs().get("y").toString()]:
-          allInvoices[dayjs().get("y").toString()].reverse(),
+        ...allInvoices,
+        [watch("year")]: allInvoices[watch("year")].reverse(),
       });
-      setSortableType(() => (sortableType === "normal" ? "reverse" : "normal"));
+      setSortableTypeReverse({
+        ...sortableTypeReverse,
+        [watch("year")]: !sortableTypeReverse[watch("year")],
+      });
     }
   };
 
@@ -91,17 +138,23 @@ export function InvoicesData({
           {allInvoices && (
             <>
               <div className="invoices__filter-ctas">
+                <form>
+                  <SelectInput
+                    error={undefined}
+                    options={selectYearOptions}
+                    {...register("year")}
+                  />
+                </form>
                 <button onClick={handleSort}>
                   <Icon name="filter" />
                   Trier par ordre&nbsp;
-                  {sortableType === "normal" ? "décroissant" : "croissant"}
+                  {sortableTypeReverse[watch("year")] === true
+                    ? "décroissant"
+                    : "croissant"}
                 </button>
               </div>
-              {allInvoices[dayjs().get("y")].map(
-                (
-                  object: { monthId: number; invoices: Invoice[] },
-                  index: number
-                ) => (
+              {allInvoices[watch("year")].map(
+                (object: MonthlyInvoices, index: number) => (
                   <div key={index} className="invoices__list">
                     <div className="invoices__list-header">
                       <h3>{dayjs.months()[object.monthId]}</h3>

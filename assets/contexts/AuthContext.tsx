@@ -35,6 +35,7 @@ export const AuthContext = createContext<InitialType>({
     city: "",
     postalCode: 0,
     country: "",
+    createdAt: "",
   },
   setUserData: (value: SetStateAction<UserData>) => value,
   isAuthenticated: false,
@@ -63,6 +64,7 @@ export function AuthContextProvider({ children }: Props) {
     city: "",
     postalCode: 0,
     country: "",
+    createdAt: "",
   });
 
   const refreshAuthToken = useCallback(async () => {
@@ -87,6 +89,7 @@ export function AuthContextProvider({ children }: Props) {
         city: data.userData.city,
         postalCode: data.userData.postalCode,
         country: data.userData.country,
+        createdAt: data.userData.createdAt,
       });
       setIsAuthenticated(true);
 

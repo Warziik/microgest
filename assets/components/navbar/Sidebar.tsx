@@ -34,8 +34,8 @@ export function Sidebar() {
         />
         <NavItem icon="invoice" name="Mes factures">
           <NavSubItem to="/factures" exactPath={false} name="Factures" />
-          <NavSubItem to="/404" name="Factures d'acomptes" />
-          <NavSubItem to="/404" name="Avoirs" />
+          <NavSubItem disabled={true} name="Factures d'acomptes" />
+          <NavSubItem disabled={true} name="Avoirs" />
         </NavItem>
         <NavItem to="/devis" exactPath={false} icon="devis" name="Mes devis" />
         <hr />

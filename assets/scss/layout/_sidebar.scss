@@ -121,12 +121,19 @@
       &:not(:last-child) {
         margin-bottom: 1.6rem;
       }
+      line-height: 1;
       transition: all 0.3s ease-in-out;
-
       &.active,
       &:hover {
         font-weight: 700;
-        color: var(--text-color-alt);
+      }
+
+      &--disabled {
+        cursor: not-allowed;
+        color: var(--primary-color-dark-disabled);
+        &:hover {
+          font-weight: 600;
+        }
       }
     }
 

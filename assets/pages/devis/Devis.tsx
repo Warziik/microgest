@@ -50,7 +50,7 @@ export function Devis() {
   const openCreateDevisModal = () => setShowCreateDevisModal(true);
 
   return (
-    <div className="devis">
+    <div className="invoices">
       <Modal
         position="right"
         isOpen={showCreateDevisModal}
@@ -59,9 +59,9 @@ export function Devis() {
       >
         <AddDevisForm addDevis={addDevis} />
       </Modal>
-      <div className="devis__header">
+      <div className="invoices__header">
         <h1>Vos devis</h1>
-        <div className="devis__header-ctas">
+        <div className="invoices__header-ctas">
           <Button
             onClick={openCreateDevisModal}
             ref={openCreateDevisModalBtn}

@@ -12,6 +12,7 @@
   --primary-color-hover: #2b50da;
   --primary-color-disabled: #adbcfa;
   --primary-color-dark: #24316b;
+  --primary-color-dark-disabled: #{rgba(#24316b, 0.45)};
 
   --accent-color: #c94cf5;
   --accent-color-a1: #{rgba(#c94cf5, 0.1)};

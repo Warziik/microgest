@@ -7,11 +7,19 @@ import { Devis } from "../../types/Devis";
 import { Button } from "../../components/Button";
 import dayjs from "dayjs";
 import { Icon } from "../../components/Icon";
+import { useAuth } from "../../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { Option, SelectInput } from "../../components/form/SelectInput";
 
 type Props = {
   devis: Devis[];
   displayCustomer?: boolean;
   displayUrls?: boolean;
+};
+
+type MonthlyDevis = {
+  monthId: number;
+  devis: Devis[];
 };
 
 export function DevisData({
@@ -21,17 +29,26 @@ export function DevisData({
 }: Props) {
   const { push } = useHistory();
   const { pathname } = useLocation();
+  const { userData } = useAuth();
 
-  const [allDevis, setAllDevis] = useState<Record<string, any>>();
-  const [sortableType, setSortableType] = useState<"normal" | "reverse">(
-    "reverse"
-  );
+  const [allDevis, setAllDevis] = useState<Record<string, MonthlyDevis[]>>();
+  const [sortableTypeReverse, setSortableTypeReverse] = useState<
+    Record<string, boolean>
+  >({});
+  const [selectYearOptions, setSelectYearOptions] = useState<Option[]>([]);
 
   const [expiredDevis, setExpiredDevis] = useState<Devis[]>();
 
   const allDevisRef = useRef(null);
   const expiredRef = useRef(null);
   const draftsRef = useRef(null);
+
+  const { register, watch } = useForm<{
+    year: number;
+  }>({
+    mode: "onChange",
+    defaultValues: { year: dayjs().get("y") },
+  });
 
   const getDefaultTab = () => {
     switch (pathname) {
@@ -52,30 +69,59 @@ export function DevisData({
           new Date().toISOString().slice(0, 19)
       )
     );
-    const monthlyDevis = [];
-    for (let i = 0; i < dayjs().get("M") + 1; i++) {
-      monthlyDevis.push({
-        monthId: i,
-        devis: devis.filter(
-          (devis: Devis) =>
-            parseInt(devis.createdAt.slice(5, 7)) - 1 === i &&
-            parseInt(devis.createdAt.slice(0, 4)) === dayjs().get("y")
-        ),
-      });
+
+    const years: number[] = [dayjs().get("y")];
+    for (let i = 0; i < dayjs().diff(userData.createdAt, "y"); i++) {
+      years.push(dayjs().get("y") - (i + 1));
     }
-    setAllDevis({
-      [dayjs().get("y").toString()]:
-        sortableType === "normal" ? monthlyDevis : monthlyDevis.reverse(),
+    setSelectYearOptions(
+      years.map((value: number) => {
+        return { value, label: value.toString() };
+      })
+    );
+
+    const initialSortableTypes: Record<number, boolean> = {};
+    years.forEach((value: number) => {
+      initialSortableTypes[value] = true;
     });
+    setSortableTypeReverse(initialSortableTypes);
+
+    const totalDevis: Record<string, MonthlyDevis[]> = {};
+    for (let yearI = 0; yearI < years.length; yearI++) {
+      totalDevis[years[yearI]] = [];
+
+      for (let i = 0; i < 12; i++) {
+        if (years[yearI] === dayjs().get("y") && dayjs().get("M") + 1 === i) {
+          break;
+        }
+
+        totalDevis[years[yearI]].push({
+          monthId: i,
+          devis: devis.filter(
+            (devis: Devis) =>
+              parseInt(devis.createdAt.slice(5, 7)) - 1 === i &&
+              parseInt(devis.createdAt.slice(0, 4)) === years[yearI]
+          ),
+        });
+      }
+      if (sortableTypeReverse[years[yearI]]) {
+        totalDevis[years[yearI]].reverse();
+      }
+    }
+
+    setAllDevis(totalDevis);
   }, [devis]);
 
   const handleSort = () => {
     if (allDevis) {
       setAllDevis({
-        [dayjs().get("y").toString()]:
-          allDevis[dayjs().get("y").toString()].reverse(),
+        ...allDevis,
+        [watch("year")]: allDevis[watch("year")].reverse(),
       });
-      setSortableType(() => (sortableType === "normal" ? "reverse" : "normal"));
+      setSortableTypeReverse({
+        ...sortableTypeReverse,
+        [watch("year")]: !sortableTypeReverse[watch("year")],
+      });
     }
   };
 
@@ -89,20 +135,26 @@ export function DevisData({
         <>
           {allDevis && (
             <>
-              <div className="devis__filter-ctas">
+              <div className="invoices__filter-ctas">
+                <form>
+                  <SelectInput
+                    error={undefined}
+                    options={selectYearOptions}
+                    {...register("year")}
+                  />
+                </form>
                 <button onClick={handleSort}>
                   <Icon name="filter" />
                   Trier par ordre&nbsp;
-                  {sortableType === "normal" ? "décroissant" : "croissant"}
+                  {sortableTypeReverse[watch("year")] === true
+                    ? "décroissant"
+                    : "croissant"}
                 </button>
               </div>
-              {allDevis[dayjs().get("y")].map(
-                (
-                  object: { monthId: number; devis: Devis[] },
-                  index: number
-                ) => (
-                  <div key={index} className="devis__list">
-                    <div className="devis__list-header">
+              {allDevis[watch("year")].map(
+                (object: MonthlyDevis, index: number) => (
+                  <div key={index} className="invoices__list">
+                    <div className="invoices__list-header">
                       <h3>{dayjs.months()[object.monthId]}</h3>
                       <p>
                         <strong>{object.devis.length}</strong>
@@ -130,7 +182,7 @@ export function DevisData({
                               <td>
                                 <Link
                                   className="link"
-                                  to={`/facture/${devis.id}`}
+                                  to={`/devis-détails/${devis.id}`}
                                 >
                                   {devis.chrono}
                                 </Link>
@@ -185,10 +237,10 @@ export function DevisData({
         url={displayUrls ? "/devis/expirés" : undefined}
         tabRef={expiredRef}
       >
-        <div className="devis__list">
+        <div className="invoices__list">
           {expiredDevis && expiredDevis.length > 0 && (
             <>
-              <div className="devis__list-header">
+              <div className="invoices__list-header">
                 <h3>Devis expirés</h3>
                 <p>
                   <strong>{expiredDevis.length}</strong>
@@ -266,7 +318,7 @@ export function DevisData({
         url={displayUrls ? "/devis/brouillons" : undefined}
         tabRef={draftsRef}
       >
-        <div className="devis__list">
+        <div className="invoices__list">
           <p>Les brouillons ne sont pas disponibles pour le moment.</p>
         </div>
       </Tab>

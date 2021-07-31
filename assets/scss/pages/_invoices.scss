@@ -129,9 +129,9 @@
     cursor: pointer;
     color: var(--text-color);
     border-radius: calc(var(--radius) / 3);
-    background-color: var(--container-background);
+    background-color: var(--select-background);
     border: none;
-    border: 0.05rem solid var(--text-color);
+    border: 0.05rem solid var(--border-color);
     outline: none;
     appearance: none;
 

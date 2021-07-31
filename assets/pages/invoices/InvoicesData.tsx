@@ -149,8 +149,8 @@ export function InvoicesData({
                   <Icon name="filter" />
                   Trier par ordre&nbsp;
                   {sortableTypeReverse[watch("year")] === true
-                    ? "décroissant"
-                    : "croissant"}
+                    ? "croissant"
+                    : "décroissant"}
                 </button>
               </div>
               {allInvoices[watch("year")].map(

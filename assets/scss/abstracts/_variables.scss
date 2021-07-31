@@ -42,8 +42,10 @@
   --modal-backdrop: var(--primary-color-a25);
   --border-color: #ced4da;
   --hr-color: var(--primary-color-a16);
-  --box-shadow: 0 4px 20px #{rgba(#4d6ef5, 0.16)};
+  --box-shadow: 0px 8px 24px #{rgba(#4d6ef5, 0.05)};
   --input-color: #a5b7fa;
+  --input-background: var(--container-background);
+  --select-background: var(--container-background);
   --input-box-shadow: 0 1px 10px #{rgba(#4d6ef5, 0.16)};
   --sidebar-gradient: linear-gradient(
     to bottom,

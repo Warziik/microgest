@@ -147,8 +147,8 @@ export function DevisData({
                   <Icon name="filter" />
                   Trier par ordre&nbsp;
                   {sortableTypeReverse[watch("year")] === true
-                    ? "décroissant"
-                    : "croissant"}
+                    ? "croissant"
+                    : "décroissant"}
                 </button>
               </div>
               {allDevis[watch("year")].map(

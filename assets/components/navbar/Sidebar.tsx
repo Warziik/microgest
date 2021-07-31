@@ -4,10 +4,13 @@ import { useToast } from "../../hooks/useToast";
 import { NavItem } from "./NavItem";
 import { NavSubItem } from "./NavSubItem";
 import { Icon } from "../Icon";
+import { ToggleInput } from "../form/ToggleInput";
+import { useTheme } from "../../hooks/useTheme";
 
 export function Sidebar() {
   const { logout } = useAuth();
   const toast = useToast();
+  const { currentTheme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     const [isSuccess] = await logout();
@@ -22,7 +25,17 @@ export function Sidebar() {
         src="../logo.svg"
         alt="Logo de Microgest"
       />
-      {/* TODO: Light / Dark theme switch */}
+      <div className="sidebar__theme">
+        <form>
+          <ToggleInput
+            type="switch"
+            label="Thème sombre"
+            checked={currentTheme === "dark" ? true : false}
+            name="theme"
+            onChange={() => toggleTheme()}
+          />
+        </form>
+      </div>
       {/* TODO: Searchbar */}
       <nav className="sidebar__nav">
         <NavItem to="/" icon="overview" name="Vue d'ensemble" />

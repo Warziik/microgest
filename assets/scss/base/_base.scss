@@ -6,6 +6,11 @@ html {
   background-color: var(--body-background);
 }
 
+#app,
+.container {
+  min-height: 100vh;
+}
+
 .link {
   display: inline-block;
   position: relative;
@@ -92,7 +97,6 @@ html {
 }
 
 .container {
-  height: 100vh;
   display: grid;
   grid-template-columns: 30.4rem [main-start] 1fr [main-end];
   grid-template-rows: 1fr;

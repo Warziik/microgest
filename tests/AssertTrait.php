@@ -3,8 +3,10 @@
 namespace App\Tests;
 
 use App\DataFixtures\UserFixtures;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validation;
 
 trait AssertTrait
 {
@@ -35,7 +37,12 @@ trait AssertTrait
     private function assertHasErrors(int $nbErrorExpected, object $entity): void
     {
         static::bootKernel();
-        $validator = static::getContainer()->get('validator');
+        $validatorFactory = static::getContainer()->get('validator.validator_factory');
+        $validator = (Validation::createValidatorBuilder())
+            ->setConstraintValidatorFactory($validatorFactory)
+            ->enableAnnotationMapping(true)
+            ->addDefaultDoctrineAnnotationReader()
+            ->getValidator();
         $errors = $validator->validate($entity);
         $messages = [];
 

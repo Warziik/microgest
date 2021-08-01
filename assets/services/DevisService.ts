@@ -1,6 +1,6 @@
 import { CUSTOMERS_URI, DEVIS_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
-import { Devis, DevisFormData } from "../types/Devis";
+import { Devis, DevisFormData, DevisUpdateFormData } from "../types/Devis";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { DataAccess } from "../utils/dataAccess";
 
@@ -57,17 +57,11 @@ export function createDevis(
  */
 export function updateDevis(
   id: number,
-  status: string,
-  sentAt: string | null,
-  signedAt: string | null
+  data: DevisUpdateFormData
 ): Promise<[boolean, Devis | ErrorResponse]> {
   return DataAccess.request(`${DEVIS_URI}/${id}`, {
     method: "PUT",
-    body: JSON.stringify({
-      status,
-      sentAt,
-      signedAt,
-    }),
+    body: JSON.stringify(data),
   });
 }
 

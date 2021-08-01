@@ -228,15 +228,18 @@ export function InvoicesData({
                                   )}
                                 </td>
                                 <td>
-                                  <Button
-                                    type="contrast"
-                                    size="small"
-                                    onClick={() =>
-                                      push(`/facture/${invoice.id}/export`)
-                                    }
-                                  >
-                                    Exporter
-                                  </Button>
+                                  {(!invoice.isDraft && (
+                                    <Button
+                                      type="contrast"
+                                      size="small"
+                                      onClick={() =>
+                                        push(`/facture/${invoice.id}/export`)
+                                      }
+                                    >
+                                      Exporter
+                                    </Button>
+                                  )) ||
+                                    "-"}
                                 </td>
                               </tr>
                             )

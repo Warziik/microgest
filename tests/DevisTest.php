@@ -125,6 +125,7 @@ class DevisTest extends ApiTestCase
                 'paymentDeadline' => '2021-04-18',
                 'paymentDelayRate' => null,
                 'tvaApplicable' => false,
+                'isDraft' => false,
                 'customer' => '/api/customers/1',
                 'services' => [
                     [
@@ -147,6 +148,7 @@ class DevisTest extends ApiTestCase
             'workDuration' => '1 week',
             'paymentDelayRate' => null,
             'tvaApplicable' => false,
+            'isDraft' => false,
             'customer' => [
                 '@id' => '/api/customers/1',
                 '@type' => 'Customer'
@@ -176,6 +178,7 @@ class DevisTest extends ApiTestCase
             'paymentDeadline' => '2021-04-18',
             'paymentDelayRate' => null,
             'tvaApplicable' => false,
+            'isDraft' => false,
             'customer' => '/api/customers/1',
             'services' => [
                 [
@@ -225,6 +228,7 @@ class DevisTest extends ApiTestCase
                 'paymentDeadline' => '2021-04-18',
                 'paymentDelayRate' => null,
                 'tvaApplicable' => false,
+                'isDraft' => false,
                 'customer' => '/api/customers/18',
                 'services' => [
                     [

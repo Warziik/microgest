@@ -34,6 +34,7 @@ class DevisTest extends ApiTestCase
             ->setPaymentDeadline(new DateTime('+2 months'))
             ->setPaymentDelayRate(3)
             ->setTvaApplicable(false)
+            ->setIsDraft(false)
             ->setCustomer(new Customer());
     }
 
@@ -96,6 +97,16 @@ class DevisTest extends ApiTestCase
         $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(false));
 
         $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(null));
+    }
+
+    public function testIsDraftConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setIsDraft(true));
+        $this->assertHasErrors(0, $this->getEntity()->setIsDraft(false));
+
+        $this->assertHasErrors(0, $this->getEntity()->setIsDraft(null));
     }
 
     public function testPaymentDeadlineConstraints(): void

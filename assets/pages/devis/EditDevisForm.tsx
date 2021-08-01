@@ -78,12 +78,7 @@ export function EditDevisForm({ devisToEdit, editDevis }: Props) {
       formData.signedAt = null;
     }
 
-    const [isSuccess, data] = await updateDevis(
-      devisToEdit.id,
-      formData.status,
-      formData.sentAt,
-      formData.signedAt
-    );
+    const [isSuccess, data] = await updateDevis(devisToEdit.id, formData);
     if (isSuccess) {
       toast("success", "Le devis a bien été mis à jour.");
       editDevis(data as Devis);

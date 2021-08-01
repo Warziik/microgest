@@ -23,6 +23,8 @@ fetchMock.mockResponse(
         sentAt: "2021-03-26T11:48:18+00:00",
         paidAt: null,
         paymentDeadline: "2021-03-26T11:48:18+00:00",
+        tvaApplicable: true,
+        isDraft: false,
         createdAt: "2021-03-26T11:48:18+00:00",
       },
       {
@@ -38,6 +40,8 @@ fetchMock.mockResponse(
         sentAt: "2021-03-26T11:48:18+00:00",
         paidAt: null,
         paymentDeadline: "2021-03-26T11:48:18+00:00",
+        tvaApplicable: true,
+        isDraft: false,
         createdAt: "2021-03-26T11:48:18+00:00",
       },
     ],

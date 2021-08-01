@@ -97,6 +97,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
@@ -117,6 +118,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
@@ -127,6 +129,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
@@ -138,6 +141,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
@@ -154,6 +158,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
@@ -165,10 +170,23 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
     private bool $tvaApplicable;
+
+    #[ORM\Column(type: "boolean")]
+    #[Assert\NotNull]
+    #[Assert\Type('boolean')]
+    #[Groups([
+        'devis:read',
+        'devis:write',
+        'devis:update',
+        'customers_devis_subresource',
+        'allDevis:read'
+    ])]
+    private bool $isDraft;
 
     #[ORM\Column(type: "datetime", nullable: true)]
     #[Assert\Type(DateTimeInterface::class)]
@@ -199,6 +217,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'customers_devis_subresource',
         'allDevis:read'
     ])]
@@ -331,6 +350,18 @@ class Devis
     public function setTvaApplicable(bool $tvaApplicable): self
     {
         $this->tvaApplicable = $tvaApplicable;
+
+        return $this;
+    }
+
+    public function getIsDraft(): ?bool
+    {
+        return $this->isDraft;
+    }
+
+    public function setIsDraft(bool $isDraft): self
+    {
+        $this->isDraft = $isDraft;
 
         return $this;
     }

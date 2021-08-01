@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ModalContext } from "../../components/Modal";
 import { useToast } from "../../hooks/useToast";
-import { InvoiceServiceFormData } from "../../types/Invoice";
+import { InvoiceService, InvoiceServiceFormData } from "../../types/Invoice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -17,10 +17,11 @@ import { ErrorResponse } from "../../types/ErrorResponse";
 import { Violation } from "../../types/Violation";
 import { Icon } from "../../components/Icon";
 import { Devis } from "../../types/Devis";
-import { createDevis } from "../../services/DevisService";
+import { createDevis, updateDevis } from "../../services/DevisService";
 
 type Props = {
-  addDevis: (devis: Devis) => void;
+  addDevis?: (devis: Devis) => void;
+  devisToEdit?: Devis;
 };
 
 type FormData = {
@@ -30,11 +31,12 @@ type FormData = {
   workDuration: string;
   paymentDeadline: string;
   paymentDelayRate: number;
-  services: InvoiceServiceFormData[];
   tvaApplicable: boolean;
+  isDraft: boolean;
+  services: InvoiceServiceFormData[];
 };
 
-export function AddDevisForm({ addDevis }: Props) {
+export function AddDevisForm({ addDevis, devisToEdit }: Props) {
   const { onClose } = useContext(ModalContext);
   const { userData } = useAuth();
   const toast = useToast();
@@ -60,6 +62,8 @@ export function AddDevisForm({ addDevis }: Props) {
     paymentDelayRate: yup
       .number()
       .typeError("Le taux doit être un nombre compris entre 0 et 100."),
+    tvaApplicable: yup.boolean(),
+    isDraft: yup.boolean(),
     services: yup.array().of(
       yup.object().shape({
         name: yup.string().required("Ce champ est requis."),
@@ -68,7 +72,6 @@ export function AddDevisForm({ addDevis }: Props) {
         unitPrice: yup.number().required("Ce champ est requis."),
       })
     ),
-    tvaApplicable: yup.boolean(),
   });
 
   const {
@@ -76,6 +79,7 @@ export function AddDevisForm({ addDevis }: Props) {
     handleSubmit,
     formState: { isSubmitting, errors },
     setError,
+    setValue,
     reset,
     control,
   } = useForm<FormData>({
@@ -83,13 +87,20 @@ export function AddDevisForm({ addDevis }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       customer: selectCustomerOptions[0].value as number,
-      validityDate: "",
-      workStartDate: "",
-      workDuration: "",
-      paymentDeadline: "",
-      paymentDelayRate: 0,
-      services: [{ name: "", quantity: 1, unitPrice: 0 }],
-      tvaApplicable: true,
+      services: devisToEdit?.services.map((service: InvoiceService) => {
+        return {
+          name: service.name,
+          quantity: service.quantity,
+          unitPrice: service.unitPrice,
+        };
+      }) ?? [{ name: "", quantity: 1, unitPrice: 0 }],
+      validityDate: devisToEdit?.validityDate.substr(0, 10) ?? "",
+      workStartDate: devisToEdit?.workStartDate.substr(0, 10) ?? "",
+      workDuration: devisToEdit?.workDuration ?? "",
+      paymentDeadline: devisToEdit?.paymentDeadline.substr(0, 10) ?? "",
+      paymentDelayRate: devisToEdit?.paymentDelayRate ?? 0,
+      tvaApplicable: devisToEdit?.tvaApplicable ?? true,
+      isDraft: devisToEdit?.isDraft ?? false,
     },
   });
 
@@ -112,6 +123,8 @@ export function AddDevisForm({ addDevis }: Props) {
         });
       });
       setSelectCustomerOptions([...selectCustomerOptions, ...customers]);
+
+      if (devisToEdit) setValue("customer", devisToEdit.customer.id);
     }
   };
 
@@ -120,15 +133,23 @@ export function AddDevisForm({ addDevis }: Props) {
   }, [userData.id]);
 
   const onSubmit = handleSubmit(async (formData: FormData) => {
-    const [isSuccess, data] = await createDevis(formData.customer, {
-      ...formData,
-      status: "NEW",
-    });
+    const [isSuccess, data] = devisToEdit
+      ? await updateDevis(devisToEdit.id, {
+          ...formData,
+          customer: `/api/customers/${formData.customer}`,
+        })
+      : await createDevis(formData.customer, {
+          ...formData,
+          status: "NEW",
+        });
     if (isSuccess) {
-      reset();
+      if (!devisToEdit) reset();
 
-      toast("success", "Le devis a bien été créé.");
-      addDevis(data as Devis);
+      toast(
+        "success",
+        `Le devis a bien été ${devisToEdit ? "mis à jour" : "crée"}.`
+      );
+      if (addDevis) addDevis(data as Devis);
       onClose();
     } else {
       if (Object.prototype.hasOwnProperty.call(data, "violations")) {
@@ -247,14 +268,20 @@ export function AddDevisForm({ addDevis }: Props) {
           {...register("tvaApplicable")}
         />
 
+        <ToggleInput
+          type="switch"
+          label="Garder en tant que brouillon"
+          {...register("isDraft")}
+        />
+
         {/* h2 className="addInvoiceForm__totalTtc">Total TTC: 0€</h2> */}
         <Button
           isLoading={isSubmitting}
-          icon="add"
+          icon={devisToEdit ? "edit" : "add"}
           center={true}
           htmlType="submit"
         >
-          Créer le devis
+          {`${devisToEdit ? "Éditer" : "Créer"} le devis`}
         </Button>
       </div>
     </form>

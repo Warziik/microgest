@@ -249,7 +249,7 @@ export function AddInvoiceForm({ addInvoice, invoiceToEdit }: Props) {
           label="TVA applicable"
           {...register("tvaApplicable")}
         />
-        <h2 className="addInvoiceForm__totalTtc">Total TTC: 0€</h2>
+        {/* h2 className="addInvoiceForm__totalTtc">Total TTC: 0€</h2> */}
         <ToggleInput
           type="switch"
           label="Garder en tant que brouillon"

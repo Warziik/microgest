@@ -15,6 +15,7 @@ import { Breadcrumb } from "../../../components/Breadcrumb";
 import { Modal } from "../../../components/Modal";
 import { EditDevisForm } from "../EditDevisForm";
 import { Tooltip } from "../../../components/Tooltip";
+import { AddDevisForm } from "../AddDevisForm";
 
 type MatchParams = {
   id: string;
@@ -110,12 +111,20 @@ export function ShowDevis() {
       )}
       {devis && (
         <Modal
+          position={devis.isDraft ? "right" : "center"}
           isOpen={showEditDevisModal}
           onClose={closeEditDevisModal}
-          title={`Éditer le devis n°${devis.chrono}`}
-          className="editInvoiceModal"
+          title={`Éditer la devis n°${devis.chrono}`}
+          className={
+            devis.isDraft ? "editDraftInvoiceModal" : "editInvoiceModal"
+          }
         >
-          <EditDevisForm devisToEdit={devis} editDevis={editDevis} />
+          {devis.isDraft && (
+            <AddDevisForm addDevis={editDevis} devisToEdit={devis} />
+          )}
+          {!devis.isDraft && (
+            <EditDevisForm devisToEdit={devis} editDevis={editDevis} />
+          )}
         </Modal>
       )}
       {(devis && (
@@ -144,16 +153,26 @@ export function ShowDevis() {
                 )}
               </div>
               <div className="showInvoice__header-ctas">
-                <Button
-                  type="contrast"
-                  center={true}
-                  icon="download"
-                  onClick={() =>
-                    history.push(`/devis-détails/${devis.id}/export`)
-                  }
+                <Tooltip
+                  isActive={devis.isDraft}
+                  content="Vous ne pouvez pas exporter un devis brouillon."
+                  position="top"
                 >
-                  Exporter le devis
-                </Button>
+                  <Button
+                    type="contrast"
+                    center={true}
+                    icon="download"
+                    disabled={devis.isDraft}
+                    onClick={
+                      !devis.isDraft
+                        ? () =>
+                            history.push(`/devis-détails/${devis.id}/export`)
+                        : undefined
+                    }
+                  >
+                    Exporter le devis
+                  </Button>
+                </Tooltip>
 
                 <Button
                   icon="edit"
@@ -207,31 +226,31 @@ export function ShowDevis() {
 
               <div className="showInvoice__details-item">
                 <h3>Détails</h3>
-                <div className="customers__item-main-data">
+                <div className="showInvoice__details-item-data">
                   <p>Date d&lsquo;émission</p>
                   <p>{dayjs(devis.createdAt).format("LLL")}</p>
                 </div>
-                <div className="customers__item-main-data">
+                <div className="showInvoice__details-item-data">
                   <p>Date d&lsquo;expiration</p>
                   <p>{dayjs(devis.validityDate).format("LL")}</p>
                 </div>
-                <div className="customers__item-main-data">
+                <div className="showInvoice__details-item-data">
                   <p>Date d&lsquo;exécution</p>
                   <p>{dayjs(devis.paymentDeadline).format("LL")}</p>
                 </div>
-                <div className="customers__item-main-data">
-                  <p>Date de début de/des prestation(s)</p>
+                <div className="showInvoice__details-item-data">
+                  <p>Date de début de la prestation</p>
                   <p>{dayjs(devis.workStartDate).format("LL")}</p>
                 </div>
-                <div className="customers__item-main-data">
+                <div className="showInvoice__details-item-data">
                   <p>Durée estimée</p>
                   <p>{devis.workDuration}</p>
                 </div>
-                <div className="customers__item-main-data">
+                <div className="showInvoice__details-item-data">
                   <p>Date limite de règlement</p>
                   <p>{dayjs(devis.paymentDeadline).format("LL")}</p>
                 </div>
-                <div className="customers__item-main-data">
+                <div className="showInvoice__details-item-data">
                   <p>Taux de pénalité en cas de retard</p>
                   <p>{devis.paymentDelayRate ?? 0}%</p>
                 </div>

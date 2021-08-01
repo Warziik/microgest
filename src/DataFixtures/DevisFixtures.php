@@ -31,6 +31,7 @@ class DevisFixtures extends Fixture implements DependentFixtureInterface
             $d->setSignedAt('SIGNED' === $d->getStatus() ? $faker->dateTimeBetween('+1 day', '+2 weeks') : null);
             $d->setCreatedAt(new DateTimeImmutable());
             $d->setTvaApplicable($faker->randomElement([true, false]));
+            $d->setIsDraft($faker->randomElement([true, false]));
             $d->setCustomer(
                 0 === $index ?
                     $this->getReference('testCustomer')

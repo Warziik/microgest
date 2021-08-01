@@ -14,6 +14,7 @@ export interface Devis {
   paymentDeadline: string;
   paymentDelayRate: number;
   tvaApplicable: boolean;
+  isDraft: boolean;
   sentAt: string;
   signedAt: string;
   createdAt: string;
@@ -28,6 +29,22 @@ export interface DevisFormData {
   workDuration: string;
   paymentDeadline: string;
   paymentDelayRate: number;
-  services: InvoiceService[];
   tvaApplicable: boolean;
+  isDraft: boolean;
+  services: InvoiceService[];
+}
+
+export interface DevisUpdateFormData {
+  customer?: string; // /api/customers/1
+  status?: string;
+  sentAt?: string | null;
+  signedAt?: string | null;
+  validityDate?: string;
+  workStartDate?: string;
+  workDuration?: string;
+  paymentDeadline?: string;
+  paymentDelayRate?: number;
+  tvaApplicable?: boolean;
+  isDraft?: boolean;
+  services?: InvoiceService[];
 }

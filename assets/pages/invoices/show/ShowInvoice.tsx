@@ -236,21 +236,21 @@ export function ShowInvoice() {
 
                 <div className="showInvoice__details-item">
                   <h3>Détails</h3>
-                  <div className="customers__item-main-data">
+                  <div className="showInvoice__details-item-data">
                     <p>Date d&lsquo;émission</p>
                     <p>{dayjs(invoice.createdAt).format("LLL")}</p>
                   </div>
-                  <div className="customers__item-main-data">
+                  <div className="showInvoice__details-item-data">
                     <p>Date d&lsquo;exécution</p>
                     <p>{dayjs(invoice.serviceDoneAt).format("LL")}</p>
                   </div>
-                  <div className="customers__item-main-data">
+                  <div className="showInvoice__details-item-data">
                     <p>Date limite de règlement</p>
                     <p>{dayjs(invoice.paymentDeadline).format("LL")}</p>
                   </div>
-                  <div className="customers__item-main-data">
+                  <div className="showInvoice__details-item-data">
                     <p>Taux de pénalité en cas de retard</p>
-                    <p>{invoice.paymentDelayRate}%</p>
+                    <p>{invoice.paymentDelayRate ?? 0}%</p>
                   </div>
                 </div>
 

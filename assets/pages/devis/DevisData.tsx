@@ -38,6 +38,7 @@ export function DevisData({
   const [selectYearOptions, setSelectYearOptions] = useState<Option[]>([]);
 
   const [expiredDevis, setExpiredDevis] = useState<Devis[]>();
+  const [draftDevis, setDraftDevis] = useState<Devis[]>();
 
   const allDevisRef = useRef(null);
   const expiredRef = useRef(null);
@@ -69,6 +70,7 @@ export function DevisData({
           new Date().toISOString().slice(0, 19)
       )
     );
+    setDraftDevis(devis.filter((devis: Devis) => devis.isDraft === true));
 
     const years: number[] = [dayjs().get("y")];
     for (let i = 0; i < dayjs().diff(userData.createdAt, "y"); i++) {
@@ -210,15 +212,18 @@ export function DevisData({
                                 )}
                               </td>
                               <td>
-                                <Button
-                                  type="contrast"
-                                  size="small"
-                                  onClick={() =>
-                                    push(`/devis-détails/${devis.id}/export`)
-                                  }
-                                >
-                                  Exporter
-                                </Button>
+                                {(!devis.isDraft && (
+                                  <Button
+                                    type="contrast"
+                                    size="small"
+                                    onClick={() =>
+                                      push(`/devis-détails/${devis.id}/export`)
+                                    }
+                                  >
+                                    Exporter
+                                  </Button>
+                                )) ||
+                                  "-"}
                               </td>
                             </tr>
                           ))}
@@ -244,8 +249,8 @@ export function DevisData({
                 <h3>Devis expirés</h3>
                 <p>
                   <strong>{expiredDevis.length}</strong>
-                  &nbsp;
-                  {expiredDevis.length <= 1 ? "devis expiré" : "devis expirés"}
+                  &nbsp;devis&nbsp;
+                  {expiredDevis.length <= 1 ? "expiré" : "expirés"}
                 </p>
               </div>
               <table className="table">
@@ -319,7 +324,68 @@ export function DevisData({
         tabRef={draftsRef}
       >
         <div className="invoices__list">
-          <p>Les brouillons ne sont pas disponibles pour le moment.</p>
+          {draftDevis && draftDevis.length > 0 && (
+            <>
+              <div className="invoices__list-header">
+                <h3>Devis brouillons</h3>
+                <p>
+                  <strong>{draftDevis.length}</strong>
+                  &nbsp;devis&nbsp;
+                  {draftDevis.length === 1 ? "brouillon" : "brouillons"}
+                </p>
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Chrono</th>
+                    <th>Statut</th>
+                    {displayCustomer && <th>Client</th>}
+                    <th>Date de création</th>
+                    <th>Date d&lsquo;expiration</th>
+                    <th>Date de début de la prestation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {draftDevis.map((devis: Devis, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <Link
+                          className="link"
+                          to={`/devis-détails/${devis.id}`}
+                        >
+                          {devis.chrono}
+                        </Link>
+                      </td>
+                      <td>
+                        <Badge status={devis.status} />
+                      </td>
+                      {displayCustomer && (
+                        <td>
+                          <Link
+                            className="link"
+                            to={`/client/${devis.customer.id}`}
+                          >
+                            {devis.customer.type === "PERSON"
+                              ? `${devis.customer.firstname} ${devis.customer.lastname}`
+                              : devis.customer.company}
+                          </Link>
+                        </td>
+                      )}
+                      <td>{dayjs(devis.createdAt).fromNow()}</td>
+                      <td>{dayjs(devis.validityDate).fromNow()}</td>
+                      <td>
+                        {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+          {draftDevis && draftDevis.length === 0 && (
+            <p>Aucune devis brouillon pour le moment.</p>
+          )}
+          {!draftDevis && <p>Chargement...</p>}
         </div>
       </Tab>
     </Tabs>

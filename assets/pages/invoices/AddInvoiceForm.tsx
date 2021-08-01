@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ModalContext } from "../../components/Modal";
 import { useToast } from "../../hooks/useToast";
-import { Invoice, InvoiceServiceFormData } from "../../types/Invoice";
+import {
+  Invoice,
+  InvoiceService,
+  InvoiceServiceFormData,
+} from "../../types/Invoice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -13,13 +17,14 @@ import { useAuth } from "../../hooks/useAuth";
 import { DatePickerInput } from "../../components/form/DatePickerInput";
 import { TextInput } from "../../components/form/TextInput";
 import { ToggleInput } from "../../components/form/ToggleInput";
-import { createInvoice } from "../../services/InvoiceService";
+import { createInvoice, updateInvoice } from "../../services/InvoiceService";
 import { ErrorResponse } from "../../types/ErrorResponse";
 import { Violation } from "../../types/Violation";
 import { Icon } from "../../components/Icon";
 
 type Props = {
-  addInvoice: (invoice: Invoice) => void;
+  addInvoice?: (invoice: Invoice) => void;
+  invoiceToEdit?: Invoice;
 };
 
 type FormData = {
@@ -29,9 +34,10 @@ type FormData = {
   serviceDoneAt: string;
   paymentDeadline: string;
   paymentDelayRate: number;
+  isDraft: boolean;
 };
 
-export function AddInvoiceForm({ addInvoice }: Props) {
+export function AddInvoiceForm({ addInvoice, invoiceToEdit }: Props) {
   const { onClose } = useContext(ModalContext);
   const { userData } = useAuth();
   const toast = useToast();
@@ -60,6 +66,7 @@ export function AddInvoiceForm({ addInvoice }: Props) {
     paymentDelayRate: yup
       .number()
       .typeError("Le taux doit être un nombre compris entre 0 et 100."),
+    isDraft: yup.boolean(),
   });
 
   const {
@@ -67,6 +74,7 @@ export function AddInvoiceForm({ addInvoice }: Props) {
     handleSubmit,
     formState: { isSubmitting, errors },
     setError,
+    setValue,
     reset,
     control,
   } = useForm<FormData>({
@@ -74,11 +82,18 @@ export function AddInvoiceForm({ addInvoice }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       customer: selectCustomerOptions[0].value as number,
-      services: [{ name: "", quantity: 1, unitPrice: 0 }],
-      tvaApplicable: true,
-      serviceDoneAt: "",
-      paymentDeadline: "",
-      paymentDelayRate: 0,
+      services: invoiceToEdit?.services.map((service: InvoiceService) => {
+        return {
+          name: service.name,
+          quantity: service.quantity,
+          unitPrice: service.unitPrice,
+        };
+      }) ?? [{ name: "", quantity: 1, unitPrice: 0 }],
+      tvaApplicable: invoiceToEdit?.tvaApplicable ?? true,
+      serviceDoneAt: invoiceToEdit?.serviceDoneAt.substr(0, 10) ?? "",
+      paymentDeadline: invoiceToEdit?.paymentDeadline.substr(0, 10) ?? "",
+      paymentDelayRate: invoiceToEdit?.paymentDelayRate ?? 0,
+      isDraft: invoiceToEdit?.isDraft ?? false,
     },
   });
 
@@ -101,6 +116,8 @@ export function AddInvoiceForm({ addInvoice }: Props) {
         });
       });
       setSelectCustomerOptions([...selectCustomerOptions, ...customers]);
+
+      if (invoiceToEdit) setValue("customer", invoiceToEdit.customer.id);
     }
   };
 
@@ -109,15 +126,26 @@ export function AddInvoiceForm({ addInvoice }: Props) {
   }, [userData.id]);
 
   const onSubmit = handleSubmit(async (formData: FormData) => {
-    const [isSuccess, data] = await createInvoice(formData.customer, {
-      ...formData,
-      status: "NEW",
-    });
-    if (isSuccess) {
-      reset();
+    const [isSuccess, data] = invoiceToEdit
+      ? await updateInvoice(invoiceToEdit.id, {
+          ...formData,
+          customer: `/api/customers/${formData.customer}`,
+        })
+      : await createInvoice(formData.customer, {
+          ...formData,
+          status: "NEW",
+        });
 
-      toast("success", "La facture a bien été créée.");
-      addInvoice(data as Invoice);
+    if (isSuccess) {
+      if (!invoiceToEdit) reset();
+
+      toast(
+        "success",
+        `La facture a bien été ${invoiceToEdit ? "mise à jour" : "créée"}.`
+      );
+      if (addInvoice) {
+        addInvoice(data as Invoice);
+      }
       onClose();
     } else {
       if (Object.prototype.hasOwnProperty.call(data, "violations")) {
@@ -221,15 +249,19 @@ export function AddInvoiceForm({ addInvoice }: Props) {
           label="TVA applicable"
           {...register("tvaApplicable")}
         />
-
-        {/* <h2 className="addInvoiceForm__totalTtc">Total TTC: 0€</h2> */}
+        <h2 className="addInvoiceForm__totalTtc">Total TTC: 0€</h2>
+        <ToggleInput
+          type="switch"
+          label="Garder en tant que brouillon"
+          {...register("isDraft")}
+        />
         <Button
           isLoading={isSubmitting}
-          icon="add"
+          icon={invoiceToEdit ? "edit" : "add"}
           center={true}
           htmlType="submit"
         >
-          Créer la facture
+          {`${invoiceToEdit ? "Éditer" : "Créer"} la facture`}
         </Button>
       </div>
     </form>

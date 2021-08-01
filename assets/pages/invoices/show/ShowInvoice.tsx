@@ -13,6 +13,7 @@ import { Modal } from "../../../components/Modal";
 import { Tooltip } from "../../../components/Tooltip";
 import { GenerateExportableDocument } from "../../../components/GenerateExportableDocument";
 import { Breadcrumb } from "../../../components/Breadcrumb";
+import { AddInvoiceForm } from "../AddInvoiceForm";
 
 type MatchParams = {
   id: string;
@@ -111,15 +112,26 @@ export function ShowInvoice() {
         )}
         {invoice && (
           <Modal
+            position={invoice.isDraft ? "right" : "center"}
             isOpen={showEditInvoiceModal}
             onClose={closeEditInvoiceModal}
             title={`Éditer la facture n°${invoice.chrono}`}
-            className="editInvoiceModal"
+            className={
+              invoice.isDraft ? "editDraftInvoiceModal" : "editInvoiceModal"
+            }
           >
-            <EditInvoiceForm
-              invoiceToEdit={invoice}
-              editInvoice={editInvoice}
-            />
+            {invoice.isDraft && (
+              <AddInvoiceForm
+                addInvoice={editInvoice}
+                invoiceToEdit={invoice}
+              />
+            )}
+            {!invoice.isDraft && (
+              <EditInvoiceForm
+                invoiceToEdit={invoice}
+                editInvoice={editInvoice}
+              />
+            )}
           </Modal>
         )}
         {(invoice && (
@@ -150,16 +162,26 @@ export function ShowInvoice() {
                   )}
                 </div>
                 <div className="showInvoice__header-ctas">
-                  <Button
-                    type="contrast"
-                    center={true}
-                    icon="download"
-                    onClick={() =>
-                      history.push(`/facture/${invoice.id}/export`)
-                    }
+                  <Tooltip
+                    isActive={invoice.isDraft}
+                    content="Vous ne pouvez pas exporter une facture brouillon."
+                    position="top"
                   >
-                    Exporter la facture
-                  </Button>
+                    <Button
+                      type="contrast"
+                      center={true}
+                      icon="download"
+                      disabled={invoice.isDraft}
+                      onClick={
+                        !invoice.isDraft
+                          ? () => history.push(`/facture/${invoice.id}/export`)
+                          : undefined
+                      }
+                    >
+                      Exporter la facture
+                    </Button>
+                  </Tooltip>
+
                   <Button
                     icon="edit"
                     type="outline"

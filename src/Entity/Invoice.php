@@ -58,7 +58,12 @@ class Invoice
 
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: "invoices")]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['invoices:read', 'invoices:write', 'allInvoices:read'])]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'allInvoices:read'
+    ])]
     #[Assert\NotBlank]
     private ?Customer $customer = null;
 
@@ -97,6 +102,7 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
+        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -119,6 +125,7 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
+        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -131,6 +138,7 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
+        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -148,11 +156,25 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
+        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
     private ?int $paymentDelayRate = null;
+
+    #[ORM\Column(type: "boolean")]
+    #[Assert\NotNull]
+    #[Assert\Type('boolean')]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update',
+        'users_customers_subresource',
+        'customers_invoices_subresource',
+        'allInvoices:read',
+    ])]
+    private bool $isDraft;
 
     #[ORM\Column(type: "datetime", nullable: true)]
     #[Assert\Type(DateTimeInterface::class)]
@@ -185,6 +207,7 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoices:write',
+        'invoice:update',
         'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
@@ -319,6 +342,18 @@ class Invoice
     public function setPaymentDelayRate(?int $paymentDelayRate): self
     {
         $this->paymentDelayRate = $paymentDelayRate;
+
+        return $this;
+    }
+
+    public function getIsDraft(): ?bool
+    {
+        return $this->isDraft;
+    }
+
+    public function setIsDraft(bool $isDraft): self
+    {
+        $this->isDraft = $isDraft;
 
         return $this;
     }

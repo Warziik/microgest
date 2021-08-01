@@ -44,6 +44,7 @@ describe("Invoice Service", () => {
     serviceDoneAt: "2021-03-26T11:48:18+00:00",
     paymentDeadline: "2021-03-26T11:48:18+00:00",
     paymentDelayRate: 20,
+    isDraft: false,
     services: [
       {
         name: "Création d'un site internet",

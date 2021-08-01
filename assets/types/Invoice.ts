@@ -15,6 +15,7 @@ export interface Invoice {
   paidAt: string;
   sentAt: string;
   totalAmount: number;
+  isDraft: boolean;
   services: InvoiceService[];
 }
 
@@ -34,7 +35,21 @@ export interface InvoiceFormData {
   serviceDoneAt: string;
   paymentDeadline: string;
   paymentDelayRate: number;
+  isDraft: boolean;
   services: InvoiceService[];
+}
+
+export interface InvoiceUpdateFormData {
+  customer?: string; // /api/customers/1
+  status?: string;
+  sentAt?: string | null;
+  paidAt?: string | null;
+  tvaApplicable?: boolean;
+  serviceDoneAt?: string;
+  paymentDeadline?: string;
+  paymentDelayRate?: number;
+  isDraft?: boolean;
+  services?: InvoiceService[];
 }
 
 export interface InvoiceServiceFormData {

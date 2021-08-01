@@ -76,12 +76,7 @@ export function EditInvoiceForm({ invoiceToEdit, editInvoice }: Props) {
       formData.paidAt = null;
     }
 
-    const [isSuccess, data] = await updateInvoice(
-      invoiceToEdit.id,
-      formData.status,
-      formData.sentAt,
-      formData.paidAt
-    );
+    const [isSuccess, data] = await updateInvoice(invoiceToEdit.id, formData);
     if (isSuccess) {
       toast("success", "La facture a bien été mise à jour.");
       editInvoice(data as Invoice);

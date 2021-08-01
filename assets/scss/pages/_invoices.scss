@@ -41,16 +41,22 @@
   }
 }
 
-.editInvoiceModal {
+.editInvoiceModal,
+.editDraftInvoiceModal {
   .editInvoiceForm {
     button {
       margin-top: 2.4rem;
     }
   }
+}
 
+.editInvoiceModal {
   .modal__content {
     width: 55.2rem;
   }
+}
+
+.editDraftInvoiceModal {
 }
 
 .addInvoiceForm {

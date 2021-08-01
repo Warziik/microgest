@@ -124,6 +124,7 @@ class InvoiceTest extends ApiTestCase
                 'serviceDoneAt' => '2021-03-18',
                 'paymentDeadline' => '2021-04-18',
                 'paymentDelayRate' => null,
+                'isDraft' => false,
                 'customer' => '/api/customers/1',
                 'services' => [
                     [
@@ -143,6 +144,7 @@ class InvoiceTest extends ApiTestCase
             'status' => 'SENT',
             'tvaApplicable' => false,
             'paymentDelayRate' => null,
+            'isDraft' => false,
             'paidAt' => null,
             'services' => [
                 [
@@ -165,6 +167,7 @@ class InvoiceTest extends ApiTestCase
             'status' => 'SENT',
             'sentAt' => '2021-04-09 20:15:13',
             'tvaApplicable' => false,
+            'isDraft' => false,
             'serviceDoneAt' => '2021-03-18',
             'paymentDeadline' => '2021-04-18',
             'paymentDelayRate' => null,
@@ -205,6 +208,7 @@ class InvoiceTest extends ApiTestCase
                 'status' => 'SENT',
                 'sentAt' => '2021-04-09 20:15:13',
                 'tvaApplicable' => false,
+                'isDraft' => false,
                 'serviceDoneAt' => '2021-03-18',
                 'paymentDeadline' => '2021-04-18',
                 'paymentDelayRate' => null,

@@ -28,6 +28,7 @@ class InvoiceTest extends ApiTestCase
             ->setServiceDoneAt(new DateTime('-1 week'))
             ->setPaymentDeadline(new DateTime('+40 days'))
             ->setPaymentDelayRate(3)
+            ->setIsDraft(false)
             ->setCreatedAt(new DateTime())
             ->setCustomer(new Customer());
     }
@@ -64,6 +65,16 @@ class InvoiceTest extends ApiTestCase
         $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(false));
 
         $this->assertHasErrors(0, $this->getEntity()->setTvaApplicable(null));
+    }
+
+    public function testIsDraftConstraints(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setIsDraft(true));
+        $this->assertHasErrors(0, $this->getEntity()->setIsDraft(false));
+
+        $this->assertHasErrors(0, $this->getEntity()->setIsDraft(null));
     }
 
     public function testServiceDoneAtConstraints(): void

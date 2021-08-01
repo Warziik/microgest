@@ -1,7 +1,11 @@
 import { CUSTOMERS_URI, INVOICES_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
 import { ErrorResponse } from "../types/ErrorResponse";
-import { Invoice, InvoiceFormData } from "../types/Invoice";
+import {
+  Invoice,
+  InvoiceFormData,
+  InvoiceUpdateFormData,
+} from "../types/Invoice";
 import { DataAccess } from "../utils/dataAccess";
 
 /**
@@ -57,17 +61,11 @@ export function createInvoice(
  */
 export function updateInvoice(
   id: number,
-  status: string,
-  sentAt: string | null,
-  paidAt: string | null
+  data: InvoiceUpdateFormData
 ): Promise<[boolean, Invoice | ErrorResponse]> {
   return DataAccess.request(`${INVOICES_URI}/${id}`, {
     method: "PUT",
-    body: JSON.stringify({
-      status,
-      sentAt,
-      paidAt,
-    }),
+    body: JSON.stringify(data),
   });
 }
 

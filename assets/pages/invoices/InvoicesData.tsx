@@ -40,6 +40,7 @@ export function InvoicesData({
   const [selectYearOptions, setSelectYearOptions] = useState<Option[]>([]);
 
   const [unpaidInvoices, setUnpaidInvoices] = useState<Invoice[]>();
+  const [draftInvoices, setDraftInvoices] = useState<Invoice[]>();
 
   const allInvoicesRef = useRef(null);
   const unpaidRef = useRef(null);
@@ -68,8 +69,11 @@ export function InvoicesData({
       invoices.filter(
         (invoice: Invoice) =>
           invoice.paymentDeadline.slice(0, 19) <
-          new Date().toISOString().slice(0, 19)
+            new Date().toISOString().slice(0, 19) && !invoice.isDraft
       )
+    );
+    setDraftInvoices(
+      invoices.filter((invoice: Invoice) => invoice.isDraft === true)
     );
 
     const years: number[] = [dayjs().get("y")];
@@ -272,7 +276,7 @@ export function InvoicesData({
                     <th>Statut</th>
                     {displayCustomer && <th>Client</th>}
                     <th>Montant total (HT)</th>
-                    <th>Date limite de règlement</th>
+                    <th>Date limite de paiement</th>
                     <th>Taux de pénalité dû au retard</th>
                     <th>Actions</th>
                   </tr>
@@ -336,7 +340,74 @@ export function InvoicesData({
         tabRef={draftsRef}
       >
         <div className="invoices__list">
-          <p>Les brouillons ne sont pas disponibles pour le moment.</p>
+          {draftInvoices && draftInvoices.length > 0 && (
+            <>
+              <div className="invoices__list-header">
+                <h3>Factures brouillons</h3>
+                <p>
+                  <strong>{draftInvoices.length}</strong>
+                  &nbsp;
+                  {draftInvoices.length === 1
+                    ? "facture brouillon"
+                    : "factures brouillons"}
+                </p>
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Chrono</th>
+                    <th>Statut</th>
+                    {displayCustomer && <th>Client</th>}
+                    <th>Montant total (HT)</th>
+                    <th>Date d&lsquo;exécution</th>
+                    <th>Date limite de paiement</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {draftInvoices.map((invoice: Invoice, index: number) => (
+                    <tr key={index}>
+                      <td>
+                        <Link className="link" to={`/facture/${invoice.id}`}>
+                          {invoice.chrono}
+                        </Link>
+                      </td>
+                      <td>
+                        <Badge status={invoice.status} />
+                      </td>
+                      {displayCustomer && (
+                        <td>
+                          <Link
+                            className="link"
+                            to={`/client/${invoice.customer.id}`}
+                          >
+                            {invoice.customer.type === "PERSON"
+                              ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
+                              : invoice.customer.company}
+                          </Link>
+                        </td>
+                      )}
+                      <td>
+                        {new Intl.NumberFormat("fr-FR", {
+                          style: "currency",
+                          currency: "EUR",
+                        }).format(invoice.totalAmount)}
+                      </td>
+                      <td>{dayjs(invoice.serviceDoneAt).fromNow()}</td>
+                      <td>
+                        {dayjs(invoice.paymentDeadline).format(
+                          "dddd DD MMMM YYYY"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+          {draftInvoices && draftInvoices.length === 0 && (
+            <p>Aucune facture brouillon pour le moment.</p>
+          )}
+          {!draftInvoices && <p>Chargement...</p>}
         </div>
       </Tab>
     </Tabs>

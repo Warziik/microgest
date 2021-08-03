@@ -110,9 +110,7 @@ export function InvoicesData({
           ),
         });
       }
-      if (sortableTypeReverse[years[yearI]]) {
-        totalInvoices[years[yearI]].reverse();
-      }
+      totalInvoices[years[yearI]].reverse();
     }
 
     setAllInvoices(totalInvoices);

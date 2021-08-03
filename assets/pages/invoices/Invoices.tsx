@@ -6,9 +6,10 @@ import { Modal } from "../../components/Modal";
 import { AddInvoiceForm } from "./AddInvoiceForm";
 import { Button } from "../../components/Button";
 import { InvoicesData } from "./InvoicesData";
+import { InvoicesSkeleton } from "../../components/skeletons/InvoicesSkeleton";
 
 export function Invoices() {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>();
 
   const [showCreateInvoiceModal, setShowCreateInvoiceModal] =
     useState<boolean>(false);
@@ -43,7 +44,9 @@ export function Invoices() {
     fetchInvoices();
   }, [fetchInvoices]);
 
-  const addInvoice = (invoice: Invoice) => setInvoices([...invoices, invoice]);
+  const addInvoice = (invoice: Invoice) => {
+    if (invoices) setInvoices([...invoices, invoice]);
+  };
 
   const closeCreateInvoiceModal = () => {
     setShowCreateInvoiceModal(false);
@@ -80,11 +83,13 @@ export function Invoices() {
         </div> */}
         </div>
       </div>
-      <InvoicesData
-        invoices={invoices}
-        displayCustomer={true}
-        displayUrls={true}
-      />
+      {(invoices && (
+        <InvoicesData
+          invoices={invoices}
+          displayCustomer={true}
+          displayUrls={true}
+        />
+      )) || <InvoicesSkeleton />}
     </div>
   );
 }

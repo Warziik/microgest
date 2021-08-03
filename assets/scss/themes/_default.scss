@@ -31,4 +31,6 @@
   --select-background: var(--container-background);
   --input-box-shadow: 0 1px 10px #{rgba(#4d6ef5, 0.16)};
   --sidebar-gradient: linear-gradient(to bottom, #1c212e 60%, #2f343f 250%);
+  --skeleton-background: var(--container-background);
+  --skeleton-pulse: #262a36;
 }

@@ -16,6 +16,7 @@ import { Modal } from "../../../components/Modal";
 import { EditDevisForm } from "../EditDevisForm";
 import { Tooltip } from "../../../components/Tooltip";
 import { AddDevisForm } from "../AddDevisForm";
+import { ShowInvoiceSkeleton } from "../../../components/skeletons/ShowInvoiceSkeleton";
 
 type MatchParams = {
   id: string;
@@ -53,7 +54,9 @@ export function ShowDevis() {
   }, [id, history, toast]);
 
   useEffect(() => {
-    document.title = `Devis n°${devis?.chrono} - Microgest`;
+    document.title = `${
+      devis ? `Devis n°${devis.chrono}` : `Chargement...`
+    } - Microgest`;
   }, [devis]);
 
   const openEditDevisModal = () => setShowEditDevisModal(true);
@@ -85,50 +88,47 @@ export function ShowDevis() {
 
   return (
     <div className="showInvoice">
-      {devis && (
-        <Modal
-          isOpen={showDeleteDevisModal}
-          onClose={closeDeleteDevisModal}
-          title="Supprimer le devis"
-          className="deleteInvoiceModal"
-        >
-          <p>
-            Êtes-vous sûr de vouloir supprimer le devis ? (action irréversible)
-          </p>
-          <div className="deleteInvoiceModal__ctas">
-            <Button
-              type="contrast"
-              onClick={closeDeleteDevisModal}
-              icon="close"
-            >
-              Annuler
-            </Button>
-            <Button onClick={handleDeleteBtn} icon="trash" color="danger">
-              Supprimer
-            </Button>
-          </div>
-        </Modal>
-      )}
-      {devis && (
-        <Modal
-          position={devis.isDraft ? "right" : "center"}
-          isOpen={showEditDevisModal}
-          onClose={closeEditDevisModal}
-          title={`Éditer la devis n°${devis.chrono}`}
-          className={
-            devis.isDraft ? "editDraftInvoiceModal" : "editInvoiceModal"
-          }
-        >
-          {devis.isDraft && (
-            <AddDevisForm addDevis={editDevis} devisToEdit={devis} />
-          )}
-          {!devis.isDraft && (
-            <EditDevisForm devisToEdit={devis} editDevis={editDevis} />
-          )}
-        </Modal>
-      )}
       {(devis && (
         <>
+          <Modal
+            isOpen={showDeleteDevisModal}
+            onClose={closeDeleteDevisModal}
+            title="Supprimer le devis"
+            className="deleteInvoiceModal"
+          >
+            <p>
+              Êtes-vous sûr de vouloir supprimer le devis ? (action
+              irréversible)
+            </p>
+            <div className="deleteInvoiceModal__ctas">
+              <Button
+                type="contrast"
+                onClick={closeDeleteDevisModal}
+                icon="close"
+              >
+                Annuler
+              </Button>
+              <Button onClick={handleDeleteBtn} icon="trash" color="danger">
+                Supprimer
+              </Button>
+            </div>
+          </Modal>
+          <Modal
+            position={devis.isDraft ? "right" : "center"}
+            isOpen={showEditDevisModal}
+            onClose={closeEditDevisModal}
+            title={`Éditer la devis n°${devis.chrono}`}
+            className={
+              devis.isDraft ? "editDraftInvoiceModal" : "editInvoiceModal"
+            }
+          >
+            {devis.isDraft && (
+              <AddDevisForm addDevis={editDevis} devisToEdit={devis} />
+            )}
+            {!devis.isDraft && (
+              <EditDevisForm devisToEdit={devis} editDevis={editDevis} />
+            )}
+          </Modal>
           <Breadcrumb
             previousPage={{ name: "Mes devis", path: "/devis" }}
             currentPage={`Devis n°${devis.chrono}`}
@@ -305,7 +305,7 @@ export function ShowDevis() {
     </div> */}
           </div>
         </>
-      )) || <p>Chargement...</p>}
+      )) || <ShowInvoiceSkeleton />}
     </div>
   );
 }

@@ -106,9 +106,7 @@ export function DevisData({
           ),
         });
       }
-      if (sortableTypeReverse[years[yearI]]) {
-        totalDevis[years[yearI]].reverse();
-      }
+      totalDevis[years[yearI]].reverse();
     }
 
     setAllDevis(totalDevis);

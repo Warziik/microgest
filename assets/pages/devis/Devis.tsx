@@ -6,9 +6,11 @@ import { Button } from "../../components/Button";
 import { DevisData } from "./DevisData";
 import { Modal } from "../../components/Modal";
 import { AddDevisForm } from "./AddDevisForm";
+import { InvoicesSkeleton } from "../../components/skeletons/InvoicesSkeleton";
 
 export function Devis() {
-  const [devis, setDevis] = useState<Devis[]>([]);
+  const [devis, setDevis] = useState<Devis[]>();
+
   const [showCreateDevisModal, setShowCreateDevisModal] =
     useState<boolean>(false);
   const openCreateDevisModalBtn = useRef<HTMLButtonElement>(null);
@@ -40,7 +42,9 @@ export function Devis() {
     fetchDevis();
   }, [fetchDevis]);
 
-  const addDevis = (newDevis: Devis) => setDevis([...devis, newDevis]);
+  const addDevis = (newDevis: Devis) => {
+    if (devis) setDevis([...devis, newDevis]);
+  };
 
   const closeCreateDevisModal = () => {
     setShowCreateDevisModal(false);
@@ -77,7 +81,9 @@ export function Devis() {
         </div> */}
         </div>
       </div>
-      <DevisData devis={devis} displayCustomer={true} displayUrls={true} />
+      {(devis && (
+        <DevisData devis={devis} displayCustomer={true} displayUrls={true} />
+      )) || <InvoicesSkeleton />}
     </div>
   );
 }

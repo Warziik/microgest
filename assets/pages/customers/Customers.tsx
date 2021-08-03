@@ -9,10 +9,11 @@ import { Modal } from "../../components/Modal";
 import { AddEditCustomerForm } from "./AddEditCustomerForm";
 import dayjs from "dayjs";
 import { Collection } from "../../types/Collection";
+import { CustoemrsSkeleton } from "../../components/skeletons/CustomersSkeleton";
 
 export function Customers() {
   const { userData } = useAuth();
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>();
 
   const [showAddEditCustomerModal, setShowAddEditCustomerModal] =
     useState(false);
@@ -31,21 +32,28 @@ export function Customers() {
     fetchAllCustomers(userData.id).then(
       (values: [boolean, Collection<Customer>]) => {
         const [isSuccess, data] = values;
-        if (isSuccess) setCustomers(data["hydra:member"]);
+        if (isSuccess) {
+          setCustomers(data["hydra:member"]);
+        }
       }
     );
   }, [userData.id]);
 
-  const addCustomer = (customer: Customer) =>
-    setCustomers([...customers, customer]);
+  const addCustomer = (customer: Customer) => {
+    if (customers) {
+      setCustomers([...customers, customer]);
+    }
+  };
 
   const editCustomer = (updatedCustomer: Customer) => {
-    const index = customers.findIndex(
-      (customer: Customer) => customer.id === updatedCustomer.id
-    );
-    const newCustomers = [...customers];
-    newCustomers[index] = updatedCustomer;
-    setCustomers(newCustomers);
+    if (customers) {
+      const index = customers.findIndex(
+        (customer: Customer) => customer.id === updatedCustomer.id
+      );
+      const newCustomers = [...customers];
+      newCustomers[index] = updatedCustomer;
+      setCustomers(newCustomers);
+    }
   };
 
   const openAddCustomerModal = () => setShowAddEditCustomerModal(true);
@@ -104,71 +112,75 @@ export function Customers() {
           <div className="pagination"></div>
         </div> */}
       </div>
+      {!customers && <CustoemrsSkeleton />}
       <div className="customers__list">
-        {customers.map((customer: Customer, index: number) => (
-          <article className="customers__item" key={customer.id}>
-            <header className="customers__item-header">
-              <img
-                src="https://via.placeholder.com/56"
-                alt={`${customer.firstname} ${customer.lastname}'s picture.`}
-              />
-              <h2>
-                {customer.type === "PERSON"
-                  ? `${customer.firstname} ${customer.lastname}`
-                  : customer.company}
-              </h2>
-              <p>Ajouté {dayjs(customer.createdAt).fromNow()}</p>
-            </header>
-            <div className="customers__item-main">
-              <div className="customers__item-main-data">
-                <p>Adresse email</p>
-                <p>{customer.email}</p>
-              </div>
-              <div className="customers__item-main-data">
-                <p>Numéro de téléphone</p>
-                <p>{customer.phone || `-`}</p>
-              </div>
-              {customer.type === "COMPANY" && (
+        {customers &&
+          customers.map((customer: Customer, index: number) => (
+            <article className="customers__item" key={customer.id}>
+              <header className="customers__item-header">
+                <img
+                  src="https://via.placeholder.com/56"
+                  alt={`${customer.firstname} ${customer.lastname}'s picture.`}
+                />
+                <h2>
+                  {customer.type === "PERSON"
+                    ? `${customer.firstname} ${customer.lastname}`
+                    : customer.company}
+                </h2>
+                <p>Ajouté {dayjs(customer.createdAt).fromNow()}</p>
+              </header>
+              <div className="customers__item-main">
                 <div className="customers__item-main-data">
-                  <p>Numéro SIRET</p>
-                  <p>{customer.siret}</p>
+                  <p>Adresse email</p>
+                  <p>{customer.email}</p>
                 </div>
-              )}
-              <div className="customers__item-main-data">
-                <p>Pays</p>
-                <p>{customer.country}</p>
+                <div className="customers__item-main-data">
+                  <p>Numéro de téléphone</p>
+                  <p>{customer.phone || `-`}</p>
+                </div>
+                {customer.type === "COMPANY" && (
+                  <div className="customers__item-main-data">
+                    <p>Numéro SIRET</p>
+                    <p>{customer.siret}</p>
+                  </div>
+                )}
+                <div className="customers__item-main-data">
+                  <p>Pays</p>
+                  <p>{customer.country}</p>
+                </div>
+                <div className="customers__item-main-data">
+                  <p>Dernière facture</p>
+                  {(customer.lastInvoice && (
+                    <p>
+                      <Link to={`/facture/${customer.lastInvoice.id}`}>
+                        {customer.lastInvoice.chrono}
+                      </Link>
+                    </p>
+                  )) || <p>-</p>}
+                </div>
               </div>
-              <div className="customers__item-main-data">
-                <p>Dernière facture</p>
-                {(customer.lastInvoice && (
-                  <p>
-                    <Link to={`/facture/${customer.lastInvoice.id}`}>
-                      {customer.lastInvoice.chrono}
-                    </Link>
-                  </p>
-                )) || <p>-</p>}
-              </div>
-            </div>
-            <footer className="customers__item-footer">
-              <Button
-                ref={(el: HTMLButtonElement) =>
-                  editCustomerBtnRefs.current.push(el)
-                }
-                type="contrast"
-                size="small"
-                icon="edit"
-                onClick={() => openEditCustomerModal(customer, index)}
-              >
-                Éditer
-              </Button>
-              <Link to={`/client/${customer.id}`} className="link-btn">
-                Voir plus
-                <Icon name="arrow-left" />
-              </Link>
-            </footer>
-          </article>
-        ))}
-        {customers.length === 0 && <p>Aucun client pour le moment.</p>}
+              <footer className="customers__item-footer">
+                <Button
+                  ref={(el: HTMLButtonElement) =>
+                    editCustomerBtnRefs.current.push(el)
+                  }
+                  type="contrast"
+                  size="small"
+                  icon="edit"
+                  onClick={() => openEditCustomerModal(customer, index)}
+                >
+                  Éditer
+                </Button>
+                <Link to={`/client/${customer.id}`} className="link-btn">
+                  Voir plus
+                  <Icon name="arrow-left" />
+                </Link>
+              </footer>
+            </article>
+          ))}
+        {customers && customers.length === 0 && (
+          <p>Aucun client pour le moment.</p>
+        )}
       </div>
     </div>
   );

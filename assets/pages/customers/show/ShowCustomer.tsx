@@ -21,6 +21,7 @@ import { Devis } from "../../../types/Devis";
 import { InvoicesData } from "../../invoices/InvoicesData";
 import { DevisData } from "../../devis/DevisData";
 import { fetchAllDevisOfCustomer } from "../../../services/DevisService";
+import { ShowCustomerSkeleton } from "../../../components/skeletons/ShowCustomerSkeleton";
 
 type MatchParams = {
   id: string;
@@ -90,10 +91,15 @@ export function ShowCustomer() {
   }, [id, history, toast]);
 
   useEffect(() => {
-    document.title =
-      customer?.type === "PERSON"
-        ? `${customer?.firstname} ${customer?.lastname} `
-        : customer?.company + `- Microgest`;
+    document.title = `${
+      customer
+        ? `${
+            customer.type === "PERSON"
+              ? `${customer.firstname} ${customer.lastname}`
+              : customer.company
+          }`
+        : `Chargement...`
+    } - Microgest`;
   }, [customer]);
 
   const editCustomer = (customer: Customer) => setCustomer(customer);
@@ -129,7 +135,7 @@ export function ShowCustomer() {
 
   return (
     <>
-      {customer && (
+      {(customer && (
         <>
           <Modal
             isOpen={showDeleteCustomerModal}
@@ -166,22 +172,16 @@ export function ShowCustomer() {
               changeCustomer={editCustomer}
             />
           </Modal>
-        </>
-      )}
-      <div className="showCustomer">
-        {customer && (
-          <Breadcrumb
-            previousPage={{ name: "Mes clients", path: "/clients" }}
-            currentPage={
-              customer.type === "PERSON"
-                ? `${customer.firstname} ${customer.lastname}`
-                : `${customer.company}`
-            }
-          />
-        )}
-        <div className="showCustomer__header">
-          {(customer && (
-            <>
+          <div className="showCustomer">
+            <Breadcrumb
+              previousPage={{ name: "Mes clients", path: "/clients" }}
+              currentPage={
+                customer.type === "PERSON"
+                  ? `${customer.firstname} ${customer.lastname}`
+                  : `${customer.company}`
+              }
+            />
+            <div className="showCustomer__header">
               <img
                 src="https://via.placeholder.com/72"
                 alt={
@@ -216,40 +216,36 @@ export function ShowCustomer() {
               >
                 Supprimer
               </Button>
-            </>
-          )) || <p>Chargement...</p>}
-        </div>
-
-        <div className="showCustomer__details">
-          <div className="showCustomer__details-item">
-            <p>Adresse email</p>
-            <p>{customer?.email}</p>
-          </div>
-          {customer?.phone && (
-            <div className="showCustomer__details-item">
-              <p>Numéro de téléphone</p>
-              <p>{customer?.phone}</p>
             </div>
-          )}
-          {customer?.type === "COMPANY" && (
-            <div className="showCustomer__details-item">
-              <p>Numéro SIRET</p>
-              <p>{customer?.siret}</p>
-            </div>
-          )}
-          <div className="showCustomer__details-item">
-            <p>Adresse</p>
-            <p>{`${customer?.address}, ${customer?.postalCode} ${customer?.city}`}</p>
-          </div>
-          <div className="showCustomer__details-item">
-            <p>Pays</p>
-            <p>{customer?.country}</p>
-          </div>
-        </div>
 
-        <div className="showCustomer__taskBar">
-          {(customer && (
-            <>
+            <div className="showCustomer__details">
+              <div className="showCustomer__details-item">
+                <p>Adresse email</p>
+                <p>{customer?.email}</p>
+              </div>
+              {customer?.phone && (
+                <div className="showCustomer__details-item">
+                  <p>Numéro de téléphone</p>
+                  <p>{customer?.phone}</p>
+                </div>
+              )}
+              {customer?.type === "COMPANY" && (
+                <div className="showCustomer__details-item">
+                  <p>Numéro SIRET</p>
+                  <p>{customer?.siret}</p>
+                </div>
+              )}
+              <div className="showCustomer__details-item">
+                <p>Adresse</p>
+                <p>{`${customer?.address}, ${customer?.postalCode} ${customer?.city}`}</p>
+              </div>
+              <div className="showCustomer__details-item">
+                <p>Pays</p>
+                <p>{customer?.country}</p>
+              </div>
+            </div>
+
+            <div className="showCustomer__taskBar">
               <p>
                 <strong>
                   {(watch("dataType") === "INVOICES" && invoices.length) ||
@@ -268,38 +264,38 @@ export function ShowCustomer() {
                 />
               </form>
               {/*               <Button icon="download" type="contrast" disabled={true}>
-                Exporter au format Excel
-              </Button>
-              <Button
-                icon="download"
-                type="contrast"
-                color="accent"
-                disabled={true}
-              >
-                Exporter au format PDF
-              </Button> */}
-            </>
-          )) || <p>Chargement...</p>}
-        </div>
+                    Exporter au format Excel
+                  </Button>
+                  <Button
+                    icon="download"
+                    type="contrast"
+                    color="accent"
+                    disabled={true}
+                  >
+                    Exporter au format PDF
+                  </Button> */}
+            </div>
 
-        {watch("dataType") === "INVOICES" && (
-          <InvoicesData invoices={invoices} />
-        )}
-        {watch("dataType") === "DEVIS" && <DevisData devis={devis} />}
-        {watch("dataType") === "PRE_INVOICES" && (
-          <div className="invoices__list">
-            <p>
-              Les factures d&lsquo;acomptes ne sont pas disponibles pour le
-              moment.
-            </p>
+            {watch("dataType") === "INVOICES" && (
+              <InvoicesData invoices={invoices} />
+            )}
+            {watch("dataType") === "DEVIS" && <DevisData devis={devis} />}
+            {watch("dataType") === "PRE_INVOICES" && (
+              <div className="invoices__list">
+                <p>
+                  Les factures d&lsquo;acomptes ne sont pas disponibles pour le
+                  moment.
+                </p>
+              </div>
+            )}
+            {watch("dataType") === "AVOIRS" && (
+              <div className="invoices__list">
+                <p>Les avoirs ne sont pas disponibles pour le moment.</p>
+              </div>
+            )}
           </div>
-        )}
-        {watch("dataType") === "AVOIRS" && (
-          <div className="invoices__list">
-            <p>Les avoirs ne sont pas disponibles pour le moment.</p>
-          </div>
-        )}
-      </div>
+        </>
+      )) || <ShowCustomerSkeleton />}
     </>
   );
 }

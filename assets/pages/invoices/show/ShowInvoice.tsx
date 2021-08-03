@@ -14,6 +14,7 @@ import { Tooltip } from "../../../components/Tooltip";
 import { GenerateExportableDocument } from "../../../components/GenerateExportableDocument";
 import { Breadcrumb } from "../../../components/Breadcrumb";
 import { AddInvoiceForm } from "../AddInvoiceForm";
+import { ShowInvoiceSkeleton } from "../../../components/skeletons/ShowInvoiceSkeleton";
 
 type MatchParams = {
   id: string;
@@ -48,7 +49,9 @@ export function ShowInvoice() {
   }, [id, history, toast]);
 
   useEffect(() => {
-    document.title = `Facture n°${invoice?.chrono} - Microgest`;
+    document.title = `${
+      invoice ? `Facture n°${invoice.chrono}` : `Chargement...`
+    } - Microgest`;
   }, [invoice]);
 
   const editInvoice = (invoice: Invoice) => setInvoice(invoice);
@@ -83,9 +86,9 @@ export function ShowInvoice() {
   };
 
   return (
-    <>
-      <div className="showInvoice">
-        {invoice && (
+    <div className="showInvoice">
+      {(invoice && (
+        <>
           <Modal
             isOpen={showDeleteInvoiceModal}
             onClose={closeDeleteInvoiceModal}
@@ -109,8 +112,6 @@ export function ShowInvoice() {
               </Button>
             </div>
           </Modal>
-        )}
-        {invoice && (
           <Modal
             position={invoice.isDraft ? "right" : "center"}
             isOpen={showEditInvoiceModal}
@@ -133,160 +134,156 @@ export function ShowInvoice() {
               />
             )}
           </Modal>
-        )}
-        {(invoice && (
-          <>
-            <Breadcrumb
-              previousPage={{ name: "Mes factures", path: "/factures" }}
-              currentPage={`Facture n°${invoice.chrono}`}
-            />
-            <div className="showInvoice__main">
-              <div className="showInvoice__header">
-                <div className="showInvoice__header-title">
-                  <h1>Facture n°{invoice.chrono}</h1>
-                  <p>Créée {dayjs(invoice.createdAt).fromNow()} </p>
-                </div>
-                <div className="showInvoice__header-status">
-                  <Badge status={invoice.status} />
-                  {invoice.status === "SENT" && (
-                    <p>
-                      Envoyée le{" "}
-                      {dayjs(invoice.sentAt).format("dddd DD MMMM YYYY")}
-                    </p>
-                  )}
-                  {invoice.status === "PAID" && (
-                    <p>
-                      Payée le{" "}
-                      {dayjs(invoice.paidAt).format("dddd DD MMMM YYYY")}
-                    </p>
-                  )}
-                </div>
-                <div className="showInvoice__header-ctas">
-                  <Tooltip
-                    isActive={invoice.isDraft}
-                    content="Vous ne pouvez pas exporter une facture brouillon."
-                    position="top"
-                  >
-                    <Button
-                      type="contrast"
-                      center={true}
-                      icon="download"
-                      disabled={invoice.isDraft}
-                      onClick={
-                        !invoice.isDraft
-                          ? () => history.push(`/facture/${invoice.id}/export`)
-                          : undefined
-                      }
-                    >
-                      Exporter la facture
-                    </Button>
-                  </Tooltip>
-
+          <Breadcrumb
+            previousPage={{ name: "Mes factures", path: "/factures" }}
+            currentPage={`Facture n°${invoice.chrono}`}
+          />
+          <div className="showInvoice__main">
+            <div className="showInvoice__header">
+              <div className="showInvoice__header-title">
+                <h1>Facture n°{invoice.chrono}</h1>
+                <p>Créée {dayjs(invoice.createdAt).fromNow()} </p>
+              </div>
+              <div className="showInvoice__header-status">
+                <Badge status={invoice.status} />
+                {invoice.status === "SENT" && (
+                  <p>
+                    Envoyée le{" "}
+                    {dayjs(invoice.sentAt).format("dddd DD MMMM YYYY")}
+                  </p>
+                )}
+                {invoice.status === "PAID" && (
+                  <p>
+                    Payée le {dayjs(invoice.paidAt).format("dddd DD MMMM YYYY")}
+                  </p>
+                )}
+              </div>
+              <div className="showInvoice__header-ctas">
+                <Tooltip
+                  isActive={invoice.isDraft}
+                  content="Vous ne pouvez pas exporter une facture brouillon."
+                  position="top"
+                >
                   <Button
-                    icon="edit"
-                    type="outline"
-                    onClick={openEditInvoiceModal}
-                    ref={openEditInvoiceModalBtn}
+                    type="contrast"
+                    center={true}
+                    icon="download"
+                    disabled={invoice.isDraft}
+                    onClick={
+                      !invoice.isDraft
+                        ? () => history.push(`/facture/${invoice.id}/export`)
+                        : undefined
+                    }
                   >
-                    Éditer
+                    Exporter la facture
                   </Button>
+                </Tooltip>
 
-                  <Tooltip
-                    isActive={invoice.status !== "NEW"}
-                    content="Vous ne pouvez pas supprimer une facture qui a été envoyée, payée ou annulée."
-                    position="left"
+                <Button
+                  icon="edit"
+                  type="outline"
+                  onClick={openEditInvoiceModal}
+                  ref={openEditInvoiceModalBtn}
+                >
+                  Éditer
+                </Button>
+
+                <Tooltip
+                  isActive={invoice.status !== "NEW"}
+                  content="Vous ne pouvez pas supprimer une facture qui a été envoyée, payée ou annulée."
+                  position="left"
+                >
+                  <Button
+                    icon="trash"
+                    type="outline"
+                    color="danger"
+                    disabled={invoice.status !== "NEW"}
+                    ref={openDeleteInvoiceModalBtn}
+                    onClick={
+                      invoice.status === "NEW"
+                        ? openDeleteInvoiceModal
+                        : undefined
+                    }
                   >
-                    <Button
-                      icon="trash"
-                      type="outline"
-                      color="danger"
-                      disabled={invoice.status !== "NEW"}
-                      ref={openDeleteInvoiceModalBtn}
-                      onClick={
-                        invoice.status === "NEW"
-                          ? openDeleteInvoiceModal
-                          : undefined
-                      }
-                    >
-                      Supprimer
-                    </Button>
-                  </Tooltip>
+                    Supprimer
+                  </Button>
+                </Tooltip>
+              </div>
+            </div>
+
+            <div className="showInvoice__details">
+              <div className="showInvoice__details-item">
+                <h3>Client associé</h3>
+                <div className="showInvoice__customer">
+                  <img src="https://via.placeholder.com/32" alt="" />
+                  <p>
+                    {invoice.customer.type === "PERSON"
+                      ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
+                      : invoice.customer.company}
+                  </p>
+                  <Link
+                    to={`/client/${invoice.customer.id}`}
+                    className="link-btn"
+                  >
+                    Voir plus
+                    <Icon name="arrow-left" />
+                  </Link>
                 </div>
               </div>
 
-              <div className="showInvoice__details">
-                <div className="showInvoice__details-item">
-                  <h3>Client associé</h3>
-                  <div className="showInvoice__customer">
-                    <img src="https://via.placeholder.com/32" alt="" />
-                    <p>
-                      {invoice.customer.type === "PERSON"
-                        ? `${invoice.customer.firstname} ${invoice.customer.lastname}`
-                        : invoice.customer.company}
-                    </p>
-                    <Link
-                      to={`/client/${invoice.customer.id}`}
-                      className="link-btn"
-                    >
-                      Voir plus
-                      <Icon name="arrow-left" />
-                    </Link>
-                  </div>
+              <div className="showInvoice__details-item">
+                <h3>Détails</h3>
+                <div className="showInvoice__details-item-data">
+                  <p>Date d&lsquo;émission</p>
+                  <p>{dayjs(invoice.createdAt).format("LLL")}</p>
                 </div>
-
-                <div className="showInvoice__details-item">
-                  <h3>Détails</h3>
-                  <div className="showInvoice__details-item-data">
-                    <p>Date d&lsquo;émission</p>
-                    <p>{dayjs(invoice.createdAt).format("LLL")}</p>
-                  </div>
-                  <div className="showInvoice__details-item-data">
-                    <p>Date d&lsquo;exécution</p>
-                    <p>{dayjs(invoice.serviceDoneAt).format("LL")}</p>
-                  </div>
-                  <div className="showInvoice__details-item-data">
-                    <p>Date limite de règlement</p>
-                    <p>{dayjs(invoice.paymentDeadline).format("LL")}</p>
-                  </div>
-                  <div className="showInvoice__details-item-data">
-                    <p>Taux de pénalité en cas de retard</p>
-                    <p>{invoice.paymentDelayRate ?? 0}%</p>
-                  </div>
+                <div className="showInvoice__details-item-data">
+                  <p>Date d&lsquo;exécution</p>
+                  <p>{dayjs(invoice.serviceDoneAt).format("LL")}</p>
                 </div>
+                <div className="showInvoice__details-item-data">
+                  <p>Date limite de règlement</p>
+                  <p>{dayjs(invoice.paymentDeadline).format("LL")}</p>
+                </div>
+                <div className="showInvoice__details-item-data">
+                  <p>Taux de pénalité en cas de retard</p>
+                  <p>{invoice.paymentDelayRate ?? 0}%</p>
+                </div>
+              </div>
 
-                {/*                 <div className="showInvoice__details-item">
+              {/*                 <div className="showInvoice__details-item">
                   <h3>Méthodes de paiement</h3>
                 </div> */}
 
-                <div className="showInvoice__details-item">
-                  <h3>Prestations réalisées</h3>
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Nom</th>
-                        <th>Qté</th>
-                        <th>Prix (HT)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoice.services.map(
-                        (service: InvoiceService, index: number) => (
-                          <tr key={index}>
-                            <td>{service.name}</td>
-                            <td>{service.quantity}</td>
-                            <td>{service.unitPrice}</td>
-                          </tr>
-                        )
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+              <div className="showInvoice__details-item">
+                <h3>Prestations réalisées</h3>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Qté</th>
+                      <th>Prix (HT)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoice.services.map(
+                      (service: InvoiceService, index: number) => (
+                        <tr key={index}>
+                          <td>{service.name}</td>
+                          <td>{service.quantity}</td>
+                          <td>{service.unitPrice}</td>
+                        </tr>
+                      )
+                    )}
+                  </tbody>
+                </table>
               </div>
+            </div>
 
-              <div className="showInvoice__display">
-                <GenerateExportableDocument data={invoice} />
-              </div>
-              {/*           <div className="showInvoice__other">
+            <div className="showInvoice__display">
+              <GenerateExportableDocument data={invoice} />
+            </div>
+            {/*           <div className="showInvoice__other">
             <h3>Envoi de la facture par mail</h3>
             <p>
               Vous pouvez envoyer la facture par mail au client en y écrivant un
@@ -305,10 +302,9 @@ export function ShowInvoice() {
               </Button>
             </form>
           </div> */}
-            </div>
-          </>
-        )) || <p>Chargement...</p>}
-      </div>
-    </>
+          </div>
+        </>
+      )) || <ShowInvoiceSkeleton />}
+    </div>
   );
 }

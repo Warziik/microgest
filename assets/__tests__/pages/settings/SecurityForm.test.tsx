@@ -8,7 +8,7 @@ describe("Settings Security form", () => {
   });
 
   it("should display fields errors", async () => {
-    fireEvent.submit(screen.getByTestId("button"));
+    fireEvent.submit(screen.getByText("Mettre à jour"));
 
     expect(await screen.findAllByRole("alert")).toHaveLength(2);
     expect(
@@ -28,7 +28,7 @@ describe("Settings Security form", () => {
     fireEvent.input(passwordInput, { target: { value: "foo" } });
     fireEvent.input(passwordConfirmInput, { target: { value: "bar" } });
 
-    fireEvent.submit(screen.getByTestId("button"));
+    fireEvent.submit(screen.getByText("Mettre à jour"));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Les mots de passe ne correspondent pas."

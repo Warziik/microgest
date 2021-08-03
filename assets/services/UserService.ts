@@ -84,3 +84,9 @@ export function fetchUser(id: number): Promise<[boolean, UserData]> {
     method: "GET",
   });
 }
+
+export function deleteUser(id: number) {
+  return DataAccess.request(`${USERS_URI}/${id}`, {
+    method: "DELETE",
+  });
+}

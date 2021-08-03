@@ -32,4 +32,32 @@
       }
     }
   }
+
+  &__security {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    &-danger {
+      border: 1px solid var(--error-color);
+      border-radius: 1.6rem;
+      color: var(--error-color);
+      padding: 2.4rem;
+      &-title {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        h4 {
+          font-weight: 700;
+        }
+        svg {
+          max-height: 1.6rem;
+          max-width: 2rem;
+        }
+      }
+      p {
+        margin: 1.6rem 0;
+        color: var(--error-color);
+      }
+    }
+  }
 }

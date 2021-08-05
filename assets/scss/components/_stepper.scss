@@ -44,3 +44,16 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .stepper {
+    &__nav {
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+    &__ctas {
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+  }
+}

@@ -178,8 +178,10 @@ export function DevisData({
                         <tbody>
                           {object.devis.map((devis: Devis, index: number) => (
                             <tr key={index}>
-                              <td>{dayjs(devis.createdAt).format("DD")}</td>
-                              <td>
+                              <td data-label="Jour">
+                                {dayjs(devis.createdAt).format("DD")}
+                              </td>
+                              <td data-label="Chrono">
                                 <Link
                                   className="link"
                                   to={`/devis-détails/${devis.id}`}
@@ -187,11 +189,11 @@ export function DevisData({
                                   {devis.chrono}
                                 </Link>
                               </td>
-                              <td>
+                              <td data-label="Statut">
                                 <Badge status={devis.status} />
                               </td>
                               {displayCustomer && (
-                                <td>
+                                <td data-label="Client">
                                   <Link
                                     className="link"
                                     to={`/client/${devis.customer.id}`}
@@ -202,14 +204,18 @@ export function DevisData({
                                   </Link>
                                 </td>
                               )}
-                              <td>{dayjs(devis.createdAt).fromNow()}</td>
-                              <td>{dayjs(devis.validityDate).fromNow()}</td>
-                              <td>
+                              <td data-label="Date de création">
+                                {dayjs(devis.createdAt).fromNow()}
+                              </td>
+                              <td data-label="Date d&lsquo;expiration">
+                                {dayjs(devis.validityDate).fromNow()}
+                              </td>
+                              <td data-label="Date de début de la prestation">
                                 {dayjs(devis.workStartDate).format(
                                   "dddd DD MMMM YYYY"
                                 )}
                               </td>
-                              <td>
+                              <td data-label="Actions">
                                 {(!devis.isDraft && (
                                   <Button
                                     type="contrast"
@@ -266,7 +272,7 @@ export function DevisData({
                 <tbody>
                   {expiredDevis.map((devis: Devis, index: number) => (
                     <tr key={index}>
-                      <td>
+                      <td data-label="Chrono">
                         <Link
                           className="link"
                           to={`/devis-détails/${devis.id}`}
@@ -274,11 +280,11 @@ export function DevisData({
                           {devis.chrono}
                         </Link>
                       </td>
-                      <td>
+                      <td data-label="Statut">
                         <Badge status={devis.status} />
                       </td>
                       {displayCustomer && (
-                        <td>
+                        <td data-label="Client">
                           <Link
                             className="link"
                             to={`/client/${devis.customer.id}`}
@@ -289,12 +295,16 @@ export function DevisData({
                           </Link>
                         </td>
                       )}
-                      <td>{dayjs(devis.createdAt).fromNow()}</td>
-                      <td>{dayjs(devis.validityDate).fromNow()}</td>
-                      <td>
+                      <td data-label="Date de création">
+                        {dayjs(devis.createdAt).fromNow()}
+                      </td>
+                      <td data-label="Date d&lsquo;expiration">
+                        {dayjs(devis.validityDate).fromNow()}
+                      </td>
+                      <td data-label="Date de début de la prestation">
                         {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
                       </td>
-                      <td>
+                      <td data-label="Actions">
                         <Button
                           type="contrast"
                           size="small"
@@ -346,7 +356,7 @@ export function DevisData({
                 <tbody>
                   {draftDevis.map((devis: Devis, index: number) => (
                     <tr key={index}>
-                      <td>
+                      <td data-label="Chrono">
                         <Link
                           className="link"
                           to={`/devis-détails/${devis.id}`}
@@ -354,11 +364,11 @@ export function DevisData({
                           {devis.chrono}
                         </Link>
                       </td>
-                      <td>
+                      <td data-label="Statut">
                         <Badge status={devis.status} />
                       </td>
                       {displayCustomer && (
-                        <td>
+                        <td data-label="Client">
                           <Link
                             className="link"
                             to={`/client/${devis.customer.id}`}
@@ -369,9 +379,13 @@ export function DevisData({
                           </Link>
                         </td>
                       )}
-                      <td>{dayjs(devis.createdAt).fromNow()}</td>
-                      <td>{dayjs(devis.validityDate).fromNow()}</td>
-                      <td>
+                      <td data-label="Date de création">
+                        {dayjs(devis.createdAt).fromNow()}
+                      </td>
+                      <td data-label="Date d&lsquo;expiration">
+                        {dayjs(devis.validityDate).fromNow()}
+                      </td>
+                      <td data-label="Date de début de la prestation">
                         {dayjs(devis.workStartDate).format("dddd DD MMMM YYYY")}
                       </td>
                     </tr>

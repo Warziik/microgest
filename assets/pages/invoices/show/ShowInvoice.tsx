@@ -191,7 +191,7 @@ export function ShowInvoice() {
                 <Tooltip
                   isActive={invoice.status !== "NEW"}
                   content="Vous ne pouvez pas supprimer une facture qui a été envoyée, payée ou annulée."
-                  position="left"
+                  position="top"
                 >
                   <Button
                     icon="trash"
@@ -269,9 +269,9 @@ export function ShowInvoice() {
                     {invoice.services.map(
                       (service: InvoiceService, index: number) => (
                         <tr key={index}>
-                          <td>{service.name}</td>
-                          <td>{service.quantity}</td>
-                          <td>{service.unitPrice}</td>
+                          <td data-label="Nom">{service.name}</td>
+                          <td data-label="Qté">{service.quantity}</td>
+                          <td data-label="Prix (HT)">{service.unitPrice}</td>
                         </tr>
                       )
                     )}

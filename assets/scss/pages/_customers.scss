@@ -11,8 +11,7 @@
   }
   &__list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 36rem), 1fr));
     gap: 2.4rem;
   }
   &__item {
@@ -167,5 +166,30 @@
         }
       }
     }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .addEditCustomerForm {
+    margin-bottom: 7.2rem;
+    &__selectCustomerType-item {
+      span {
+        display: none;
+      }
+      &--active {
+        justify-content: center;
+      }
+    }
+  }
+  .customers__header {
+    flex-direction: column;
+    align-items: flex-start;
+    button {
+      width: 100%;
+    }
+  }
+  .customers__item-main-data {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

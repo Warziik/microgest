@@ -1,13 +1,12 @@
 .sidebar {
-  width: 30.4rem;
+  width: 16vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 2.4rem 0;
 
-  position: fixed;
-
   background: var(--sidebar-gradient);
+  transition: width 0.3s ease-in-out;
 
   hr {
     width: calc(100% - 4.8rem);
@@ -29,8 +28,11 @@
     margin-top: 3.2rem;
     margin-bottom: auto;
     width: 100%;
+    display: flex;
+    flex-direction: column;
     &-item {
       padding: 1.6rem 0;
+      padding-left: 6rem;
       margin-bottom: 1.6rem;
       display: flex;
       align-items: center;
@@ -45,7 +47,6 @@
       font-size: 1.6rem;
 
       svg {
-        margin-left: 6rem;
         margin-right: 2.4rem;
         max-height: 1.6rem;
         max-width: 2.4rem;
@@ -72,6 +73,7 @@
         font-family: inherit;
         font-size: 1.6rem;
         padding: 1.6rem 0;
+        padding-left: 6rem;
         align-items: center;
         font-weight: 700;
         line-height: 1;
@@ -81,9 +83,8 @@
         color: var(--text-color);
         cursor: pointer;
         svg {
-          margin-left: 6rem;
           margin-right: 2.4rem;
-          max-height: 1.6rem;
+          height: 1.6rem;
           max-width: 2.4rem;
         }
         .dropdown__chevron {
@@ -136,7 +137,7 @@
 
       &--disabled {
         cursor: not-allowed;
-        color: var(--primary-color-dark-disabled);
+        color: var(--text-color-alt);
         &:hover {
           font-weight: 600;
         }
@@ -166,4 +167,142 @@
 
 .dropdown__chevron--up {
   transform: rotate(180deg);
+}
+
+@media only screen and (max-width: 1600px) {
+  .sidebar__nav-item,
+  .sidebar__nav-dropdown button {
+    padding-left: 3rem;
+
+    svg {
+      margin-right: 1.6rem;
+    }
+  }
+  .sidebar__nav-subItems {
+    margin-left: 4.2rem;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .sidebar__nav {
+    margin-top: 0;
+  }
+  .sidebar__nav-item {
+    justify-content: center;
+    padding-left: 0 !important;
+
+    svg {
+      margin-right: 0;
+    }
+  }
+  .sidebar__nav-logout {
+    justify-content: center;
+  }
+
+  .sidebar__nav-dropdown {
+    position: relative;
+    button {
+      justify-content: center;
+      padding-left: 0 !important;
+      svg {
+        margin-right: 0;
+      }
+    }
+
+    .sidebar__nav-subItem {
+      color: #fff;
+      &--disabled {
+        color: #fff;
+        opacity: 0.5;
+      }
+    }
+
+    .sidebar__nav-subItems {
+      width: 20rem;
+      margin: 0;
+      position: absolute;
+      top: -80%;
+      left: 100%;
+      padding: 2.4rem;
+      border-radius: calc(var(--radius) / 3);
+      background-color: var(--primary-color-dark);
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: calc(50% - 8px);
+        left: -8px;
+        border-right: 8px solid var(--primary-color-dark);
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+      }
+    }
+  }
+
+  .sidebar__logo,
+  .sidebar__footer,
+  .sidebar__theme,
+  .sidebar__nav-item span,
+  .sidebar__nav-dropdown span,
+  .dropdown__chevron {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .main {
+    padding-bottom: 10rem;
+  }
+
+  .sidebar {
+    padding: 0 2.4rem;
+    z-index: 999;
+    box-shadow: 0 -1rem 2rem var(--primary-color-a05);
+    height: auto;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+
+    hr {
+      display: none;
+    }
+  }
+
+  .sidebar__nav {
+    justify-content: space-between;
+    flex-direction: row;
+
+    &-item,
+    &-dropdown {
+      padding: 0.8rem 0;
+
+      margin-bottom: 0;
+      border-left: none !important;
+      border-top: 4px solid transparent;
+
+      &.active {
+        border-top-color: var(--primary-color);
+      }
+    }
+    &-dropdown button {
+      border-left: none !important;
+    }
+    &-subItems {
+      left: -375% !important;
+      top: -225% !important;
+      &:before {
+        content: "";
+        left: calc(50% - 8px) !important;
+        top: 100% !important;
+        border-bottom: none;
+        border-top: 8px solid var(--primary-color-dark) !important;
+        border-left: 8px solid transparent !important;
+        border-right: 8px solid transparent !important;
+      }
+    }
+  }
 }

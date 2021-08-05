@@ -182,22 +182,24 @@ export function ShowCustomer() {
               }
             />
             <div className="showCustomer__header">
-              <img
-                src="https://via.placeholder.com/72"
-                alt={
-                  customer.type === "PERSON"
-                    ? `Photo de ${customer.firstname} ${customer.lastname}`
-                    : `Logo de ${customer.company}`
-                }
-              />
-              <h2>
-                {customer.type === "PERSON"
-                  ? `${customer.firstname} ${customer.lastname}`
-                  : customer.company}
-              </h2>
-              <p className="showCustomer__header-createdAt">
-                Ajouté {dayjs(customer.createdAt).fromNow()}
-              </p>
+              <div className="showCustomer__header-userDetails">
+                <img
+                  src="https://via.placeholder.com/72"
+                  alt={
+                    customer.type === "PERSON"
+                      ? `Photo de ${customer.firstname} ${customer.lastname}`
+                      : `Logo de ${customer.company}`
+                  }
+                />
+                <h2>
+                  {customer.type === "PERSON"
+                    ? `${customer.firstname} ${customer.lastname}`
+                    : customer.company}
+                </h2>
+                <p className="showCustomer__header-createdAt">
+                  Ajouté {dayjs(customer.createdAt).fromNow()}
+                </p>
+              </div>
 
               <Button
                 icon="edit"

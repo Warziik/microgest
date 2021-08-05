@@ -121,12 +121,89 @@
 
 .deleteInvoiceModal {
   .modal__content {
-    width: 50rem;
+    width: min(100%, 50rem);
     text-align: center;
   }
   &__ctas {
     margin-top: 2.4rem;
     display: flex;
     justify-content: space-between;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .showInvoice__header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+
+    &-title {
+      grid-column: 1 / 2;
+    }
+    &-status {
+      grid-column: 2 / -1;
+      justify-self: flex-end;
+
+      p {
+        display: none;
+      }
+    }
+    &-ctas {
+      grid-column: 1 / -1;
+      flex-direction: column;
+      margin-left: 0;
+      button,
+      .tooltip {
+        width: 100% !important;
+      }
+      .tooltip__content {
+        width: 75%;
+        left: 30%;
+      }
+    }
+  }
+  .showInvoice__main {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, min-content);
+  }
+  .showInvoice__details,
+  .showInvoice__other {
+    grid-column: 1 / 1;
+  }
+
+  .showInvoice__header {
+    grid-row: 1 / 2;
+  }
+  .showInvoice__details {
+    grid-row: 2 / 3;
+  }
+  .showInvoice__display {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .breadcrumb {
+    display: none;
+  }
+  .showInvoice__header {
+    display: grid;
+    grid-template-columns: min(100%, 1fr);
+
+    &-title {
+      grid-column: 1 / -1;
+    }
+    &-status {
+      grid-column: 1 / -1;
+      justify-self: flex-start;
+      p {
+        display: block;
+      }
+    }
+  }
+  .deleteInvoiceModal {
+    &__ctas {
+      flex-direction: column-reverse;
+      gap: 1.6rem;
+    }
   }
 }

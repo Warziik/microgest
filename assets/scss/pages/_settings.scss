@@ -61,3 +61,22 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .settings {
+    &__personalInformations,
+    &__company,
+    &__security {
+      width: 100%;
+    }
+  }
+  .settings__personalInformations {
+    &-addressForm {
+      &-city {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-bottom: 1.6rem;
+      }
+    }
+  }
+}

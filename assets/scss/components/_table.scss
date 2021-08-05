@@ -6,8 +6,7 @@
       font-weight: 600;
       color: var(--text-color);
     }
-    border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--primary-color-a05);
   }
 
   tbody {
@@ -24,5 +23,44 @@
         display: inline-block;
       }
     }
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+  }
+  td {
+    padding-left: 25rem !important;
+    text-align: left !important;
+    position: relative;
+
+    &:before {
+      content: attr(data-label);
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 22.8rem;
+      padding-left: 2.4rem;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      background-color: var(--primary-color-a05);
+    }
+  }
+  td:first-child:before {
+    border-top-left-radius: var(--radius);
+  }
+  tr:not(:last-child) {
+    margin-bottom: 1.6rem;
+  }
+  thead {
+    display: none;
   }
 }

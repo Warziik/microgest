@@ -187,8 +187,10 @@ export function InvoicesData({
                           {object.invoices.map(
                             (invoice: Invoice, index: number) => (
                               <tr key={index}>
-                                <td>{dayjs(invoice.createdAt).format("DD")}</td>
-                                <td>
+                                <td data-label="Jour">
+                                  {dayjs(invoice.createdAt).format("DD")}
+                                </td>
+                                <td data-label="Chrono">
                                   <Link
                                     className="link"
                                     to={`/facture/${invoice.id}`}
@@ -196,11 +198,11 @@ export function InvoicesData({
                                     {invoice.chrono}
                                   </Link>
                                 </td>
-                                <td>
+                                <td data-label="Statut">
                                   <Badge status={invoice.status} />
                                 </td>
                                 {displayCustomer && (
-                                  <td>
+                                  <td data-label="Client">
                                     <Link
                                       className="link"
                                       to={`/client/${invoice.customer.id}`}
@@ -211,21 +213,21 @@ export function InvoicesData({
                                     </Link>
                                   </td>
                                 )}
-                                <td>
+                                <td data-label="Montant total (HT)">
                                   {new Intl.NumberFormat("fr-FR", {
                                     style: "currency",
                                     currency: "EUR",
                                   }).format(invoice.totalAmount)}
                                 </td>
-                                <td>
+                                <td data-label="Date d&lsquo;exécution">
                                   {dayjs(invoice.serviceDoneAt).fromNow()}
                                 </td>
-                                <td>
+                                <td data-label="Date limite de paiement">
                                   {dayjs(invoice.paymentDeadline).format(
                                     "dddd DD MMMM YYYY"
                                   )}
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                   {(!invoice.isDraft && (
                                     <Button
                                       type="contrast"
@@ -285,16 +287,16 @@ export function InvoicesData({
                 <tbody>
                   {unpaidInvoices.map((invoice: Invoice, index: number) => (
                     <tr key={index}>
-                      <td>
+                      <td data-label="Chrono">
                         <Link className="link" to={`/facture/${invoice.id}`}>
                           {invoice.chrono}
                         </Link>
                       </td>
-                      <td>
+                      <td data-label="Statut">
                         <Badge status={invoice.status} />
                       </td>
                       {displayCustomer && (
-                        <td>
+                        <td data-label="Client">
                           <Link
                             className="link"
                             to={`/client/${invoice.customer.id}`}
@@ -305,17 +307,19 @@ export function InvoicesData({
                           </Link>
                         </td>
                       )}
-                      <td>
+                      <td data-label="Montant total (HT)">
                         {new Intl.NumberFormat("fr-FR", {
                           style: "currency",
                           currency: "EUR",
                         }).format(invoice.totalAmount)}
                       </td>
-                      <td>{dayjs(invoice.paymentDeadline).fromNow()}</td>
-                      <td>
+                      <td data-label="Date limite de paiement">
+                        {dayjs(invoice.paymentDeadline).fromNow()}
+                      </td>
+                      <td data-label="Taux de pénalité dû au retard">
                         {invoice.paymentDelayRate}% de la somme totale TTC
                       </td>
-                      <td>
+                      <td data-label="Actions">
                         <Button
                           type="contrast"
                           size="small"
@@ -367,16 +371,16 @@ export function InvoicesData({
                 <tbody>
                   {draftInvoices.map((invoice: Invoice, index: number) => (
                     <tr key={index}>
-                      <td>
+                      <td data-label="Chrono">
                         <Link className="link" to={`/facture/${invoice.id}`}>
                           {invoice.chrono}
                         </Link>
                       </td>
-                      <td>
+                      <td data-label="Statut">
                         <Badge status={invoice.status} />
                       </td>
                       {displayCustomer && (
-                        <td>
+                        <td data-label="Client">
                           <Link
                             className="link"
                             to={`/client/${invoice.customer.id}`}
@@ -387,14 +391,16 @@ export function InvoicesData({
                           </Link>
                         </td>
                       )}
-                      <td>
+                      <td data-label="Montant total (HT)">
                         {new Intl.NumberFormat("fr-FR", {
                           style: "currency",
                           currency: "EUR",
                         }).format(invoice.totalAmount)}
                       </td>
-                      <td>{dayjs(invoice.serviceDoneAt).fromNow()}</td>
-                      <td>
+                      <td data-label="Date d&lsquo;exécution">
+                        {dayjs(invoice.serviceDoneAt).fromNow()}
+                      </td>
+                      <td data-label="Date limite de paiement">
                         {dayjs(invoice.paymentDeadline).format(
                           "dddd DD MMMM YYYY"
                         )}

@@ -51,7 +51,7 @@ export function NavItem({
       >
         <button onClick={() => setShowDropdown(!showDropdown)}>
           <Icon name={icon} />
-          {name}
+          <span>{name}</span>
           <Icon
             name="chevron"
             className={`dropdown__chevron ${
@@ -72,7 +72,7 @@ export function NavItem({
     )) || (
       <NavLink exact={exactPath} to={to ?? ""} className="sidebar__nav-item">
         <Icon name={icon} />
-        {name}
+        <span>{name}</span>
       </NavLink>
     )
   );

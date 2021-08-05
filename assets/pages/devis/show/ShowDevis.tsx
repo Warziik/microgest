@@ -186,7 +186,7 @@ export function ShowDevis() {
                 <Tooltip
                   isActive={devis.status !== "NEW"}
                   content="Vous ne pouvez pas supprimer un devis qui a été envoyé, signé ou annulé."
-                  position="left"
+                  position="top"
                 >
                   <Button
                     icon="trash"
@@ -270,9 +270,9 @@ export function ShowDevis() {
                     {devis.services.map(
                       (service: InvoiceService, index: number) => (
                         <tr key={index}>
-                          <td>{service.name}</td>
-                          <td>{service.quantity}</td>
-                          <td>{service.unitPrice}</td>
+                          <td data-label="Nom">{service.name}</td>
+                          <td data-label="Qté">{service.quantity}</td>
+                          <td data-label="Prix (HT)">{service.unitPrice}</td>
                         </tr>
                       )
                     )}

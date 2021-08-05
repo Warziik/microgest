@@ -52,11 +52,8 @@
 
 .editInvoiceModal {
   .modal__content {
-    width: 55.2rem;
+    width: min(100%, 55.2rem);
   }
-}
-
-.editDraftInvoiceModal {
 }
 
 .addInvoiceForm {
@@ -152,5 +149,32 @@
       font-weight: 700;
       background-color: var(--primary-color-a05);
     }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .addInvoiceForm {
+    &__services {
+      &-addBtn {
+        margin-inline: auto;
+      }
+      &-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        button {
+          margin-top: 0;
+          margin-bottom: 1.6rem;
+        }
+      }
+    }
+
+    button:last-child {
+      margin-bottom: 2.4rem;
+    }
+  }
+  .invoices__header {
+    gap: 1.6rem;
+    flex-direction: column;
   }
 }

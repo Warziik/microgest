@@ -20,6 +20,7 @@ export function Sidebar() {
 
   return (
     <div className="sidebar">
+      {/*       <button onClick={handleExpand}>Show / Hide</button>       */}
       <img
         className="sidebar__logo"
         src="../logo.svg"
@@ -63,7 +64,7 @@ export function Sidebar() {
           className="sidebar__nav-item sidebar__nav-logout"
         >
           <Icon name="logout" />
-          Se déconnecter
+          <span>Se déconnecter</span>
         </button>
       </nav>
       <div className="sidebar__footer">

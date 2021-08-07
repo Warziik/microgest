@@ -86,6 +86,10 @@
       border-radius: 0;
       border-top-left-radius: var(--radius);
       border-top-right-radius: var(--radius);
+
+      .modal__close {
+        display: none;
+      }
     }
   }
   .modal__right .modal__content {

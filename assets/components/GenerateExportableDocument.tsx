@@ -103,12 +103,12 @@ export function GenerateExportableDocument({ data }: Props) {
         <tbody>
           {data.services.map((service: InvoiceService) => (
             <tr key={service.id}>
-              <td>
+              <td data-label="Prestation réalisée">
                 {service.name}
                 <span>{service.description}</span>
               </td>
-              <td>{service.quantity}</td>
-              <td>{service.unitPrice}€</td>
+              <td data-label="Quantité">{service.quantity}</td>
+              <td data-label="Prix unitaire (HT)">{service.unitPrice}€</td>
             </tr>
           ))}
         </tbody>

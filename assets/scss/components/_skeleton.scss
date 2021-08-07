@@ -302,3 +302,173 @@
     gap: 2.4rem;
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .skeleton__showCustomer {
+    &-breadcrumb {
+      display: none;
+    }
+    &-header-ctas {
+      flex-direction: column;
+    }
+  }
+
+  .skeleton__showInvoice {
+    &-breadcrumb {
+      display: none;
+    }
+    &-header {
+      &-infos {
+        grid-column: 1 / -1 !important;
+      }
+      &-status {
+        grid-column: 1 / 2 !important;
+        width: 50% !important;
+        justify-self: flex-start !important;
+      }
+      &-ctas {
+        .skeleton--btn-normal:first-child {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .skeleton__invoices {
+    &-tabs {
+      .skeleton--title {
+        width: 25% !important;
+      }
+    }
+    &-ctas {
+      .skeleton--title:first-child {
+        width: 20% !important;
+      }
+      .skeleton--title:last-child {
+        width: 25% !important;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .skeleton__showCustomer {
+    &-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2.4rem;
+      &-infos {
+        width: 50%;
+      }
+      &-ctas {
+        width: 100%;
+      }
+    }
+
+    &-details {
+      flex-direction: column;
+      &-item {
+        width: 50%;
+        align-items: flex-start;
+      }
+    }
+
+    &-taskBar {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      .skeleton--text {
+        width: 25%;
+      }
+    }
+  }
+
+  .skeleton__showInvoice {
+    &-header {
+      display: grid;
+      grid-template-columns: 1fr 25%;
+      gap: 2.4rem;
+      &-infos {
+        width: 90%;
+        grid-column: 1 / 2;
+      }
+      &-status {
+        width: 100%;
+        justify-self: flex-end;
+        grid-column: 2 / -1;
+      }
+      &-ctas {
+        grid-column: 1 / -1;
+        flex-direction: column;
+        margin: 0;
+        width: 100%;
+      }
+    }
+
+    &-main {
+      &-details {
+        grid-column: 1 / -1;
+      }
+
+      &-display,
+      &-other {
+        display: none;
+      }
+    }
+  }
+
+  .skeleton__invoices {
+    &-tabs {
+      .skeleton--title {
+        width: 15%;
+      }
+    }
+    &-ctas {
+      .skeleton--title:first-child {
+        width: 10%;
+      }
+      .skeleton--title:last-child {
+        width: 15%;
+      }
+    }
+    &-table {
+      &:last-child {
+        display: none;
+      }
+      flex-direction: column;
+      &-row {
+        display: grid;
+        grid-template-columns: 40% 1fr;
+
+        & > * {
+          &:first-child,
+          &:nth-child(3),
+          &:nth-child(5),
+          &:nth-child(7) {
+            height: 2rem;
+            width: 100%;
+          }
+
+          &:nth-child(2),
+          &:last-child {
+            width: 60%;
+          }
+
+          &:nth-child(4) {
+            width: 80%;
+          }
+          &:nth-child(6),
+          &:nth-child(8) {
+            width: 90%;
+          }
+        }
+
+        &:nth-child(5),
+        &:first-child,
+        &:last-child {
+          display: none;
+        }
+      }
+    }
+  }
+}

@@ -47,7 +47,7 @@
       font-size: 1.6rem;
 
       svg {
-        margin-right: 2.4rem;
+        margin-right: 1.6rem;
         max-height: 1.6rem;
         max-width: 2.4rem;
       }
@@ -83,13 +83,13 @@
         color: var(--text-color);
         cursor: pointer;
         svg {
-          margin-right: 2.4rem;
+          margin-right: 1.6rem;
           height: 1.6rem;
           max-width: 2.4rem;
         }
         .dropdown__chevron {
           margin: 0;
-          margin-left: 2.4rem;
+          margin-left: 1.6rem;
           max-width: 1.6rem;
           max-height: 0.8rem;
         }
@@ -223,19 +223,9 @@
       position: absolute;
       top: -80%;
       left: 100%;
-      padding: 2.4rem;
+      padding: 1.6rem;
       border-radius: calc(var(--radius) / 3);
       background-color: var(--primary-color-dark);
-
-      &:before {
-        content: "";
-        position: absolute;
-        top: calc(50% - 8px);
-        left: -8px;
-        border-right: 8px solid var(--primary-color-dark);
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-      }
     }
   }
 
@@ -293,16 +283,7 @@
     }
     &-subItems {
       left: -375% !important;
-      top: -225% !important;
-      &:before {
-        content: "";
-        left: calc(50% - 8px) !important;
-        top: 100% !important;
-        border-bottom: none;
-        border-top: 8px solid var(--primary-color-dark) !important;
-        border-left: 8px solid transparent !important;
-        border-right: 8px solid transparent !important;
-      }
+      top: -200% !important;
     }
   }
 }

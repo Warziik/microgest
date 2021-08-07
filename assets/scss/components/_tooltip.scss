@@ -5,19 +5,11 @@
     position: absolute;
     padding: 1.6rem;
     border-radius: calc(var(--radius) / 3);
-    background-color: var(--primary-color-dark);
+    background-color: var(--primary-color-dark-a75);
     color: #fff;
     line-height: 1.4;
     text-align: center;
-    box-shadow: var(--box-shadow);
-
-    &--enter {
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    &--leave {
-      animation: fadeOut 0.3s ease-in;
-    }
+    font-weight: 600;
 
     &:before {
       content: "";
@@ -26,13 +18,13 @@
 
     &--top {
       margin-bottom: 1.6rem;
-      transform: translateX(-25%);
+      left: -50%;
       bottom: 100%;
 
       &:before {
         left: calc(50% - 8px);
         top: 100%;
-        border-top: 8px solid var(--primary-color-dark);
+        border-top: 8px solid var(--primary-color-dark-a75);
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
       }
@@ -40,14 +32,13 @@
 
     &--left {
       margin-right: 1.6rem;
-      top: 0;
+      top: -50%;
       right: 100%;
-      transform: translateY(-25%);
 
       &:before {
         top: calc(50% - 8px);
         right: -8px;
-        border-left: 8px solid var(--primary-color-dark);
+        border-left: 8px solid var(--primary-color-dark-a75);
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
       }
@@ -55,14 +46,13 @@
 
     &--right {
       margin-left: 1.6rem;
-      top: 0;
+      top: -50%;
       left: 100%;
-      transform: translateY(-25%);
 
       &:before {
         top: calc(50% - 8px);
         left: -8px;
-        border-right: 8px solid var(--primary-color-dark);
+        border-right: 8px solid var(--primary-color-dark-a75);
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
       }
@@ -70,15 +60,41 @@
 
     &--bottom {
       margin-top: 1.6rem;
-      transform: translateX(-25%);
+      left: -50%;
 
       &:before {
         left: calc(50% - 8px);
         bottom: 100%;
-        border-bottom: 8px solid var(--primary-color-dark);
+        border-bottom: 8px solid var(--primary-color-dark-a75);
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
       }
     }
   }
+}
+
+.tooltip__content--top {
+  transform: translateY(20%);
+}
+
+.tooltip__content--bottom {
+  transform: translateY(-20%);
+}
+
+.tooltip__content--left {
+  transform: translateX(20%);
+}
+
+.tooltip__content--right {
+  transform: translateX(-20%);
+}
+
+.tooltip__content {
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.tooltip:hover .tooltip__content {
+  opacity: 1;
+  transform: translate(0, 0);
 }

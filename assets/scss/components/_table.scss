@@ -36,7 +36,7 @@
     display: block;
   }
   td {
-    padding-left: 25rem !important;
+    padding-left: calc(45% + 2.4rem) !important;
     text-align: left !important;
     position: relative;
 
@@ -46,7 +46,7 @@
       top: 0;
       left: 0;
       bottom: 0;
-      width: 22.8rem;
+      width: 45%;
       padding-left: 2.4rem;
       display: flex;
       align-items: center;

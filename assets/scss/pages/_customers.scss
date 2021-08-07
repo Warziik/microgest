@@ -171,7 +171,6 @@
 
 @media only screen and (max-width: 600px) {
   .addEditCustomerForm {
-    margin-bottom: 7.2rem;
     &__selectCustomerType-item {
       span {
         display: none;
@@ -179,6 +178,9 @@
       &--active {
         justify-content: center;
       }
+    }
+    button[type="submit"] {
+      margin-top: 0;
     }
   }
   .customers__header {

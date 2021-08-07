@@ -1,27 +1,30 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 
 type Props = {
-    isActive?: boolean;
-    content: string;
-    position?: "top" | "left" | "right" | "bottom";
-    children: ReactElement;
-}
+  isActive?: boolean;
+  content: string;
+  position?: "top" | "left" | "right" | "bottom";
+  children: ReactElement;
+};
 
-export function Tooltip({isActive = true, content, position = "bottom", children}: Props) {
-    const [isVisible, setIsVisible] = useState(false);
-
-    return isActive && <div
-        className="tooltip"
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-    >
+export function Tooltip({
+  isActive = true,
+  content,
+  position = "bottom",
+  children,
+}: Props) {
+  return (
+    (isActive && (
+      <div className="tooltip">
         {children}
-        {isVisible && <div
-            role="tooltip"
-            className={`tooltip__content tooltip__content--${position} ${isVisible ? "tooltip__content--enter" : "tooltip__content--leave"}`}
+        <div
+          role="tooltip"
+          className={`tooltip__content tooltip__content--${position}`}
         >
-            {content}
+          {content}
         </div>
-        }
-    </div> || children;
+      </div>
+    )) ||
+    children
+  );
 }

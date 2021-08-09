@@ -4,18 +4,22 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Controller\CustomerPictureController;
 use App\Repository\CustomerRepository;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 #[ORM\Table(name: "customers")]
 #[ORM\HasLifecycleCallbacks]
+#[Vich\Uploadable]
 #[
     ApiResource(
         normalizationContext: ['groups' => ['customers:read']],
@@ -25,6 +29,13 @@ use Symfony\Component\Validator\Constraints as Assert;
             'get' => ['security' => 'object.getOwner() == user'],
             'put' => ['security' => 'object.getOwner() == user'],
             'delete' => ['security' => 'object.getOwner() == user'],
+            'picture' => [
+                'path' => '/customers/{id}/picture',
+                'method' => 'POST',
+                'security' => 'object.getOwner() == user',
+                "deserialize" => false,
+                'controller' => CustomerPictureController::class
+            ]
         ],
         subresourceOperations: [
             'api_users_customers_get_subresource' => [
@@ -131,7 +142,6 @@ class Customer
         'devis:read',
         'allDevis:read'
     ])]
-    #[Assert\NotBlank(allowNull: true)]
     #[Assert\Length(max: 40)]
     private ?string $company = null;
 
@@ -193,6 +203,17 @@ class Customer
     #[Assert\NotBlank]
     #[Assert\Country(alpha3: true)]
     private string $country;
+
+    #[Vich\UploadableField(mapping: "customer_picture", fileNameProperty: 'picture')]
+    private ?File $pictureFile = null;
+
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private ?string $picture = null;
+    
+    #[Groups([
+        'customers:read'
+    ])]
+    private ?string $pictureUrl = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "customers")]
     #[ORM\JoinColumn(nullable: false)]
@@ -405,6 +426,46 @@ class Customer
     public function setUpdatedAt(?DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPictureFile(): ?File
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(?File $pictureFile): self
+    {
+        $this->pictureFile = $pictureFile;
+
+        if ($pictureFile) {
+            $this->setUpdatedAt(new DateTime());
+        }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getPictureUrl(): ?string
+    {
+        return $this->pictureUrl;
+    }
+
+    public function setPictureUrl(?string $pictureUrl): self
+    {
+        $this->pictureUrl = $pictureUrl;
 
         return $this;
     }

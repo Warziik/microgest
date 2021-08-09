@@ -17,6 +17,7 @@ export interface Customer {
     city: string;
     postalCode: number;
     country: string;
+    pictureUrl: string | null;
     owner?: User;
     createdAt: string;
     updatedAt: string;

@@ -6,6 +6,7 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Customer;
 use App\Entity\User;
 use App\Tests\AssertTrait;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Unit tests.
@@ -132,6 +133,21 @@ class CustomerTest extends ApiTestCase
 
         $this->assertHasErrors(1, $this->getEntity()->setCountry(null));
         $this->assertHasErrors(1, $this->getEntity()->setCountry('invalid_country_code'));
+    }
+
+    public function testPictureFile(): void
+    {
+        $this->expectException(\TypeError::class);
+
+        $this->assertHasErrors(0, $this->getEntity()->setPictureFile(null));
+
+        $this->assertHasErrors(1, $this->getEntity()->setPictureFile('invalid_file'));
+    }
+
+    public function testPictureUrl(): void
+    {
+        $this->assertHasErrors(0, $this->getEntity()->setPictureUrl(""));
+        $this->assertHasErrors(0, $this->getEntity()->setPictureUrl(null));
     }
 
     public function testOwnerConstraints(): void

@@ -3,7 +3,7 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/images/
+/public/images/customers
 /var/
 /vendor/
 /node_modules/

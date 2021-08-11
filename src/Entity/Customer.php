@@ -33,8 +33,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 'path' => '/customers/{id}/picture',
                 'method' => 'POST',
                 'security' => 'object.getOwner() == user',
-                "deserialize" => false,
-                'controller' => CustomerPictureController::class
+                'deserialize' => false,
+                'controller' => CustomerPictureController::class,
+                'normalization_context' => ['groups' => ['customers:picture:read']]
             ]
         ],
         subresourceOperations: [
@@ -205,13 +206,18 @@ class Customer
     private string $country;
 
     #[Vich\UploadableField(mapping: "customer_picture", fileNameProperty: 'picture')]
+    #[Assert\File(mimeTypes: ["image/png", "image/jpeg"], maxSize: "5M")]
     private ?File $pictureFile = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $picture = null;
     
     #[Groups([
-        'customers:read'
+        'customers:read',
+        'customers:picture:read',
+        'users_customers_subresource',
+        'invoices:read',
+        'devis:read'
     ])]
     private ?string $pictureUrl = null;
 

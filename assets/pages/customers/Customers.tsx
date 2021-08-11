@@ -119,8 +119,12 @@ export function Customers() {
             <article className="customers__item" key={customer.id}>
               <header className="customers__item-header">
                 <img
-                  src="https://via.placeholder.com/56"
-                  alt={`${customer.firstname} ${customer.lastname}'s picture.`}
+                  src={`${customer.pictureUrl ?? "/images/default.png"}`}
+                  alt={
+                    customer.type === "PERSON"
+                      ? `Photo de ${customer.firstname} ${customer.lastname}`
+                      : `Logo de ${customer.company}`
+                  }
                 />
                 <h2>
                   {customer.type === "PERSON"
@@ -131,11 +135,11 @@ export function Customers() {
               </header>
               <div className="customers__item-main">
                 <div className="customers__item-main-data">
-                  <p>Adresse email</p>
+                  <p>Email</p>
                   <p>{customer.email}</p>
                 </div>
                 <div className="customers__item-main-data">
-                  <p>Numéro de téléphone</p>
+                  <p>Téléphone</p>
                   <p>{customer.phone || `-`}</p>
                 </div>
                 {customer.type === "COMPANY" && (

@@ -116,7 +116,7 @@ export function ShowInvoice() {
             position={invoice.isDraft ? "right" : "center"}
             isOpen={showEditInvoiceModal}
             onClose={closeEditInvoiceModal}
-            title={`Éditer la facture n°${invoice.chrono}`}
+            title={`Éditer la facture`}
             className={
               invoice.isDraft ? "editDraftInvoiceModal" : "editInvoiceModal"
             }
@@ -148,8 +148,7 @@ export function ShowInvoice() {
                 <Badge status={invoice.status} />
                 {invoice.status === "SENT" && (
                   <p>
-                    Envoyée le{" "}
-                    {dayjs(invoice.sentAt).format("dddd DD MMMM YYYY")}
+                    Envoyée le {dayjs(invoice.sentAt).format("dddd DD MMMM YYYY")}
                   </p>
                 )}
                 {invoice.status === "PAID" && (
@@ -215,7 +214,14 @@ export function ShowInvoice() {
               <div className="showInvoice__details-item">
                 <h3>Client associé</h3>
                 <div className="showInvoice__customer">
-                  <img src="https://via.placeholder.com/32" alt="" />
+                  <img
+                    src={`${invoice.customer.pictureUrl ?? "/images/default.png"}`}
+                    alt={
+                      invoice.customer.type === "PERSON"
+                        ? `Photo de ${invoice.customer.firstname} ${invoice.customer.lastname}`
+                        : `Logo de ${invoice.customer.company}`
+                    }
+                  />
                   <p>
                     {invoice.customer.type === "PERSON"
                       ? `${invoice.customer.firstname} ${invoice.customer.lastname}`

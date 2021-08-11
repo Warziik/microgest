@@ -117,7 +117,7 @@ export function ShowDevis() {
             position={devis.isDraft ? "right" : "center"}
             isOpen={showEditDevisModal}
             onClose={closeEditDevisModal}
-            title={`Éditer la devis n°${devis.chrono}`}
+            title={`Éditer la devis`}
             className={
               devis.isDraft ? "editDraftInvoiceModal" : "editInvoiceModal"
             }
@@ -208,7 +208,14 @@ export function ShowDevis() {
               <div className="showInvoice__details-item">
                 <h3>Client associé</h3>
                 <div className="showInvoice__customer">
-                  <img src="https://via.placeholder.com/32" alt="" />
+                  <img
+                    src={`${devis.customer.pictureUrl ?? "/images/default.png"}`}
+                    alt={
+                      devis.customer.type === "PERSON"
+                        ? `Photo de ${devis.customer.firstname} ${devis.customer.lastname}`
+                        : `Logo de ${devis.customer.company}`
+                    }
+                  />
                   <p>
                     {devis.customer.type === "PERSON"
                       ? `${devis.customer.firstname} ${devis.customer.lastname}`

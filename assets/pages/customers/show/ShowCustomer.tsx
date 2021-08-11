@@ -5,6 +5,7 @@ import { useToast } from "../../../hooks/useToast";
 import {
   deleteCustomer,
   fetchCustomer,
+  updateCustomerPicture,
 } from "../../../services/CustomerService";
 import { fetchAllInvoicesOfCustomer } from "../../../services/InvoiceService";
 import { Collection } from "../../../types/Collection";
@@ -22,6 +23,8 @@ import { InvoicesData } from "../../invoices/InvoicesData";
 import { DevisData } from "../../devis/DevisData";
 import { fetchAllDevisOfCustomer } from "../../../services/DevisService";
 import { ShowCustomerSkeleton } from "../../../components/skeletons/ShowCustomerSkeleton";
+import { Icon } from "../../../components/Icon";
+import { Violation } from "../../../types/Violation";
 
 type MatchParams = {
   id: string;
@@ -133,6 +136,36 @@ export function ShowCustomer() {
     }
   };
 
+  const handleUpdatePicture = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (customer && event.target.files) {
+      const formData = new FormData();
+      formData.append("pictureFile", event.target.files[0]);
+
+      const [isSuccess, data] = await updateCustomerPicture(
+        customer.id,
+        formData
+      );
+      if (isSuccess) {
+        editCustomer({ ...customer, pictureUrl: data.pictureUrl });
+        toast("success", "La photo a bien été modifiée.");
+      } else {
+        if (Object.prototype.hasOwnProperty.call(data, "violations")) {
+          const response = data as ErrorResponse;
+          response.violations?.forEach((violation: Violation) => {
+            toast("error", violation.message);
+          });
+        } else {
+          toast(
+            "error",
+            "Une erreur inattendue s'est produite, veuillez réessayer plus tard."
+          );
+        }
+      }
+    }
+  };
+
   return (
     <>
       {(customer && (
@@ -183,22 +216,33 @@ export function ShowCustomer() {
             />
             <div className="showCustomer__header">
               <div className="showCustomer__header-userDetails">
-                <img
-                  src="https://via.placeholder.com/72"
-                  alt={
-                    customer.type === "PERSON"
-                      ? `Photo de ${customer.firstname} ${customer.lastname}`
-                      : `Logo de ${customer.company}`
-                  }
-                />
+                <form
+                  className="showCustomer__header-userDetails-picture"
+                  encType="multipart/form-data"
+                >
+                  <div className="showCustomer__header-userDetails-picture-upload">
+                    <Icon name="edit" />
+                  </div>
+                  <img
+                    src={`${customer.pictureUrl ?? "/images/default.png"}`}
+                    alt={
+                      customer.type === "PERSON"
+                        ? `Photo de ${customer.firstname} ${customer.lastname}`
+                        : `Logo de ${customer.company}`
+                    }
+                  />
+                  <input
+                    onChange={handleUpdatePicture}
+                    type="file"
+                    name="pictureFile"
+                  />
+                </form>
                 <h2>
                   {customer.type === "PERSON"
                     ? `${customer.firstname} ${customer.lastname}`
                     : customer.company}
                 </h2>
-                <p className="showCustomer__header-createdAt">
-                  Ajouté {dayjs(customer.createdAt).fromNow()}
-                </p>
+                <p>Ajouté {dayjs(customer.createdAt).fromNow()}</p>
               </div>
 
               <Button

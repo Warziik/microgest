@@ -66,10 +66,11 @@ class ResetPasswordTest extends ApiTestCase
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_BAD_REQUEST,
-            'message' => "Le password ou le token ou les deux sont manquants dans les paramètres POST de la requête.",
-        ]);
+        $this->assertJsonContains(
+            ["hydra:description" =>
+                "Le password ou le token ou les deux sont manquants dans les paramètres POST de la requête."
+            ]
+        );
     }
 
     /**
@@ -83,10 +84,9 @@ class ResetPasswordTest extends ApiTestCase
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_NOT_FOUND,
-            'message' => "La ressource relative à cette fonctionnalité n'a pas été trouvée.",
-        ]);
+        $this->assertJsonContains(
+            ["hydra:description" => "La ressource relative à cette fonctionnalité n'a pas été trouvée."]
+        );
     }
 
     /**
@@ -110,10 +110,9 @@ class ResetPasswordTest extends ApiTestCase
             'token' => $token,
         ]]);
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_NOT_FOUND,
-            'message' => "La ressource relative à cette fonctionnalité n'a pas été trouvée.",
-        ]);
+        $this->assertJsonContains(
+            ["hydra:description" => "La ressource relative à cette fonctionnalité n'a pas été trouvée."]
+        );
     }
 
     /**
@@ -121,36 +120,13 @@ class ResetPasswordTest extends ApiTestCase
      */
     public function testTokenValidationConstraints(): void
     {
-        // Token is too short
         static::createClient()->request(Request::METHOD_POST, self::RESET_PASSWORD_URI, ['json' => [
             'password' => 'test1234',
             'token' => 'invalid',
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token invalide.',
-            'violations' => [
-                "Cette chaîne est trop courte. Elle doit avoir au minimum 10 caractères.",
-            ],
-        ]);
-
-        // Token must be a string, integer given
-        static::createClient()->request(Request::METHOD_POST, self::RESET_PASSWORD_URI, ['json' => [
-            'password' => 'test1234',
-            'token' => 123456,
-        ]]);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token invalide.',
-            'violations' => [
-                'Cette chaîne est trop courte. Elle doit avoir au minimum 10 caractères.',
-                'Cette valeur doit être de type string.',
-            ],
-        ]);
+        $this->assertJsonContains(["hydra:description" => "Token invalide."]);
     }
 
     protected function tearDown(): void

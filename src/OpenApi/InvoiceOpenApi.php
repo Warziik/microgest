@@ -6,10 +6,11 @@ use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use Symfony\Component\HttpFoundation\Response;
 
-class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
+class InvoiceOpenApi implements OpenApiFactoryInterface
 {
-    public const OPERATION_PATH = '/api/invoices';
 
+
+    public const ALL_INVOICES_PATH = '/api/invoices';
     public function __construct(private OpenApiFactoryInterface $decorated)
     {
     }
@@ -17,10 +18,15 @@ class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
-        $pathItem = $openApi->getPaths()->getPath(self::OPERATION_PATH);
+        $this->generateAllInvoicesDoc($openApi);
+        return $openApi;
+    }
+
+    private function generateAllInvoicesDoc(OpenApi $openApi)
+    {
+        $pathItem = $openApi->getPaths()->getPath(self::ALL_INVOICES_PATH);
         $operation = $pathItem->getGet();
-        $openApi->getPaths()->addPath(self::OPERATION_PATH, $pathItem->withGet(
-            $operation
+        $openApi->getPaths()->addPath(self::ALL_INVOICES_PATH, $pathItem->withGet($operation
                 ->withSummary("Gets all invoices belonging to all of the User's customers.")
                 ->withDescription('')
                 ->withResponses([
@@ -92,9 +98,6 @@ class GetAllInvoicesOpenApi implements OpenApiFactoryInterface
                         ],
                     ],
                     Response::HTTP_FORBIDDEN => ['description' => 'Access denied.'],
-                ])
-        ));
-
-        return $openApi;
+                ])));
     }
 }

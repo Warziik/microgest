@@ -1,0 +1,26 @@
+.overview {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 70% 1fr;
+  grid-template-rows: 30% 1fr;
+  gap: 2.4rem;
+
+  & > * {
+    padding: 2.4rem;
+    border-radius: var(--radius);
+    background-color: var(--container-background);
+  }
+
+  &__mainChart {
+    grid-column: 1 / 2;
+    grid-row: 1 / -1;
+  }
+  &__exportDocuments {
+    grid-column: 2 / -1;
+    grid-row: 1 / 2;
+  }
+  &__lastCreatedDocuments {
+    grid-column: 2 / -1;
+    grid-row: 2 / -1;
+  }
+}

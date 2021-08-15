@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Auth;
+namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,11 +10,13 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+#[AsController]
 class Logout extends AbstractController
 {
-    public function logout(Request $request, KernelInterface $kernel)
+    public function logout(Request $request, KernelInterface $kernel): JsonResponse
     {
         $cookieName = $this->getParameter('app.jwt_refresh_token_cookie_name');
         if ($request->cookies->has($cookieName)) {

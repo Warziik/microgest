@@ -56,10 +56,9 @@ class ConfirmAccountTest extends ApiTestCase
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_BAD_REQUEST,
-            'message' => "Le token est manquant dans les paramètres POST de la requête.",
-        ]);
+        $this->assertJsonContains(
+            ["hydra:description" => "Le token est manquant dans les paramètres POST de la requête."]
+        );
     }
 
     public function testSendInvalidToken(): void
@@ -69,10 +68,7 @@ class ConfirmAccountTest extends ApiTestCase
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Token invalide.',
-        ]);
+        $this->assertJsonContains(["hydra:description" => "Token invalide."]);
     }
 
     public function testConfirmAccountAlreadyConfirmed(): void
@@ -88,9 +84,6 @@ class ConfirmAccountTest extends ApiTestCase
         ]]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => 'Votre compte est déjà confirmé.',
-        ]);
+        $this->assertJsonContains(["hydra:description" => "Votre compte est déjà confirmé."]);
     }
 }

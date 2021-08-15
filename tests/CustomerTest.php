@@ -36,9 +36,6 @@ class CustomerTest extends ApiTestCase
 
         static::createClient()->request(Request::METHOD_GET, '/api/customers/1', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-
-        static::createClient()->request(Request::METHOD_GET, '/api/users/1/customers', ['auth_bearer' => $authToken]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     /**
@@ -47,9 +44,6 @@ class CustomerTest extends ApiTestCase
     public function testGetCustomerWithoutAuthorization(): void
     {
         static::createClient()->request(Request::METHOD_GET, '/api/customers/1');
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-
-        static::createClient()->request(Request::METHOD_GET, '/api/users/1/customers');
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
@@ -62,9 +56,6 @@ class CustomerTest extends ApiTestCase
         $this->databaseTool->loadFixtures([CustomerFixtures::class]);
 
         static::createClient()->request(Request::METHOD_GET, '/api/customers/3', ['auth_bearer' => $authToken]);
-        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
-
-        static::createClient()->request(Request::METHOD_GET, '/api/users/18/customers', ['auth_bearer' => $authToken]);
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 

@@ -10,7 +10,7 @@ use ApiPlatform\Core\OpenApi\OpenApi;
 use ArrayObject;
 use Symfony\Component\HttpFoundation\Response;
 
-final class JwtOpenApi implements OpenApiFactoryInterface
+final class AuthOpenApi implements OpenApiFactoryInterface
 {
     public const AUTH_PATH = '/api/authentication_token';
     public const REFRESH_TOKEN_PATH = '/api/authentication_token/refresh';
@@ -27,28 +27,7 @@ final class JwtOpenApi implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath(self::AUTH_PATH, new PathItem(
             post: new Operation(
                 operationId: 'postCredentialsItem',
-                summary: 'Gets a JWT Token to login',
                 tags: ['JWT Token'],
-                requestBody: new RequestBody(
-                    description: 'Generate a new JWT Token',
-                    content: new ArrayObject([
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'email' => [
-                                        'type' => 'string',
-                                        'example' => 'johndoe@example.com',
-                                    ],
-                                    'password' => [
-                                        'type' => 'string',
-                                        'example' => 'demo123',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ]),
-                ),
                 responses: [
                     '200' => [
                         'description' => 'Gets a JWT token',
@@ -69,14 +48,34 @@ final class JwtOpenApi implements OpenApiFactoryInterface
                     '401' => [
                         'description' => 'Invalid credentials. | Unconfirmed account.',
                     ],
-                ]
+                ],
+                summary: 'Gets a JWT Token to login',
+                requestBody: new RequestBody(
+                    description: 'Generate a new JWT Token',
+                    content: new ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'email' => [
+                                        'type' => 'string',
+                                        'example' => 'johndoe@example.com',
+                                    ],
+                                    'password' => [
+                                        'type' => 'string',
+                                        'example' => 'demo123',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]),
+                )
             )
         ));
 
         $openApi->getPaths()->addPath(self::REFRESH_TOKEN_PATH, new PathItem(
             post: new Operation(
                 operationId: 'askRefreshToken',
-                summary: 'Refreshes a JWT Token before it expires',
                 tags: ['JWT Token'],
                 responses: [
                     '200' => [
@@ -95,14 +94,14 @@ final class JwtOpenApi implements OpenApiFactoryInterface
                             ],
                         ],
                     ],
-                ]
+                ],
+                summary: 'Refreshes a JWT Token before it expires'
             )
         ));
 
         $openApi->getPaths()->addPath(self::REVOKE_REFRESH_TOKEN_PATH, new PathItem(
             post: new Operation(
                 operationId: 'revokeRefreshToken',
-                summary: 'Revokes the refresh token',
                 tags: ['JWT Token'],
                 responses: [
                     '200' => [
@@ -153,7 +152,8 @@ final class JwtOpenApi implements OpenApiFactoryInterface
                             ],
                         ],
                     ],
-                ]
+                ],
+                summary: 'Revokes the refresh token'
             )
         ));
 

@@ -13,7 +13,6 @@ import { Button } from "../../components/Button";
 import { Customer } from "../../types/Customer";
 import { fetchAllCustomers } from "../../services/CustomerService";
 import { Option, SelectInput } from "../../components/form/SelectInput";
-import { useAuth } from "../../hooks/useAuth";
 import { DatePickerInput } from "../../components/form/DatePickerInput";
 import { TextInput } from "../../components/form/TextInput";
 import { ToggleInput } from "../../components/form/ToggleInput";
@@ -39,7 +38,6 @@ type FormData = {
 
 export function AddInvoiceForm({ addInvoice, invoiceToEdit }: Props) {
   const { onClose } = useContext(ModalContext);
-  const { userData } = useAuth();
   const toast = useToast();
 
   const [selectCustomerOptions, setSelectCustomerOptions] = useState<Option[]>([
@@ -102,8 +100,8 @@ export function AddInvoiceForm({ addInvoice, invoiceToEdit }: Props) {
     name: "services",
   });
 
-  const fetchFormData = async (userId: number) => {
-    const [isSuccess, data] = await fetchAllCustomers(userId);
+  const fetchFormData = async () => {
+    const [isSuccess, data] = await fetchAllCustomers();
     if (isSuccess) {
       const customers: Option[] = [];
       data["hydra:member"].forEach((customer: Customer) => {
@@ -122,8 +120,8 @@ export function AddInvoiceForm({ addInvoice, invoiceToEdit }: Props) {
   };
 
   useEffect(() => {
-    fetchFormData(userData.id);
-  }, [userData.id]);
+    fetchFormData();
+  }, []);
 
   const onSubmit = handleSubmit(async (formData: FormData) => {
     const [isSuccess, data] = invoiceToEdit

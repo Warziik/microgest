@@ -10,10 +10,8 @@ import { DataAccess } from "../utils/dataAccess";
 
 /**
  * Retrieves all the Invoices who belongs to all the Customers linked to the User.
- *
- * @param id The User's id
  */
-export function fetchAllInvoicesOfUser(): Promise<
+export function fetchAllInvoices(): Promise<
   [boolean, Collection<Invoice> | ErrorResponse]
 > {
   return DataAccess.request(INVOICES_URI, {
@@ -22,9 +20,9 @@ export function fetchAllInvoicesOfUser(): Promise<
 }
 
 export function fetchAllInvoicesOfCustomer(
-  id: number
+  customerId: number
 ): Promise<[boolean, Collection<Invoice> | ErrorResponse]> {
-  return DataAccess.request(`${CUSTOMERS_URI}/${id}/invoices`, {
+  return DataAccess.request(`${CUSTOMERS_URI}/${customerId}/invoices`, {
     method: "GET",
   });
 }

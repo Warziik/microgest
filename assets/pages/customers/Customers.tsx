@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { Icon } from "../../components/Icon";
-import { useAuth } from "../../hooks/useAuth";
 import { fetchAllCustomers } from "../../services/CustomerService";
 import { Customer } from "../../types/Customer";
 import { Modal } from "../../components/Modal";
@@ -12,7 +11,6 @@ import { Collection } from "../../types/Collection";
 import { CustoemrsSkeleton } from "../../components/skeletons/CustomersSkeleton";
 
 export function Customers() {
-  const { userData } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>();
 
   const [showAddEditCustomerModal, setShowAddEditCustomerModal] =
@@ -29,7 +27,7 @@ export function Customers() {
   }, []);
 
   useEffect(() => {
-    fetchAllCustomers(userData.id).then(
+    fetchAllCustomers().then(
       (values: [boolean, Collection<Customer>]) => {
         const [isSuccess, data] = values;
         if (isSuccess) {
@@ -37,7 +35,7 @@ export function Customers() {
         }
       }
     );
-  }, [userData.id]);
+  }, []);
 
   const addCustomer = (customer: Customer) => {
     if (customers) {

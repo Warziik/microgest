@@ -3,8 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreateUpdateInvoice;
-use App\Controller\GetInvoices;
+use App\Controller\CreateUpdateInvoiceDevis;
 use App\Repository\InvoiceRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,21 +16,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: "invoices")]
 #[
     ApiResource(
-        normalizationContext: ['groups' => ['invoices:read', 'invoice:service_read']],
-        denormalizationContext: ['groups' => ['invoices:write', 'invoice:service_write']],
         collectionOperations: [
             'get' => [
-                'controller' => GetInvoices::class,
                 'normalization_context' => ['groups' => ['allInvoices:read']],
             ],
-            'post' => ['controller' => CreateUpdateInvoice::class],
+            'post' => ['controller' => CreateUpdateInvoiceDevis::class],
         ],
         itemOperations: [
             'get' => ['security' => 'object.getCustomer().getOwner() == user'],
             'put' => [
                 'security' => 'object.getCustomer().getOwner() == user',
                 'denormalization_context' => ['groups' => ['invoice:update']],
-                'controller' => CreateUpdateInvoice::class,
+                'controller' => CreateUpdateInvoiceDevis::class,
             ],
             'delete' => ['security' => 'object.getCustomer().getOwner() == user'],
         ],
@@ -40,7 +36,9 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'security' => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
                 'normalization_context' => ['groups' => ['customers_invoices_subresource']],
             ],
-        ]
+        ],
+        denormalizationContext: ['groups' => ['invoices:write', 'invoice:service_write']],
+        normalizationContext: ['groups' => ['invoices:read', 'invoice:service_read']]
     )
 ]
 class Invoice
@@ -51,8 +49,7 @@ class Invoice
     #[Groups([
         'invoices:read',
         'customers_invoices_subresource',
-        'allInvoices:read',
-        'users_customers_subresource',
+        'allInvoices:read'
     ])]
     private int $id;
 
@@ -71,8 +68,7 @@ class Invoice
     #[Groups([
         'invoices:read',
         'customers_invoices_subresource',
-        'users_customers_subresource',
-        'allInvoices:read',
+        'allInvoices:read'
     ])]
     #[Assert\Regex(
         pattern: "/^F-(\d{4})-(\d{6})$/",
@@ -85,7 +81,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -103,7 +98,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -113,7 +107,6 @@ class Invoice
     #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
         'invoices:read',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -126,7 +119,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -139,7 +131,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -157,7 +148,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -170,7 +160,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -181,7 +170,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -192,7 +180,6 @@ class Invoice
     #[Groups([
         'invoices:read',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -208,7 +195,6 @@ class Invoice
         'invoices:read',
         'invoices:write',
         'invoice:update',
-        'users_customers_subresource',
         'customers_invoices_subresource',
         'allInvoices:read',
     ])]
@@ -221,7 +207,7 @@ class Invoice
     }
 
     /* Returns the total amount of all the services prices */
-    #[Groups(['invoices:read', 'customers_invoices_subresource', 'allInvoices:read', 'users_customers_subresource'])]
+    #[Groups(['invoices:read', 'customers_invoices_subresource', 'allInvoices:read'])]
     public function getTotalAmount()
     {
         $totalAmount = 0;

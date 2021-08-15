@@ -3,8 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreateUpdateInvoice;
-use App\Controller\GetDevis;
+use App\Controller\CreateUpdateInvoiceDevis;
 use App\Repository\DevisRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,21 +15,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 #[
     ApiResource(
-        normalizationContext: ['groups' => ['devis:read', 'devis:service_read']],
-        denormalizationContext: ['groups' => ['devis:write', 'devis:service_write']],
         collectionOperations: [
             'get' => [
-                'controller' => GetDevis::class,
                 'normalization_context' => ['groups' => ['allDevis:read']],
             ],
-            'post' => ['controller' => CreateUpdateInvoice::class],
+            'post' => ['controller' => CreateUpdateInvoiceDevis::class],
         ],
         itemOperations: [
             'get' => ['security' => 'object.getCustomer().getOwner() == user'],
             'put' => [
                 'security' => 'object.getCustomer().getOwner() == user',
                 'denormalization_context' => ['groups' => ['devis:update']],
-                'controller' => CreateUpdateInvoice::class,
+                'controller' => CreateUpdateInvoiceDevis::class,
             ],
             'delete' => ['security' => 'object.getCustomer().getOwner() == user'],
         ],
@@ -39,7 +35,9 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'security' => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
                 'normalization_context' => ['groups' => ['customers_devis_subresource']],
             ],
-        ]
+        ],
+        denormalizationContext: ['groups' => ['devis:write', 'devis:service_write']],
+        normalizationContext: ['groups' => ['devis:read', 'devis:service_read']]
     )
 ]
 class Devis
@@ -150,10 +148,10 @@ class Devis
     #[ORM\Column(type: "integer", nullable: true)]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Range(
-        min: 0,
-        max: 100,
         notInRangeMessage: "Le taux des pénalités de retard ou d'absence de paiement doit être
-        un pourcentage compris entre {{ min }} et {{ max }}."
+        un pourcentage compris entre {{ min }} et {{ max }}.",
+        min: 0,
+        max: 100
     )]
     #[Groups([
         'devis:read',
@@ -209,10 +207,10 @@ class Devis
     private ?DateTimeInterface $signedAt = null;
 
     #[ORM\OneToMany(
-        targetEntity: InvoiceService::class,
         mappedBy: "devis",
-        orphanRemoval: true,
-        cascade: ["persist", "remove"]
+        targetEntity: InvoiceService::class,
+        cascade: ["persist", "remove"],
+        orphanRemoval: true
     )]
     #[Groups([
         'devis:read',

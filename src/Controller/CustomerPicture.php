@@ -1,15 +1,18 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Customer;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class CustomerPictureController extends AbstractController {
-    public function __invoke(Request $request)
+class CustomerPicture
+{
+
+
+    public function __invoke(Request $request): Customer
     {
         $customer = $request->attributes->get('data');
         if (!($customer instanceof Customer)) {
@@ -21,5 +24,4 @@ class CustomerPictureController extends AbstractController {
         $customer->setPictureFile($request->files->get('pictureFile'));
         return $customer;
     }
-    
 }

@@ -1,18 +1,14 @@
-import { CUSTOMERS_URI, USERS_URI } from "../config/entrypoints";
+import { CUSTOMERS_URI } from "../config/entrypoints";
 import { Collection } from "../types/Collection";
 import { CustomerFormData, Customer } from "../types/Customer";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { DataAccess } from "../utils/dataAccess";
 
 /**
- * Send a GET request to retrieve all the Customers who belongs to the User id gave as parameter.
- *
- * @param id The User's id
+ * Send a GET request to retrieve all the Customers who belongs to the logged User.
  */
-export function fetchAllCustomers(
-  id: number
-): Promise<[boolean, Collection<Customer>]> {
-  return DataAccess.request(`${USERS_URI}/${id}/customers`, {
+export function fetchAllCustomers(): Promise<[boolean, Collection<Customer>]> {
+  return DataAccess.request(CUSTOMERS_URI, {
     method: "GET",
   });
 }

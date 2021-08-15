@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller\Auth;
+namespace App\Tests\Controller;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\JwtRefreshTokenFixtures;

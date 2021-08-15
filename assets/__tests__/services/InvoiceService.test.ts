@@ -57,7 +57,7 @@ describe("Invoice Service", () => {
 
   it("should returns all the Invoices of the logged User", async () => {
     fetchMock.mockResponse(JSON.stringify(allInvoicesData));
-    expect(await InvoiceService.fetchAllInvoicesOfUser()).toStrictEqual([
+    expect(await InvoiceService.fetchAllInvoices()).toStrictEqual([
       true,
       allInvoicesData,
     ]);

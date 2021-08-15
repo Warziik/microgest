@@ -1,4 +1,5 @@
 <?php
+
 namespace App\EventSubscriber\Auth;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
@@ -7,10 +8,12 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AuthenticationFailureSubscriber implements EventSubscriberInterface {
+class AuthenticationFailureSubscriber implements EventSubscriberInterface
+{
+
+
     public function __construct(private TranslatorInterface $translator)
     {
-        
     }
 
     public static function getSubscribedEvents()
@@ -20,14 +23,10 @@ class AuthenticationFailureSubscriber implements EventSubscriberInterface {
         ];
     }
 
-    public function onAuthenticationFailure(AuthenticationFailureEvent $event): void {
+    public function onAuthenticationFailure(AuthenticationFailureEvent $event): void
+    {
         /** @var JWTAuthenticationFailureResponse $response */
         $response = $event->getResponse();
-
-        $response->setMessage(
-            $this->translator->trans(
-                $response->getMessage()
-            )
-        );
+        $response->setMessage($this->translator->trans($response->getMessage()));
     }
 }

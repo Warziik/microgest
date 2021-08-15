@@ -5,13 +5,14 @@ namespace App\Controller;
 use App\Entity\ResetPassword;
 use App\Entity\User;
 use App\Notification\UserNotification;
-use App\Repository\ResetPasswordRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @see App\OpenApi\ForgotPasswordOpenApi
@@ -21,38 +22,24 @@ class ForgotPassword extends AbstractController
 {
     public function __construct(
         private UserRepository $userRepository,
-        private ResetPasswordRepository $resetPasswordRepository,
         private EntityManagerInterface $entityManager,
         private UserNotification $userNotification
     ) {
     }
 
-    public function __invoke(User $data)
+    public function __invoke(User $data): Response|\Exception
     {
         $email = $data->getEmail();
         if (is_null($email)) {
-            return new JsonResponse(
-                [
-                    'code' => Response::HTTP_BAD_REQUEST,
-                    'message' => "L'adresse email doit être passé comme paramètre dans le requête POST.",
-                ],
-                Response::HTTP_BAD_REQUEST
-            );
+            throw new BadRequestException("L'adresse email doit être passé comme paramètre dans le requête POST.");
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
         if (is_null($user)) {
-            return new JsonResponse(
-                [
-                    'code' => Response::HTTP_NOT_FOUND,
-                    'message' => "L'utilisateur n'a pas été trouvé.",
-                ],
-                Response::HTTP_NOT_FOUND
-            );
+            throw new NotFoundHttpException("L'utilisateur n'a pas été trouvé.");
         }
 
         $resetPassword = (new ResetPassword())->setUser($user);
-
         $this->entityManager->persist($resetPassword);
         $this->entityManager->flush();
 

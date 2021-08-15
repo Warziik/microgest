@@ -24,37 +24,24 @@ services:
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
-  App\OpenApi\ForgotPasswordOpenApi:
+  App\OpenApi\UserOpenApi:
     decorates: "api_platform.openapi.factory"
-    arguments: ['@App\OpenApi\ForgotPasswordOpenApi.inner']
+    arguments: ['@App\OpenApi\UserOpenApi.inner']
     autoconfigure: false
 
-  App\OpenApi\ResetPasswordOpenApi:
+  App\OpenApi\CustomerOpenApi:
     decorates: "api_platform.openapi.factory"
-    arguments: ['@App\OpenApi\ResetPasswordOpenApi.inner']
+    arguments: ['@App\OpenApi\CustomerOpenApi.inner']
     autoconfigure: false
 
-  App\OpenApi\CustomersSubresourceOpenApi:
+  App\OpenApi\InvoiceOpenApi:
     decorates: "api_platform.openapi.factory"
-    arguments: ['@App\OpenApi\CustomersSubresourceOpenApi.inner']
+    arguments: ['@App\OpenApi\InvoiceOpenApi.inner']
     autoconfigure: false
 
-  App\OpenApi\InvoicesSubresourceOpenApi:
+  App\OpenApi\AuthOpenApi:
     decorates: "api_platform.openapi.factory"
-    arguments: ['@App\OpenApi\InvoicesSubresourceOpenApi.inner']
-    autoconfigure: false
-
-  App\OpenApi\ConfirmAccountOpenApi:
-    decorates: "api_platform.openapi.factory"
-    arguments: ['@App\OpenApi\ConfirmAccountOpenApi.inner']
-    autoconfigure: false
-
-  App\OpenApi\JwtOpenApi:
-    decorates: "api_platform.openapi.factory"
-    autoconfigure: false
-
-  App\OpenApi\GetAllInvoicesOpenApi:
-    decorates: "api_platform.openapi.factory"
+    arguments: [ '@App\OpenApi\AuthOpenApi.inner' ]
     autoconfigure: false
 
   App\EventSubscriber\Auth\AuthenticationSuccessSubscriber:

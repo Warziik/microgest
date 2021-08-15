@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ResetPasswordRepository::class)]
 #[ORM\Table(name: "users_reset_password")]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity(fields: ['token'], message: 'Token invalid')]
+#[UniqueEntity(fields: ['token'], message: 'Token invalide.')]
 class ResetPassword
 {
     #[ORM\Id]

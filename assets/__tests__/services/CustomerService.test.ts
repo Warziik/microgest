@@ -23,7 +23,7 @@ describe("CustomerService", () => {
 
     it("should returns all the Customers", async () => {
         fetchMock.mockResponse(JSON.stringify(allCustomersData));
-        expect(await CustomerService.fetchAllCustomers(1)).toStrictEqual([true, allCustomersData]);
+        expect(await CustomerService.fetchAllCustomers()).toStrictEqual([true, allCustomersData]);
     });
 
     it("should create a Customer", async () => {

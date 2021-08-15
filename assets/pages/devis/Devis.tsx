@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { fetchAllDevisOfUser } from "../../services/DevisService";
+import { fetchAllDevis } from "../../services/DevisService";
 import { Collection } from "../../types/Collection";
 import { Devis } from "../../types/Devis";
 import { Button } from "../../components/Button";
@@ -20,7 +20,7 @@ export function Devis() {
   }, []);
 
   const fetchDevis = useCallback(() => {
-    fetchAllDevisOfUser().then((values: [boolean, Collection<Devis> | any]) => {
+    fetchAllDevis().then((values: [boolean, Collection<Devis> | any]) => {
       const [isSuccess, data] = values;
       if (isSuccess) {
         setDevis(

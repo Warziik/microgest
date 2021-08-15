@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Invoice } from "../../types/Invoice";
-import { fetchAllInvoicesOfUser } from "../../services/InvoiceService";
+import { fetchAllInvoices } from "../../services/InvoiceService";
 import { Collection } from "../../types/Collection";
 import { Modal } from "../../components/Modal";
 import { AddInvoiceForm } from "./AddInvoiceForm";
@@ -20,7 +20,7 @@ export function Invoices() {
   }, []);
 
   const fetchInvoices = useCallback(() => {
-    fetchAllInvoicesOfUser().then(
+    fetchAllInvoices().then(
       (values: [boolean, Collection<Invoice> | any]) => {
         const [isSuccess, data] = values;
         if (isSuccess) {

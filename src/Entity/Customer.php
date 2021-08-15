@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\Controller\CustomerPictureController;
+use App\Controller\CustomerPicture;
 use App\Repository\CustomerRepository;
 use DateTime;
 use DateTimeInterface;
@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -22,28 +23,22 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[
     ApiResource(
-        normalizationContext: ['groups' => ['customers:read']],
-        denormalizationContext: ['groups' => ['customers:write']],
-        collectionOperations: ['post'],
+        collectionOperations: ['get', 'post'],
         itemOperations: [
             'get' => ['security' => 'object.getOwner() == user'],
             'put' => ['security' => 'object.getOwner() == user'],
             'delete' => ['security' => 'object.getOwner() == user'],
             'picture' => [
                 'path' => '/customers/{id}/picture',
-                'method' => 'POST',
+                'method' => Request::METHOD_POST,
                 'security' => 'object.getOwner() == user',
                 'deserialize' => false,
-                'controller' => CustomerPictureController::class,
+                'controller' => CustomerPicture::class,
                 'normalization_context' => ['groups' => ['customers:picture:read']]
             ]
         ],
-        subresourceOperations: [
-            'api_users_customers_get_subresource' => [
-                'security' => "is_granted('GET_SUBRESOURCE', _api_normalization_context['subresource_resources'])",
-                'normalization_context' => ['groups' => ['users_customers_subresource']],
-            ],
-        ],
+        denormalizationContext: ['groups' => ['customers:write']],
+        normalizationContext: ['groups' => ['customers:read']],
     )
 ]
 class Customer
@@ -53,7 +48,6 @@ class Customer
     #[ORM\Column(type: "integer")]
     #[Groups([
         'customers:read',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -65,7 +59,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -82,7 +75,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -96,7 +88,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -110,7 +101,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -124,7 +114,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -137,7 +126,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -150,7 +138,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'allInvoices:read',
         'devis:read',
@@ -164,7 +151,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'devis:read'
     ])]
@@ -175,7 +161,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'devis:read'
     ])]
@@ -186,7 +171,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'devis:read'
     ])]
@@ -197,7 +181,6 @@ class Customer
     #[Groups([
         'customers:read',
         'customers:write',
-        'users_customers_subresource',
         'invoices:read',
         'devis:read'
     ])]
@@ -206,16 +189,15 @@ class Customer
     private string $country;
 
     #[Vich\UploadableField(mapping: "customer_picture", fileNameProperty: 'picture')]
-    #[Assert\File(mimeTypes: ["image/png", "image/jpeg"], maxSize: "5M")]
+    #[Assert\File(maxSize: "5M", mimeTypes: ["image/png", "image/jpeg"])]
     private ?File $pictureFile = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $picture = null;
-    
+
     #[Groups([
         'customers:read',
         'customers:picture:read',
-        'users_customers_subresource',
         'invoices:read',
         'devis:read'
     ])]
@@ -223,17 +205,16 @@ class Customer
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "customers")]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['invoices:read', "devis:read"])]
     #[Assert\NotBlank]
     private ?User $owner = null;
 
     #[ORM\Column(type: "datetime")]
-    #[Groups(['customers:read', 'users_customers_subresource'])]
+    #[Groups(['customers:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private DateTimeInterface $createdAt;
 
     #[ORM\Column(type: "datetime", nullable: true)]
-    #[Groups(['customers:read', 'users_customers_subresource'])]
+    #[Groups(['customers:read'])]
     #[Assert\Type(DateTimeInterface::class)]
     private ?DateTimeInterface $updatedAt = null;
 

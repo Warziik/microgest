@@ -188,11 +188,10 @@ class InvoiceTest extends ApiTestCase
                 'status' => 'NEW',
             ]]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $this->assertJsonEquals([
-            'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'message' => 'Un client doit être fourni.',
-        ]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertJsonContains(
+            ["hydra:description" => "Un client doit être passé comme paramètre dans le requête POST."]
+        );
     }
 
     /**
@@ -215,11 +214,10 @@ class InvoiceTest extends ApiTestCase
                 'customer' => '/api/customers/18',
             ]]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
-        $this->assertJsonContains([
-            'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => "Vous ne pouvez pas assigner une facture à un client que vous ne possédez pas.",
-        ]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+        $this->assertJsonContains(
+            ["hydra:description" => "Vous ne pouvez pas assigner une facture à un client que vous ne possédez pas."]
+        );
     }
 
     /**

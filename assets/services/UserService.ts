@@ -63,6 +63,12 @@ export function resetPassword(
   });
 }
 
+export function fetchUser(id: number): Promise<[boolean, UserData]> {
+  return DataAccess.request(`${USERS_URI}/${id}`, {
+    method: "GET",
+  });
+}
+
 /**
  * Send a PUT request to update the logged User's data.
  *
@@ -76,12 +82,6 @@ export function updateUser(
   return DataAccess.request(`${USERS_URI}/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
-  });
-}
-
-export function fetchUser(id: number): Promise<[boolean, UserData]> {
-  return DataAccess.request(`${USERS_URI}/${id}`, {
-    method: "GET",
   });
 }
 

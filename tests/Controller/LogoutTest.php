@@ -38,10 +38,7 @@ class LogoutTest extends ApiTestCase
         $client->request(Request::METHOD_POST, self::REVOKE_REFRESH_TOKEN_URI);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains([
-            'code' => Response::HTTP_OK,
-            'message' => "L'utilisateur a été déconnecté avec succès.",
-        ]);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
     }
 
     public function testLogoutWithInvalidRefreshToken(): void

@@ -29,13 +29,7 @@ class Logout extends AbstractController
             $status = $application->run($input, new NullOutput());
 
             if (0 === $status) {
-                $response = new JsonResponse(
-                    [
-                        'code' => Response::HTTP_OK,
-                        'message' => "L'utilisateur a été déconnecté avec succès.",
-                    ],
-                    Response::HTTP_OK
-                );
+                $response = new JsonResponse([], Response::HTTP_NO_CONTENT);
                 $response->headers->setCookie(new Cookie($cookieName));
             } else {
                 $response = new JsonResponse(

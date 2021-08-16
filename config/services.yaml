@@ -24,6 +24,11 @@ services:
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
+  App\OpenApi\InfoOpenApi:
+    decorates: "api_platform.openapi.factory"
+    arguments: [ '@App\OpenApi\InfoOpenApi.inner' ]
+    autoconfigure: false
+
   App\OpenApi\UserOpenApi:
     decorates: "api_platform.openapi.factory"
     arguments: ['@App\OpenApi\UserOpenApi.inner']

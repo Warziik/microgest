@@ -1,26 +1,191 @@
 .overview {
   height: 100%;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 70% 1fr;
-  grid-template-rows: 30% 1fr;
+  grid-template-rows: min-content 1fr;
   gap: 2.4rem;
+
+  .unaivalable-message {
+    color: var(--error-color);
+    font-weight: 600;
+  }
 
   & > * {
     padding: 2.4rem;
     border-radius: var(--radius);
     background-color: var(--container-background);
+
+    h2 {
+      margin-bottom: 1.6rem;
+    }
   }
 
   &__mainChart {
     grid-column: 1 / 2;
     grid-row: 1 / -1;
   }
+
   &__exportDocuments {
     grid-column: 2 / -1;
     grid-row: 1 / 2;
+
+    .unaivalable-message {
+      margin-top: 2.4rem;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+
+      &:first-of-type {
+        margin-block: 1.6rem;
+      }
+    }
   }
-  &__lastCreatedDocuments {
+
+  &__lastAddedDocuments {
     grid-column: 2 / -1;
     grid-row: 2 / -1;
+    position: relative;
+    overflow: hidden;
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+
+    &-fixedHeader {
+      padding: 2.4rem;
+      position: absolute;
+      left: 0;
+      right: 0;
+
+      background-color: var(--container-background);
+      z-index: 999;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      box-shadow: 0 5px 20px var(--primary-color-a1);
+
+      .invoices__filter-ctas {
+        select {
+          width: auto;
+        }
+
+        margin-bottom: 0;
+      }
+    }
+
+    &-list {
+      width: 100%;
+      height: 100%;
+      padding-top: 14.1rem;
+      padding-left: 2.4rem;
+      padding-right: 2.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      overflow: auto;
+
+      &-item {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        grid-template-rows: repeat(2, min-content);
+        gap: .8rem 1.6rem;
+        padding: 2.4rem;
+        border: 1px solid var(--border-color);
+        border-radius: 1.6rem;
+
+        h4 {
+          grid-column: 1 / 2;
+          grid-row: 1 / 2;
+          font-weight: 700;
+          color: var(--text-color);
+        }
+
+        p {
+          grid-column: 1 / 2;
+          grid-row: 2 / -1;
+
+          color: var(--text-color-alt);
+          line-height: 1;
+        }
+
+        .btn-outline--primary--normal {
+          padding: 1.3rem;
+          border-radius: 50%;
+          grid-row: 1 / -1;
+
+          svg {
+            margin-right: 0;
+          }
+
+          &:first-of-type {
+            grid-column: 2 / 3;
+
+            svg {
+              transform: rotate(180deg);
+            }
+          }
+
+          &:last-of-type {
+            grid-column: 3 / -1;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  .overview {
+    grid-template-columns: 1fr;
+    grid-template-rows: 100% auto 100%;
+    overflow-y: scroll;
+
+    & > * {
+      grid-column: 1 / -1;
+    }
+
+    &__mainChart {
+      grid-row: 1 / 2;
+    }
+
+    &__exportDocuments {
+      grid-row: 2 / 3;
+    }
+
+    &__lastAddedDocuments {
+      grid-row: 3 / -1;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .overview__lastAddedDocuments-list-item {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+
+    h4 {
+      grid-column: 1 / -1;
+      grid-row: 1 / 2;
+    }
+
+    p {
+      grid-column: 1 / -1;
+      grid-row: 2 / 3;
+    }
+
+    .btn-outline--primary--normal {
+      margin-top: .8rem;
+      border-radius: var(--radius);
+      grid-row: 3 / -1;
+
+      &:first-of-type {
+        grid-column: 1 / 2;
+      }
+
+      &:last-of-type {
+        grid-column: 2 / -1;
+      }
+    }
   }
 }

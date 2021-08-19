@@ -8,10 +8,10 @@
     width: 100%;
     border-radius: 1.6rem;
     background: linear-gradient(
-      -90deg,
-      var(--skeleton-background) 0%,
-      var(--skeleton-pulse) 50%,
-      var(--skeleton-background) 100%
+                    -90deg,
+                    var(--skeleton-background) 0%,
+                    var(--skeleton-pulse) 50%,
+                    var(--skeleton-background) 100%
     );
     background-size: 400% 400%;
 
@@ -21,20 +21,25 @@
   &--title {
     height: 3rem;
   }
+
   &--text {
     height: 1.5rem;
   }
+
   &--avatar {
     width: 5.6rem;
     height: 5.6rem;
     border-radius: 50%;
   }
+
   &--btn-small {
     height: 3.5rem;
   }
+
   &--btn-normal {
     height: 5rem;
   }
+
   &--block {
     height: 10rem;
   }
@@ -50,6 +55,7 @@
   display: flex;
   flex-direction: column;
   gap: 2.4rem 0;
+
   &-header {
     display: grid;
     grid-template-columns: min-content 1fr;
@@ -60,23 +66,28 @@
       grid-column: 1 / 2;
       grid-row: 1 / -1;
     }
+
     .skeleton--title {
       grid-column: 2 / -1;
       grid-row: 1 / 2;
     }
+
     .skeleton--text {
       grid-column: 2 / -1;
       grid-row: 2 / -1;
     }
   }
+
   &-details {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.6rem;
   }
+
   &-ctas {
     display: flex;
     justify-content: space-between;
+
     .skeleton--btn-small {
       width: 30%;
     }
@@ -89,27 +100,34 @@
     flex-direction: column;
     gap: 3.2rem 0;
   }
+
   &-tabs {
     display: flex;
     gap: 2.4rem;
+
     .skeleton--title {
       width: 10%;
     }
   }
+
   &-ctas {
     display: flex;
     gap: 1.6rem;
+
     .skeleton--title:first-child {
       width: 5%;
     }
+
     .skeleton--title:last-child {
       width: 10%;
     }
   }
+
   &-table {
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
+
     &-row {
       display: flex;
       gap: 2.4rem;
@@ -123,6 +141,7 @@
         &:nth-child(3) {
           width: 70%;
         }
+
         &:nth-child(5),
         &:nth-child(6) {
           width: 80%;
@@ -142,6 +161,7 @@
   display: flex;
   flex-direction: column;
   gap: 3.2rem 0;
+
   &-breadcrumb {
     display: flex;
     gap: 1.6rem;
@@ -151,6 +171,7 @@
       width: 70%;
     }
   }
+
   &-header {
     display: flex;
     align-items: center;
@@ -162,17 +183,21 @@
       display: grid;
       grid-template-rows: repeat(2, min-content);
       gap: 1.6rem;
+
       .skeleton--title {
         grid-row: 1 / 2;
       }
+
       .skeleton--text {
         width: 60%;
         grid-row: 2 / -1;
       }
     }
+
     &-status {
       width: 10%;
     }
+
     &-ctas {
       margin-left: auto;
       width: 30%;
@@ -180,12 +205,14 @@
       gap: 1.6rem;
     }
   }
+
   &-main {
     display: grid;
-    grid-template-columns: 25% 1fr 25%;
+    grid-template-columns: 50% 1fr;
     gap: 2.4rem;
 
     height: 100%;
+
     &-details,
     &-display,
     &-other {
@@ -195,7 +222,8 @@
     }
 
     &-other {
-      display: flex;
+      display: none;
+      //display: flex;
       flex-direction: column;
       gap: 2.4rem;
     }
@@ -204,25 +232,31 @@
       display: flex;
       flex-direction: column;
       gap: 2.4rem;
+
       &-customer {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .skeleton--text {
           width: 45%;
         }
+
         .skeleton--btn-small {
           width: 35%;
         }
       }
+
       &-data {
         display: flex;
         flex-direction: column;
         gap: 2.4rem;
+
         &-item {
           display: flex;
           flex-direction: column;
           gap: 1.6rem;
+
           .skeleton--text:first-child {
             width: 50%;
           }
@@ -241,6 +275,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     &-infos {
       width: 25%;
 
@@ -253,15 +288,18 @@
         grid-column: 1 / 2;
         grid-row: 1 / -1;
       }
+
       .skeleton--title {
         grid-column: 2 / -1;
         grid-row: 1 / 2;
       }
+
       .skeleton--text {
         grid-column: 2 / -1;
         grid-row: 2 / -1;
       }
     }
+
     &-ctas {
       width: 20%;
       display: flex;
@@ -273,12 +311,14 @@
     display: flex;
     gap: 2.4rem;
     justify-content: center;
+
     &-item {
       width: 15%;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.6rem;
+
       .skeleton--text:first-child {
         width: 60%;
       }
@@ -303,7 +343,65 @@
   }
 }
 
+.skeleton__lastAddedDocuments {
+  &-item {
+    display: grid;
+    grid-template-columns: 1fr 15% 15%;
+    grid-template-rows: repeat(2, min-content);
+    gap: 1.6rem;
+
+    .skeleton--text {
+      grid-column: 1 / 2;
+
+      &:first-child {
+        grid-row: 1 / 2;
+      }
+
+      &:nth-child(2) {
+        width: 80%;
+        grid-row: 2 / -1;
+      }
+    }
+
+    .skeleton--btn-normal {
+      grid-row: 1 / -1;
+    }
+
+    &:first-child {
+      margin-top: .8rem;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 2.4rem;
+    }
+  }
+}
+
 @media only screen and (max-width: 600px) {
+  .skeleton__lastAddedDocuments-item {
+    grid-template-columns: 1fr 1fr;
+
+    .skeleton--text {
+      grid-column: 1 / -1;
+
+      &:first-of-type {
+        grid-row: 1 / 2;
+      }
+
+      &:last-of-type {
+        grid-row: 2 / 3;
+      }
+    }
+
+    .skeleton--btn-normal {
+      grid-row: 3 / -1;
+      grid-column: 1 / 2;
+
+      &:last-child {
+        grid-column: 2 / -1;
+      }
+    }
+  }
   .skeleton__customers {
     &-wrapper {
       grid-template-columns: 1fr;
@@ -313,6 +411,7 @@
     &-breadcrumb {
       display: none;
     }
+
     &-header-ctas {
       flex-direction: column;
     }
@@ -322,15 +421,18 @@
     &-breadcrumb {
       display: none;
     }
+
     &-header {
       &-infos {
         grid-column: 1 / -1 !important;
       }
+
       &-status {
         grid-column: 1 / 2 !important;
         width: 50% !important;
         justify-self: flex-start !important;
       }
+
       &-ctas {
         .skeleton--btn-normal:first-child {
           display: none;
@@ -345,10 +447,12 @@
         width: 25% !important;
       }
     }
+
     &-ctas {
       .skeleton--title:first-child {
         width: 20% !important;
       }
+
       .skeleton--title:last-child {
         width: 25% !important;
       }
@@ -362,9 +466,11 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 2.4rem;
+
       &-infos {
         width: 50%;
       }
+
       &-ctas {
         width: 100%;
       }
@@ -372,6 +478,7 @@
 
     &-details {
       flex-direction: column;
+
       &-item {
         width: 50%;
         align-items: flex-start;
@@ -382,6 +489,7 @@
       flex-direction: column;
       align-items: flex-start;
       width: 100%;
+
       .skeleton--text {
         width: 25%;
       }
@@ -393,15 +501,18 @@
       display: grid;
       grid-template-columns: 1fr 25%;
       gap: 2.4rem;
+
       &-infos {
         width: 90%;
         grid-column: 1 / 2;
       }
+
       &-status {
         width: 100%;
         justify-self: flex-end;
         grid-column: 2 / -1;
       }
+
       &-ctas {
         grid-column: 1 / -1;
         flex-direction: column;
@@ -428,19 +539,24 @@
         width: 15%;
       }
     }
+
     &-ctas {
       .skeleton--title:first-child {
         width: 10%;
       }
+
       .skeleton--title:last-child {
         width: 15%;
       }
     }
+
     &-table {
       &:last-child {
         display: none;
       }
+
       flex-direction: column;
+
       &-row {
         display: grid;
         grid-template-columns: 40% 1fr;
@@ -462,6 +578,7 @@
           &:nth-child(4) {
             width: 80%;
           }
+
           &:nth-child(6),
           &:nth-child(8) {
             width: 90%;

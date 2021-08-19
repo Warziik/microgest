@@ -1,17 +1,13 @@
 api_platform:
   show_webby: false
   mapping:
-    paths: ["%kernel.project_dir%/src/Entity"]
+    paths: [ "%kernel.project_dir%/src/Entity" ]
   formats:
-    jsonld: ["application/ld+json"]
-    json: ["application/json"]
-    html: ["text/html"]
-    multipart: ["multipart/form-data"]
+    jsonld: [ "application/ld+json" ]
+    json: [ "application/json" ]
+    html: [ "text/html" ]
+    multipart: [ "multipart/form-data" ]
   patch_formats:
-    json: ["application/merge-patch+json"]
+    json: [ "application/merge-patch+json" ]
   swagger:
-    versions: [3]
-    api_keys:
-      Token:
-        name: Authorization
-        type: header
+    versions: [ 3 ]

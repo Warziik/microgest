@@ -26,7 +26,6 @@ final class AuthOpenApi implements OpenApiFactoryInterface
         $openApi = ($this->decorated)($context);
 
         $securitySchemes = $openApi->getComponents()->getSecuritySchemes();
-        unset($securitySchemes["Token"]);
         $securitySchemes["bearerAuth"] = new SecurityScheme(
             description: "Authentication JWT",
             type: "http",

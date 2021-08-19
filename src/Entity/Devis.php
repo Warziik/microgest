@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Controller\CreateUpdateInvoiceDevis;
 use App\Repository\DevisRepository;
 use DateTimeInterface;
@@ -37,9 +39,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
         ],
         denormalizationContext: ['groups' => ['devis:write', 'devis:service_write']],
-        normalizationContext: ['groups' => ['devis:read', 'devis:service_read']]
+        normalizationContext: ['groups' => ['devis:read', 'devis:service_read']],
+        paginationClientItemsPerPage: true,
+        paginationMaximumItemsPerPage: 500
     )
 ]
+#[ApiFilter(OrderFilter::class, properties: ["createdAt" => "desc"], arguments: ["orderParameterName" => "order"])]
 class Devis
 {
     #[ORM\Id]

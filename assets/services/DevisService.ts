@@ -1,4 +1,4 @@
-import {CUSTOMERS_URI, DEVIS_URI, LAST_ADDED_DEVIS} from "../config/entrypoints";
+import {CUSTOMERS_URI, DEVIS_URI, LAST_ADDED_DEVIS_URI} from "../config/entrypoints";
 import {Collection} from "../types/Collection";
 import {Devis, DevisFormData, DevisUpdateFormData} from "../types/Devis";
 import {ErrorResponse} from "../types/ErrorResponse";
@@ -28,7 +28,7 @@ export function fetchDevis(id: number): Promise<[boolean, Devis]> {
 }
 
 export function fetchLastAddedDevis(): Promise<[boolean, Collection<Devis> | ErrorResponse]> {
-    return DataAccess.request(LAST_ADDED_DEVIS, {method: "GET"});
+    return DataAccess.request(LAST_ADDED_DEVIS_URI, {method: "GET"});
 }
 
 /**

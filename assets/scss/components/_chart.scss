@@ -1,0 +1,46 @@
+.chartCustomTooltip {
+  padding: 2.4rem;
+  color: var(--text-color);
+  box-shadow: var(--box-shadow);
+  background: var(--container-background);
+  border-radius: 1.6rem;
+
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: repeat(2, min-content);
+  gap: 1.6rem;
+
+  & > * {
+    line-height: 1;
+  }
+
+  &__date {
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    text-transform: uppercase;
+    color: var(--text-color-alt);
+    font-weight: 600;
+  }
+
+  &__amount, &__variation {
+    font-weight: 700;
+    font-size: 2.4rem;
+    grid-row: 2 / -1;
+  }
+
+  &__amount {
+    grid-column: 1 / 2;
+  }
+
+  &__variation {
+    grid-column: 2 / -1;
+
+    &--positive {
+      color: var(--success-color);
+    }
+
+    &--negative {
+      color: var(--error-color);
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import {CUSTOMERS_URI, INVOICES_URI, LAST_ADDED_INVOICES} from "../config/entrypoints";
+import {CUSTOMERS_URI, INVOICES_URI, LAST_ADDED_INVOICES_URI} from "../config/entrypoints";
 import {Collection} from "../types/Collection";
 import {ErrorResponse} from "../types/ErrorResponse";
 import {
@@ -32,7 +32,7 @@ export function fetchInvoice(id: number): Promise<[boolean, Invoice]> {
 }
 
 export function fetchLastAddedInvoices(): Promise<[boolean, Collection<Invoice> | ErrorResponse]> {
-    return DataAccess.request(LAST_ADDED_INVOICES, {method: "GET"});
+    return DataAccess.request(LAST_ADDED_INVOICES_URI, {method: "GET"});
 }
 
 /**

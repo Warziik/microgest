@@ -14,6 +14,8 @@ export const INVOICES_URI = `${API_URL}/invoices`;
 
 export const DEVIS_URI = `${API_URL}/devis`;
 
-export const LAST_ADDED_INVOICES = `${INVOICES_URI}?order[createdAt]&itemsPerPage=5`;
+export const LAST_ADDED_INVOICES_URI = `${INVOICES_URI}?order[createdAt]&itemsPerPage=5`;
 
-export const LAST_ADDED_DEVIS = `${DEVIS_URI}?order[createdAt]&itemsPerPage=5`;
+export const LAST_ADDED_DEVIS_URI = `${DEVIS_URI}?order[createdAt]&itemsPerPage=5`;
+
+export const STATS_TURNOVER_EVOLUTION_URI = `${INVOICES_URI}?status=PAID&paidAt=2021`;

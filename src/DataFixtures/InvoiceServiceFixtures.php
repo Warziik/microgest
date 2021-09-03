@@ -20,8 +20,8 @@ class InvoiceServiceFixtures extends Fixture implements DependentFixtureInterfac
             $i->setDescription($faker->randomElement([null, $faker->sentence(8)]));
             $i->setQuantity($faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
             $i->setUnitPrice($faker->randomFloat(2, 50, 10000));
-            $i->setInvoice($this->getReference("invoice-" . rand(1, 40)));
-
+            $i->setInvoice($this->getReference("invoice-$index"));
+            $i->setDevis($this->getReference("devis-$index"));
             $manager->persist($i);
         }
 

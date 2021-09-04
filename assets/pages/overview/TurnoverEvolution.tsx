@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Tooltip, ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis} from "recharts";
-import {fetchTurnoverEvolutionDataChart} from "../../services/ChartService";
+import {fetchTurnoverEvolutionChartData} from "../../services/ChartService";
 import dayjs from "dayjs";
 import {Invoice} from "../../types/Invoice";
 
@@ -14,22 +14,41 @@ export function TurnoverEvolution() {
     const [chartData, setChartData] = useState<any[]>();
 
     const fetchChartData = useCallback(async () => {
-        const [isSuccess, data] = await fetchTurnoverEvolutionDataChart();
+        const [isSuccess, data] = await fetchTurnoverEvolutionChartData();
 
         if (isSuccess) {
             const dataToSet: ChartData[] = [];
             for (let i = 0; i <= dayjs().get("M"); i++) {
                 const invoicesOfTheMonth = data["hydra:member"].filter((invoice: Invoice) => {
-                    return dayjs(invoice.paidAt).get("month") === (i + 1)
+                    //return dayjs(invoice.paidAt).get("month") === (i + 1)
+                    return parseInt(dayjs(invoice.paidAt).format("M")) === (i + 1)
                 });
+
                 let amount = 0;
                 invoicesOfTheMonth.forEach((invoice: Invoice) => {
-                    amount += invoice.totalAmount;
+                    amount += invoice.tvaApplicable ?
+                        invoice.totalAmount + (invoice.totalAmount * 20) / 100
+                        :
+                        invoice.totalAmount;
                 });
+
+                let variation = "";
+                if (dataToSet.length > 1) {
+                    const previousMonthAmount = dataToSet[i - 1].amount;
+                    if (previousMonthAmount < amount && previousMonthAmount > 0) {
+                        const increase = amount - previousMonthAmount;
+                        variation = `+${((increase / previousMonthAmount) * 100).toFixed()}%`;
+                    }
+                    if (previousMonthAmount > amount) {
+                        const decrease = previousMonthAmount - amount;
+                        variation = `-${((decrease / previousMonthAmount) * 100).toFixed()}%`;
+                    }
+                }
+
                 dataToSet.push({
                     month: dayjs.months()[i],
                     amount,
-                    variation: "" // TODO
+                    variation
                 });
             }
             setChartData(dataToSet);

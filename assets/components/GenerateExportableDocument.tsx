@@ -110,7 +110,12 @@ export function GenerateExportableDocument({data}: Props) {
                             <span>{service.description}</span>
                         </td>
                         <td data-label="Quantité">{service.quantity}</td>
-                        <td data-label="Prix unitaire (HT)">{service.unitPrice}€</td>
+                        <td data-label="Prix unitaire (HT)">
+                            {new Intl.NumberFormat("fr-FR", {
+                                style: "currency",
+                                currency: "EUR",
+                            }).format(service.unitPrice)}
+                        </td>
                     </tr>
                 ))}
                 </tbody>

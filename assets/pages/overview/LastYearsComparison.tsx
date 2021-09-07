@@ -2,7 +2,7 @@ import React from "react";
 
 export function LastYearsComparison() {
     return <div className="overview__lastYearsComparison">
-        <h3>Comparatif des dernières années</h3>
+        <h2>Comparatif des dernières années</h2>
         <div className="overview__lastYearsComparison-list">
             <p className="unaivalable-message">
                 Indisponible pour le moment.

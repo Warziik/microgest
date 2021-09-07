@@ -3,6 +3,7 @@ import {Invoice, InvoiceService} from "../types/Invoice";
 import dayjs from "dayjs";
 import {Devis} from "../types/Devis";
 import {useAuth} from "../hooks/useAuth";
+import {getName as getCountryName} from "i18n-iso-countries";
 
 const isInvoice = (object: any): object is Invoice =>
     (object as Invoice)["@type"] === "Invoice";
@@ -32,7 +33,13 @@ export function GenerateExportableDocument({data}: Props) {
                     <p>
                         {userData.postalCode} {userData.city}
                     </p>
-                    <p>{userData.country}</p>
+                    <p>
+                        {getCountryName(
+                            userData.country,
+                            "fr",
+                            {select: "official"}
+                        )}
+                    </p>
                     <p>{userData.email}</p>
                 </div>
                 <div className="invoiceExport__title">
@@ -52,7 +59,13 @@ export function GenerateExportableDocument({data}: Props) {
                     <p>
                         {data.customer.postalCode} {data.customer.city}
                     </p>
-                    <p>{data.customer.country}</p>
+                    <p>
+                        {getCountryName(
+                            data.customer.country,
+                            "fr",
+                            {select: "official"}
+                        )}
+                    </p>
                 </div>
             </header>
             <hr/>

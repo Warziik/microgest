@@ -9,6 +9,7 @@ import {AddEditCustomerForm} from "./AddEditCustomerForm";
 import dayjs from "dayjs";
 import {Collection} from "../../types/Collection";
 import {CustoemrsSkeleton} from "../../components/skeletons/CustomersSkeleton";
+import {getName as getCountryName} from "i18n-iso-countries";
 
 export function Customers() {
     const [customers, setCustomers] = useState<Customer[]>();
@@ -100,17 +101,6 @@ export function Customers() {
                 >
                     Ajouter un nouveau client
                 </Button>
-                {/*
-        <Button type="outline" icon="filter" disabled={true}>
-          Filtrer
-        </Button>
-        */}
-                {/*         <div className="customers__pagination-wrapper">
-          <p>
-            <strong>8 clients</strong> affichés par page
-          </p>
-          <div className="pagination"></div>
-        </div> */}
             </div>
             {!customers && <CustoemrsSkeleton/>}
             <div className="customers__list">
@@ -150,7 +140,13 @@ export function Customers() {
                             )}
                             <div className="customers__item-main-data">
                                 <p>Pays</p>
-                                <p>{customer.country}</p>
+                                <p>
+                                    {getCountryName(
+                                        customer.country,
+                                        "fr",
+                                        {select: "official"}
+                                    )}
+                                </p>
                             </div>
                             <div className="customers__item-main-data">
                                 <p>Dernière facture</p>

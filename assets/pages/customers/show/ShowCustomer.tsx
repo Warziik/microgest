@@ -25,6 +25,7 @@ import {fetchAllDevisOfCustomer} from "../../../services/DevisService";
 import {ShowCustomerSkeleton} from "../../../components/skeletons/ShowCustomerSkeleton";
 import {Icon} from "../../../components/Icon";
 import {Violation} from "../../../types/Violation";
+import {getName as getCountryName} from "i18n-iso-countries";
 
 type MatchParams = {
     id: string;
@@ -267,27 +268,33 @@ export function ShowCustomer() {
                         <div className="showCustomer__details">
                             <div className="showCustomer__details-item">
                                 <p>Adresse email</p>
-                                <p>{customer?.email}</p>
+                                <p>{customer.email}</p>
                             </div>
                             {customer?.phone && (
                                 <div className="showCustomer__details-item">
                                     <p>Numéro de téléphone</p>
-                                    <p>{customer?.phone}</p>
+                                    <p>{customer.phone}</p>
                                 </div>
                             )}
                             {customer?.type === "COMPANY" && (
                                 <div className="showCustomer__details-item">
                                     <p>Numéro SIRET</p>
-                                    <p>{customer?.siret}</p>
+                                    <p>{customer.siret}</p>
                                 </div>
                             )}
                             <div className="showCustomer__details-item">
                                 <p>Adresse</p>
-                                <p>{`${customer?.address}, ${customer?.postalCode} ${customer?.city}`}</p>
+                                <p>{`${customer.address}, ${customer.postalCode} ${customer.city}`}</p>
                             </div>
                             <div className="showCustomer__details-item">
                                 <p>Pays</p>
-                                <p>{customer?.country}</p>
+                                <p>
+                                    {getCountryName(
+                                        customer.country,
+                                        "fr",
+                                        {select: "official"}
+                                    )}
+                                </p>
                             </div>
                         </div>
 

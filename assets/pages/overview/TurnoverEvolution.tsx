@@ -42,8 +42,7 @@ export function TurnoverEvolution() {
             const dataToSet: ChartData[] = [];
             for (let i = 0; i <= dayjs().get("M"); i++) {
                 const invoicesOfTheMonth = data["hydra:member"].filter((invoice: Invoice) => {
-                    //return dayjs(invoice.paidAt).get("month") === (i + 1)
-                    return parseInt(dayjs(invoice.paidAt).format("M")) === (i + 1)
+                    return parseInt(dayjs.utc(invoice.paidAt).format("M")) === (i + 1)
                 });
 
                 let amount = 0;

@@ -1,8 +1,6 @@
 import React, {useEffect} from "react";
 import {TurnoverEvolution} from "./TurnoverEvolution";
 import {LastAddedDocuments} from "./LastAddedDocuments";
-import {LastYearsComparison} from "./LastYearsComparison";
-import {ExportDocuments} from "./ExportDocuments";
 
 export function Overview() {
     useEffect(() => {
@@ -12,8 +10,10 @@ export function Overview() {
     return (
         <div className="overview">
             <TurnoverEvolution/>
+            {/*
             <LastYearsComparison/>
             <ExportDocuments/>
+            */}
             <LastAddedDocuments/>
         </div>
     );

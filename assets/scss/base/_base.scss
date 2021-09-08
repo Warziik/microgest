@@ -82,8 +82,10 @@ html {
   }
 
   transition: color 0.3s ease 0.1s;
+
   &:hover {
     color: #fff;
+
     &:after {
       transform: scale(1);
     }
@@ -122,4 +124,9 @@ hr {
 ::selection {
   background: var(--primary-color);
   color: #fff;
+}
+
+.countryFlag {
+  margin-right: .8rem;
+  font-size: 1.6rem;
 }

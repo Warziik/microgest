@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import {Collection} from "../../types/Collection";
 import {CustoemrsSkeleton} from "../../components/skeletons/CustomersSkeleton";
 import {getName as getCountryName} from "i18n-iso-countries";
+import {CountryFlag} from "../../components/CountryFlag";
 
 export function Customers() {
     const [customers, setCustomers] = useState<Customer[]>();
@@ -141,6 +142,7 @@ export function Customers() {
                             <div className="customers__item-main-data">
                                 <p>Pays</p>
                                 <p>
+                                    <CountryFlag countryCode={customer.country}/>
                                     {getCountryName(
                                         customer.country,
                                         "fr",

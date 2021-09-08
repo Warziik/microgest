@@ -26,6 +26,7 @@ import {ShowCustomerSkeleton} from "../../../components/skeletons/ShowCustomerSk
 import {Icon} from "../../../components/Icon";
 import {Violation} from "../../../types/Violation";
 import {getName as getCountryName} from "i18n-iso-countries";
+import {CountryFlag} from "../../../components/CountryFlag";
 
 type MatchParams = {
     id: string;
@@ -289,6 +290,7 @@ export function ShowCustomer() {
                             <div className="showCustomer__details-item">
                                 <p>Pays</p>
                                 <p>
+                                    <CountryFlag countryCode={customer.country}/>
                                     {getCountryName(
                                         customer.country,
                                         "fr",

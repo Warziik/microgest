@@ -47,7 +47,6 @@ export function AddressStep() {
                 <TextInput error={errors.city} label="Ville" {...register("city")} />
                 <TextInput
                     error={errors.postalCode}
-                    type="number"
                     label="Code postal"
                     {...register("postalCode")}
                 />

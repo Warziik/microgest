@@ -74,7 +74,7 @@ export function PersonalInformationsForm() {
             country: "",
         },
     });
-    
+
     const onSubmit = handleSubmit(async (formData: FormData) => {
         if (formData.phone === "") {
             formData.phone = null;
@@ -173,7 +173,6 @@ export function PersonalInformationsForm() {
                             {...register("city")}
                         />
                         <TextInput
-                            type="number"
                             error={errors.postalCode}
                             label="Code postal"
                             {...register("postalCode")}

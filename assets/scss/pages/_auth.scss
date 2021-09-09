@@ -1,4 +1,7 @@
 .auth {
+  height: 100vh;
+  background: url(../../../public/auth_background.svg) no-repeat center / cover;
+
   h1 {
     font-size: 4.8rem;
     text-align: center;
@@ -12,6 +15,7 @@
     &-logo {
       width: 15rem;
     }
+
     &-ctas {
       display: flex;
       gap: 1.6rem;
@@ -37,13 +41,16 @@
 
 .auth__completeMessage {
   text-align: center;
+
   h2 {
     margin-bottom: 1.6rem;
   }
+
   p {
     width: min(100%, 34.4rem);
     margin-inline: auto;
   }
+
   &-check {
     margin-left: auto;
     margin-right: auto;

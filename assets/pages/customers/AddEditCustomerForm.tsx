@@ -266,7 +266,6 @@ export function AddEditCustomerForm({customerToEdit, changeCustomer}: Props) {
 
                     <TextInput
                         error={errors.postalCode}
-                        type="number"
                         label="Code postal"
                         {...register("postalCode")}
                     />

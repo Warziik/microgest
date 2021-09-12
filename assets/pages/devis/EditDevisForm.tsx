@@ -1,6 +1,6 @@
 import {yupResolver} from "@hookform/resolvers/yup";
 import React, {useContext, useMemo} from "react";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {Option, SelectInput} from "../../components/form/SelectInput";
 import {ModalContext} from "../../components/Modal";
 import {useToast} from "../../hooks/useToast";
@@ -19,7 +19,7 @@ type Props = {
 };
 
 type FormData = {
-    status: string;
+    status: Option;
     sentAt: string | null;
     signedAt: string | null;
 };
@@ -38,7 +38,7 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
     }, []);
 
     const schema: yup.AnyObjectSchema = yup.object().shape({
-        status: yup.string(),
+        status: yup.object(),
         signedAt: yup.mixed().when("status", {
             is: "SIGNED",
             then: yup.date().typeError("Le format de la date est invalide."),
@@ -51,6 +51,7 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
 
     const {
         register,
+        control,
         handleSubmit,
         formState: {isSubmitting, errors},
         setError,
@@ -59,7 +60,7 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
         mode: "onTouched",
         resolver: yupResolver(schema),
         defaultValues: {
-            status: devisToEdit.status ?? "NEW",
+            status: devisToEdit.status ? selectStatusOptions.find((option: Option) => option.value === devisToEdit.status) as Option : selectStatusOptions[0],
             sentAt: devisToEdit?.sentAt ? dayjs(devisToEdit.sentAt).format("YYYY-MM-DD") : null,
             signedAt: devisToEdit?.signedAt
                 ? dayjs(devisToEdit.signedAt).format("YYYY-MM-DD")
@@ -68,18 +69,21 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
     });
 
     const onSubmit = handleSubmit(async (formData: FormData) => {
-        if (formData.status === "NEW" || formData.status === "CANCELLED") {
+        if (formData.status.value === "NEW" || formData.status.value === "CANCELLED") {
             formData.signedAt = null;
             formData.sentAt = null;
         }
-        if (formData.status === "SIGNED") {
+        if (formData.status.value === "SIGNED") {
             formData.sentAt = null;
         }
-        if (formData.status === "SENT") {
+        if (formData.status.value === "SENT") {
             formData.signedAt = null;
         }
 
-        const [isSuccess, data] = await updateDevis(devisToEdit.id, formData);
+        const [isSuccess, data] = await updateDevis(devisToEdit.id, {
+            ...formData,
+            status: formData.status.value as string
+        });
         if (isSuccess) {
             toast("success", "Le devis a bien été mis à jour.");
             editDevis(data as Devis);
@@ -104,14 +108,21 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
 
     return (
         <form className="editInvoiceForm" onSubmit={onSubmit}>
-            <SelectInput
-                error={errors.status}
-                label="Statut"
-                options={selectStatusOptions}
-                {...register("status")}
+            <Controller
+                name="status"
+                control={control}
+                render={({field}) => (
+                    <SelectInput
+                        label="Statut"
+                        options={selectStatusOptions}
+                        placeholder="Sélectionner un statut..."
+                        isSearchable={false}
+                        {...field}
+                    />
+                )}
             />
 
-            {watch("status") === "SENT" && (
+            {watch("status").value === "SENT" && (
                 <DatePickerInput
                     error={errors.sentAt}
                     label="Date d'envoi"
@@ -119,7 +130,7 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
                 />
             )}
 
-            {watch("status") === "SIGNED" && (
+            {watch("status").value === "SIGNED" && (
                 <DatePickerInput
                     error={errors.signedAt}
                     label="Date de signature"

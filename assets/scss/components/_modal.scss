@@ -24,6 +24,7 @@
     background: none;
     display: flex;
     justify-content: center;
+
     svg {
       max-width: 1.6rem;
       max-height: 1.6rem;
@@ -40,6 +41,7 @@
   }
 
   transition: visibility 0.3s;
+
   &[aria-hidden="true"] {
     animation-name: fadeOut;
   }
@@ -52,6 +54,7 @@
   .modal__content {
     border-radius: var(--radius);
     animation: modalJumpToCenter 0.3s ease-in-out;
+    overflow: visible !important;
   }
 
   &[aria-hidden="true"] {
@@ -64,6 +67,7 @@
 .modal__right {
   display: flex;
   justify-content: flex-end;
+
   .modal__content {
     width: 53.6rem;
     animation: modalSlideToLeft 0.3s ease-in-out;
@@ -82,6 +86,7 @@
   }
   .modal__center {
     place-items: end;
+
     .modal__content {
       border-radius: 0;
       border-top-left-radius: var(--radius);

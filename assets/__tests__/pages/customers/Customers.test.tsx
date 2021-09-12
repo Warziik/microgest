@@ -60,6 +60,6 @@ describe("Customers Page", () => {
         expect(screen.getByText("demo@test.dev")).toBeInTheDocument();
         expect(screen.getByText("demo@test.dev").tagName).toBe("P");
 
-        expect(screen.getAllByText("France")).toHaveLength(3);
+        expect(screen.getAllByText("France")).toHaveLength(2);
     });
 });

@@ -14,7 +14,7 @@ import {ErrorResponse} from "../../../types/ErrorResponse";
 import {Invoice} from "../../../types/Invoice";
 import dayjs from "dayjs";
 import {Option, SelectInput} from "../../../components/form/SelectInput";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {Modal} from "../../../components/Modal";
 import {AddEditCustomerForm} from "../AddEditCustomerForm";
 import {Breadcrumb} from "../../../components/Breadcrumb";
@@ -47,11 +47,11 @@ export function ShowCustomer() {
     const [showDeleteCustomerModal, setShowDeleteCustomerModal] = useState(false);
     const openDeleteCustomerModalBtn = useRef<HTMLButtonElement>(null);
 
-    const {register, watch} = useForm<{
-        dataType: "INVOICES" | "PRE_INVOICES" | "AVOIRS" | "DEVIS";
+    const {control, watch} = useForm<{
+        dataType: Option;
     }>({
         mode: "onChange",
-        defaultValues: {dataType: "INVOICES"},
+        defaultValues: {dataType: {value: "INVOICES", label: "Afficher les factures associées"}},
     });
 
     const selectDataTypeOptions: Option[] = [
@@ -303,19 +303,25 @@ export function ShowCustomer() {
                         <div className="showCustomer__taskBar">
                             <p>
                                 <strong>
-                                    {(watch("dataType") === "INVOICES" && invoices.length.toString()) ||
-                                    (watch("dataType") === "DEVIS" && devis.length.toString()) ||
-                                    (watch("dataType") === "PRE_INVOICES" && "0") ||
-                                    (watch("dataType") === "AVOIRS" && "0")}
+                                    {(watch("dataType").value === "INVOICES" && invoices.length.toString()) ||
+                                    (watch("dataType").value === "DEVIS" && devis.length.toString()) ||
+                                    (watch("dataType").value === "PRE_INVOICES" && "0") ||
+                                    (watch("dataType").value === "AVOIRS" && "0")}
                                 </strong>
                                 &nbsp;document(s) trouvé(s).
                             </p>
 
                             <form>
-                                <SelectInput
-                                    error={undefined}
-                                    options={selectDataTypeOptions}
-                                    {...register("dataType")}
+                                <Controller
+                                    name="dataType"
+                                    control={control}
+                                    render={({field}) => (
+                                        <SelectInput
+                                            options={selectDataTypeOptions}
+                                            {...field}
+                                            isSearchable={false}
+                                        />
+                                    )}
                                 />
                             </form>
                             {/*               <Button icon="download" type="contrast" disabled={true}>
@@ -331,11 +337,11 @@ export function ShowCustomer() {
                   </Button> */}
                         </div>
 
-                        {watch("dataType") === "INVOICES" && (
+                        {watch("dataType").value === "INVOICES" && (
                             <InvoicesData invoices={invoices}/>
                         )}
-                        {watch("dataType") === "DEVIS" && <DevisData devis={devis}/>}
-                        {watch("dataType") === "PRE_INVOICES" && (
+                        {watch("dataType").value === "DEVIS" && <DevisData devis={devis}/>}
+                        {watch("dataType").value === "PRE_INVOICES" && (
                             <div className="invoices__list">
                                 <p>
                                     Les factures d&lsquo;acomptes ne sont pas disponibles pour le
@@ -343,7 +349,7 @@ export function ShowCustomer() {
                                 </p>
                             </div>
                         )}
-                        {watch("dataType") === "AVOIRS" && (
+                        {watch("dataType").value === "AVOIRS" && (
                             <div className="invoices__list">
                                 <p>Les avoirs ne sont pas disponibles pour le moment.</p>
                             </div>

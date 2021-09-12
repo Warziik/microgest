@@ -1,29 +1,23 @@
 import React, {useContext, useEffect, useState} from "react";
-import {TextInput} from "../../../components/form/TextInput";
-import {Option, SelectInput} from "../../../components/form/SelectInput";
+import {Option} from "../../../components/form/SelectInput";
 import {Button} from "../../../components/Button";
-import {useFormContext} from "react-hook-form";
+import {useFormContext, FormProvider} from "react-hook-form";
 import {StepperContext} from "../../../components/stepper/Stepper";
 import {getNames as getCountries, alpha2ToAlpha3} from "i18n-iso-countries";
+import {AddressFormPart} from "../../../components/form/parts/AddressFormPart";
 
 export function AddressStep() {
     const {nextStep, previousStep} = useContext(StepperContext);
 
-    const {
-        register,
-        formState: {errors, isSubmitting},
-        trigger,
-        setValue
-    } = useFormContext();
+    const methods = useFormContext();
+    const {trigger, setValue, formState: {isSubmitting}} = methods;
 
     const [selectCountryOptions, setSelectCountryOptions] = useState<Option[]>([]);
 
     const onSubmitStepTwo = async () => {
         const result = await trigger(["address", "city", "postalCode", "country"]);
 
-        if (result) {
-            nextStep();
-        }
+        if (result) nextStep();
     };
 
     useEffect(() => {
@@ -37,26 +31,9 @@ export function AddressStep() {
 
     return (
         <>
-            <SelectInput
-                error={errors.country}
-                options={selectCountryOptions}
-                label="Pays"
-                {...register("country")}
-            />
-            <div className="settings__personalInformations-addressForm-city">
-                <TextInput error={errors.city} label="Ville" {...register("city")} />
-                <TextInput
-                    error={errors.postalCode}
-                    label="Code postal"
-                    {...register("postalCode")}
-                />
-            </div>
-            <TextInput
-                error={errors.address}
-                label="Adresse"
-                {...register("address")}
-            />
-
+            <FormProvider {...methods}>
+                <AddressFormPart selectCountryOptions={selectCountryOptions}/>
+            </FormProvider>
             <div className="stepper__ctas">
                 <Button onClick={previousStep} icon="arrow-left" type="contrast">
                     Précédent

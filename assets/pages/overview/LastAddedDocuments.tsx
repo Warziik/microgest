@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import {Link} from "react-router-dom";
 import {Icon} from "../../components/Icon";
 import {Option, SelectInput} from "../../components/form/SelectInput";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {Devis} from "../../types/Devis";
 import {LastAddedDocumentsSkeleton} from "../../components/skeletons/LastAddedDocumentsSkeleton";
 
@@ -21,11 +21,11 @@ export function LastAddedDocuments() {
         {value: "DEVIS", label: "Uniquement les devis"}
     ];
 
-    const {register, watch} = useForm<{
-        dataType: "ALL" | "INVOICES" | "DEVIS";
+    const {control, watch} = useForm<{
+        dataType: Option;
     }>({
         mode: "onChange",
-        defaultValues: {dataType: "ALL"},
+        defaultValues: {dataType: {value: "ALL", label: "Afficher tous les documents"}},
     });
 
     const fetchData = useCallback(() => {
@@ -57,27 +57,32 @@ export function LastAddedDocuments() {
     return <div className="overview__lastAddedDocuments">
         <div className="overview__lastAddedDocuments-fixedHeader">
             <h2>Derniers documents ajoutés</h2>
-            <div className="invoices__filter-ctas">
-                <form>
-                    <SelectInput
-                        error={undefined}
-                        options={selectDataTypeOptions}
-                        {...register("dataType")}
-                    />
-                </form>
-            </div>
+            <form>
+                <Controller
+                    name="dataType"
+                    control={control}
+                    render={({field}) => (
+                        <SelectInput
+                            options={selectDataTypeOptions}
+                            {...field}
+                            isSearchable={false}
+                            className="customFormSelectSmall"
+                        />
+                    )}
+                />
+            </form>
         </div>
         <div className="overview__lastAddedDocuments-list">
             {globalData && <>
-                {watch("dataType") === "ALL" && globalData.map((data: Invoice | Devis, index: number) =>
+                {watch("dataType").value === "ALL" && globalData.map((data: Invoice | Devis, index: number) =>
                     <AddedDocument key={index} data={data}/>
                 )}
 
-                {watch("dataType") === "INVOICES" && invoices && invoices.map((data: Invoice, index: number) =>
+                {watch("dataType").value === "INVOICES" && invoices && invoices.map((data: Invoice, index: number) =>
                     <AddedDocument key={index} data={data}/>
                 )}
 
-                {watch("dataType") === "DEVIS" && devis && devis.map((data: Devis, index: number) =>
+                {watch("dataType").value === "DEVIS" && devis && devis.map((data: Devis, index: number) =>
                     <AddedDocument key={index} data={data}/>
                 )}
             </> || <LastAddedDocumentsSkeleton/>}

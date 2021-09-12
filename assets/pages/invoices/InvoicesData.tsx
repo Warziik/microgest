@@ -8,7 +8,7 @@ import {Button} from "../../components/Button";
 import dayjs from "dayjs";
 import {useState} from "react";
 import {Icon} from "../../components/Icon";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {Option, SelectInput} from "../../components/form/SelectInput";
 import {useAuth} from "../../hooks/useAuth";
 
@@ -40,11 +40,11 @@ export function InvoicesData({invoices, displayCustomer = false, displayUrls = f
     const unpaidRef = useRef(null);
     const draftsRef = useRef(null);
 
-    const {register, watch} = useForm<{
-        year: number;
+    const {control, watch} = useForm<{
+        year: Option;
     }>({
         mode: "onChange",
-        defaultValues: {year: dayjs().get("y")},
+        defaultValues: {year: {value: dayjs().get("y"), label: dayjs().get("y").toString()}},
     });
 
     const getDefaultTab = () => {
@@ -114,11 +114,11 @@ export function InvoicesData({invoices, displayCustomer = false, displayUrls = f
         if (allInvoices) {
             setAllInvoices({
                 ...allInvoices,
-                [watch("year")]: allInvoices[watch("year")].reverse(),
+                [watch("year").value]: allInvoices[watch("year").value].reverse(),
             });
             setSortableTypeReverse({
                 ...sortableTypeReverse,
-                [watch("year")]: !sortableTypeReverse[watch("year")],
+                [watch("year").value]: !sortableTypeReverse[watch("year").value],
             });
         }
     };
@@ -133,23 +133,30 @@ export function InvoicesData({invoices, displayCustomer = false, displayUrls = f
                 <>
                     {allInvoices && (
                         <>
-                            <div className="invoices__filter-ctas">
+                            <div className="sorting-ctas">
                                 <form>
-                                    <SelectInput
-                                        error={undefined}
-                                        options={selectYearOptions}
-                                        {...register("year")}
+                                    <Controller
+                                        name="year"
+                                        control={control}
+                                        render={({field}) => (
+                                            <SelectInput
+                                                options={selectYearOptions}
+                                                isSearchable={false}
+                                                className="customFormSelectSmall"
+                                                {...field}
+                                            />
+                                        )}
                                     />
                                 </form>
                                 <button onClick={handleSort}>
                                     <Icon name="filter"/>
                                     Trier par ordre&nbsp;
-                                    {sortableTypeReverse[watch("year")] === true
+                                    {sortableTypeReverse[watch("year").value]
                                         ? "croissant"
                                         : "décroissant"}
                                 </button>
                             </div>
-                            {allInvoices[watch("year")].map(
+                            {allInvoices[watch("year").value].map(
                                 (object: MonthlyInvoices, index: number) => (
                                     <div key={index} className="invoices__list">
                                         <div className="invoices__list-header">

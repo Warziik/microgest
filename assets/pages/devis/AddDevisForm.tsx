@@ -4,7 +4,7 @@ import {useToast} from "../../hooks/useToast";
 import {InvoiceService, InvoiceServiceFormData} from "../../types/Invoice";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {useFieldArray, useForm} from "react-hook-form";
+import {Controller, useFieldArray, useForm} from "react-hook-form";
 import {Button} from "../../components/Button";
 import {Customer} from "../../types/Customer";
 import {fetchAllCustomers} from "../../services/CustomerService";
@@ -24,7 +24,7 @@ type Props = {
 };
 
 type FormData = {
-    customer: number;
+    customer: Option;
     validityDate: string;
     workStartDate: string;
     workDuration: string;
@@ -39,15 +39,11 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
     const {onClose} = useContext(ModalContext);
     const toast = useToast();
 
-    const [selectCustomerOptions, setSelectCustomerOptions] = useState<Option[]>([
-        {value: 0, label: "Sélectionner un client"},
-    ]);
+    const [selectCustomerOptions, setSelectCustomerOptions] = useState<Option[]>([]);
 
     const schema: yup.AnyObjectSchema = yup.object().shape({
         customer: yup
-            .number()
-            .min(1, "Veuillez sélectionner ou créer un client.")
-            .typeError("Veuillez séléctionner un client ou en créer un.")
+            .object()
             .required("Ce champ est requis."),
         validityDate: yup.date().typeError("Le format de la date est invalide."),
         workStartDate: yup.date().typeError("Le format de la date est invalide."),
@@ -80,7 +76,6 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
         mode: "onTouched",
         resolver: yupResolver(schema),
         defaultValues: {
-            customer: selectCustomerOptions[0].value as number,
             services: devisToEdit?.services.map((service: InvoiceService) => {
                 return {
                     name: service.name,
@@ -117,8 +112,6 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
                 });
             });
             setSelectCustomerOptions([...selectCustomerOptions, ...customers]);
-
-            if (devisToEdit) setValue("customer", devisToEdit.customer.id);
         }
     };
 
@@ -130,10 +123,11 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
         const [isSuccess, data] = devisToEdit
             ? await updateDevis(devisToEdit.id, {
                 ...formData,
-                customer: `/api/customers/${formData.customer}`,
+                customer: `/api/customers/${formData.customer.value as number}`,
             })
-            : await createDevis(formData.customer, {
+            : await createDevis(formData.customer.value as number, {
                 ...formData,
+                customer: formData.customer.value as number,
                 status: "NEW",
             });
         if (isSuccess) {
@@ -163,15 +157,28 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
         }
     });
 
+    useEffect(() => {
+        if (devisToEdit) setValue("customer", selectCustomerOptions.find((option: Option) => {
+            return option.value === devisToEdit.customer.id;
+        }) as Option);
+    }, [selectCustomerOptions]);
+
     return (
         <form className="addInvoiceForm" onSubmit={onSubmit}>
             <div className="addInvoiceForm__general">
                 <h3>Général</h3>
-                <SelectInput
-                    error={errors.customer}
-                    label="Client"
-                    options={selectCustomerOptions}
-                    {...register("customer")}
+                <Controller
+                    name="customer"
+                    control={control}
+                    render={({field}) => (
+                        <SelectInput
+                            label="Client"
+                            options={selectCustomerOptions}
+                            placeholder="Sélectionner un client..."
+                            noOptionMessage="Aucun client trouvé."
+                            {...field}
+                        />
+                    )}
                 />
 
                 <DatePickerInput

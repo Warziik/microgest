@@ -63,6 +63,7 @@ class Devis
     #[Groups([
         'devis:read',
         'devis:write',
+        'devis:update',
         'allDevis:read'
     ])]
     private ?Customer $customer = null;

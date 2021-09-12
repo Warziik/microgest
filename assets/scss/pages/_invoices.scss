@@ -127,43 +127,6 @@
   }
 }
 
-.invoices__filter-ctas,
-.devis__filter-ctas {
-  margin-bottom: 2.4rem;
-  display: flex;
-  gap: 1.6rem;
-
-  button,
-  select {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem 1.6rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    color: var(--text-color);
-    border-radius: calc(var(--radius) / 3);
-    background-color: var(--select-background);
-    border: 0.05rem solid var(--border-color);
-    outline: none;
-    appearance: none;
-
-    svg {
-      max-width: 1.6rem;
-      max-height: 1.6rem;
-      fill: currentColor;
-    }
-
-    transition: all 0.3s ease-in-out;
-
-    &:hover {
-      font-weight: 700;
-      background-color: var(--primary-color-a05);
-    }
-  }
-}
-
 @media screen and (max-width: 600px) {
   .addInvoiceForm {
     &__services {

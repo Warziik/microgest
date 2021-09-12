@@ -83,6 +83,8 @@
     background-color: var(--input-background);
 
     transition: all 0.3s ease-in;
+    font-family: inherit;
+    font-size: 1.6rem;
 
     &:focus {
       outline: none;
@@ -94,12 +96,6 @@
   &__select select {
     @extend .form__input;
     appearance: none;
-  }
-
-  &__datepicker {
-    .form__input {
-      font-family: inherit;
-    }
   }
 
   &__textarea {
@@ -119,6 +115,7 @@
   &__switch {
     display: flex;
     gap: 0 1.6rem;
+
     .form__label {
       margin-bottom: 0;
     }
@@ -198,6 +195,120 @@
 form {
   .form__group:last-child {
     margin-bottom: 0;
+  }
+}
+
+
+.sorting-ctas {
+  margin-bottom: 2.4rem;
+  display: flex;
+  gap: 1.6rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.6rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--text-color);
+    border-radius: calc(var(--radius) / 3);
+    background-color: var(--select-background);
+    border: 0.05rem solid var(--border-color);
+    outline: none;
+
+    svg {
+      max-width: 1.6rem;
+      max-height: 1.6rem;
+      fill: currentColor;
+    }
+
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      font-weight: 700;
+      background-color: var(--primary-color-a05);
+    }
+  }
+}
+
+.customFormSelect {
+  &__control {
+    min-height: 0 !important;
+    border-radius: var(--radius) !important;
+    border: 1px solid var(--input-color) !important;
+    background-color: var(--input-background) !important;
+  }
+
+  &__value-container {
+    padding: 1.6rem !important;
+
+    .customFormSelect__placeholder, .customFormSelect__single-value {
+      color: var(--text-color-alt) !important;
+      font-size: 1.6rem !important;
+    }
+
+    div:last-of-type {
+      margin: 0 !important;
+    }
+  }
+
+  &__indicators {
+    .customFormSelect__indicator {
+      padding: 0 1.6rem !important;
+      color: var(--text-color) !important;
+    }
+
+    .customFormSelect__indicator-separator {
+      background: none;
+    }
+  }
+
+  &__menu {
+    margin: .8rem 0 !important;
+    background-color: var(--input-background) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .16) !important;
+    border-radius: calc(var(--radius) / 2) !important;
+
+    &-list {
+      padding: .8rem 0 !important;
+    }
+  }
+
+  &__option {
+    padding: .8rem 1.6rem !important;
+    color: var(--text-color) !important;
+
+    &--is-focused {
+      background-color: var(--primary-color-a1) !important;
+    }
+
+    &--is-selected {
+      color: #FFF !important;
+      background-color: var(--primary-color) !important;
+      font-weight: 600;
+    }
+  }
+}
+
+.customFormSelectSmall {
+  .customFormSelect__control {
+    width: 100% !important;
+    border-radius: calc(var(--radius) / 3) !important;
+    border: 0.05rem solid var(--border-color) !important;
+    background-color: var(--select-background) !important;
+  }
+
+  .customFormSelect__value-container {
+    padding-block: 0.8rem !important;
+
+    .customFormSelect__placeholder, .customFormSelect__single-value {
+      color: var(--text-color) !important;
+    }
+
+    .customFormSelect__placeholder {
+      font-weight: 600;
+    }
   }
 }
 

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button} from "../../components/Button";
 import {useAuth} from "../../hooks/useAuth";
 import * as yup from "yup";
-import {useForm} from "react-hook-form";
+import {useForm, FormProvider} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {TextInput} from "../../components/form/TextInput";
 import {updateUser} from "../../services/UserService";
@@ -10,7 +10,8 @@ import {useToast} from "../../hooks/useToast";
 import {Violation} from "../../types/Violation";
 import {ErrorResponse} from "../../types/ErrorResponse";
 import {getNames as getCountries, alpha2ToAlpha3} from "i18n-iso-countries";
-import {Option, SelectInput} from "../../components/form/SelectInput";
+import {Option} from "../../components/form/SelectInput";
+import {AddressFormPart} from "../../components/form/parts/AddressFormPart";
 
 type FormData = {
     firstname: string;
@@ -20,7 +21,7 @@ type FormData = {
     address: string;
     city: string;
     postalCode: string;
-    country: string;
+    country: Option;
 };
 
 export function PersonalInformationsForm() {
@@ -49,18 +50,12 @@ export function PersonalInformationsForm() {
             .string()
             .matches(/^\d{5}$/, "Le code postal doit contenir 5 chiffres.")
             .required("Ce champ est requis."),
-        country: yup.string().required("Ce champ est requis."),
+        country: yup.object().required("Ce champ est requis."),
     });
 
     const [selectCountryOptions, setSelectCountryOptions] = useState<Option[]>([]);
 
-    const {
-        register,
-        handleSubmit,
-        formState: {isSubmitting, errors},
-        setError,
-        setValue
-    } = useForm<FormData>({
+    const methods = useForm<FormData>({
         mode: "onTouched",
         resolver: yupResolver(schema),
         defaultValues: {
@@ -70,10 +65,16 @@ export function PersonalInformationsForm() {
             phone: userData.phone ?? "",
             address: userData.address,
             city: userData.city,
-            postalCode: userData.postalCode.toString(),
-            country: "",
+            postalCode: userData.postalCode.toString()
         },
     });
+    const {
+        register,
+        handleSubmit,
+        formState: {isSubmitting, errors},
+        setError,
+        setValue
+    } = methods;
 
     const onSubmit = handleSubmit(async (formData: FormData) => {
         if (formData.phone === "") {
@@ -81,6 +82,7 @@ export function PersonalInformationsForm() {
         }
         const [isSuccess, data] = await updateUser(userData.id, {
             ...formData,
+            country: formData.country.value,
             postalCode: parseInt(formData.postalCode),
         });
         if (isSuccess) {
@@ -123,72 +125,52 @@ export function PersonalInformationsForm() {
     }, []);
 
     useEffect(() => {
-        setValue("country", userData.country);
+        setValue("country", selectCountryOptions.find((option: Option) => option.value === userData.country) as Option);
     }, [selectCountryOptions]);
 
     return (
         <div className="settings__personalInformations">
-            <form className="settings__personalInformations-form" onSubmit={onSubmit}>
-                <div className="settings__personalInformations-nameForm">
-                    <TextInput
-                        error={errors.firstname}
-                        label="Prénom"
-                        {...register("firstname")}
-                    />
-
-                    <TextInput
-                        error={errors.lastname}
-                        label="Nom de famille"
-                        {...register("lastname")}
-                    />
-                </div>
-
-                <div className="settings__personalInformations-contactForm">
-                    <h3>Contact</h3>
-                    <TextInput
-                        error={errors.email}
-                        type="email"
-                        label="Adresse email"
-                        {...register("email")}
-                    />
-                    <TextInput
-                        error={errors.phone}
-                        label="Numéro de téléphone"
-                        {...register("phone")}
-                    />
-                </div>
-
-                <div className="settings__personalInformations-addressForm">
-                    <h3>Adresse</h3>
-                    <SelectInput
-                        error={errors.country}
-                        label="Pays"
-                        options={selectCountryOptions}
-                        {...register("country")}
-                    />
-                    <div className="settings__personalInformations-addressForm-city">
+            <FormProvider {...methods}>
+                <form className="settings__personalInformations-form" onSubmit={onSubmit}>
+                    <div className="settings__personalInformations-nameForm">
                         <TextInput
-                            error={errors.city}
-                            label="Ville"
-                            {...register("city")}
+                            error={errors.firstname}
+                            label="Prénom"
+                            {...register("firstname")}
                         />
+
                         <TextInput
-                            error={errors.postalCode}
-                            label="Code postal"
-                            {...register("postalCode")}
+                            error={errors.lastname}
+                            label="Nom de famille"
+                            {...register("lastname")}
                         />
                     </div>
-                    <TextInput
-                        error={errors.address}
-                        label="Adresse"
-                        {...register("address")}
-                    />
-                </div>
 
-                <Button isLoading={isSubmitting} htmlType="submit" center={true}>
-                    Mettre à jour
-                </Button>
-            </form>
+                    <div className="settings__personalInformations-contactForm">
+                        <h3>Contact</h3>
+                        <TextInput
+                            error={errors.email}
+                            type="email"
+                            label="Adresse email"
+                            {...register("email")}
+                        />
+                        <TextInput
+                            error={errors.phone}
+                            label="Numéro de téléphone"
+                            {...register("phone")}
+                        />
+                    </div>
+
+                    <div className="settings__personalInformations-addressForm">
+                        <h3>Adresse</h3>
+                        <AddressFormPart selectCountryOptions={selectCountryOptions}/>
+                    </div>
+
+                    <Button isLoading={isSubmitting} htmlType="submit" center={true}>
+                        Mettre à jour
+                    </Button>
+                </form>
+            </FormProvider>
         </div>
     );
 }

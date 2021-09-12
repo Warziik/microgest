@@ -19,17 +19,13 @@ import {
 import {fetchTurnoverEvolutionChartData} from "../../services/ChartService";
 import dayjs from "dayjs";
 import {Invoice} from "../../types/Invoice";
-import {useForm} from "react-hook-form";
+import {useForm, Controller} from "react-hook-form";
 import {Option, SelectInput} from "../../components/form/SelectInput";
 
 type ChartData = {
     month: string;
     amount: number;
     variation: string;
-}
-
-type FormChatType = {
-    chartType: "WAVE" | "BAR" | "LINE" | "RADAR";
 }
 
 export function TurnoverEvolution() {
@@ -87,14 +83,14 @@ export function TurnoverEvolution() {
         {value: "RADAR", label: "Radar"}
     ];
 
-    const {register, watch} = useForm<FormChatType>({
+    const {control, watch} = useForm<{ chartType: Option }>({
         mode: "onChange",
-        defaultValues: {chartType: "WAVE"}
+        defaultValues: {chartType: {value: "WAVE", label: "Vague (défault)"}}
     });
 
     const renderSelectedChart = () => {
         if (chartData) {
-            switch (watch("chartType")) {
+            switch (watch("chartType").value) {
                 case "WAVE": {
                     return <GenerateWaveChart chartData={chartData}/>;
                 }
@@ -113,15 +109,20 @@ export function TurnoverEvolution() {
 
     return <div className="overview__turnoverEvolution">
         <h2>Évolution de votre chiffre d&lsquo;affaire</h2>
-        <div className="invoices__filter-ctas">
-            <form>
-                <SelectInput
-                    error={undefined}
-                    options={selectChartTypeOptions}
-                    {...register("chartType")}
-                />
-            </form>
-        </div>
+        <form>
+            <Controller
+                name="chartType"
+                control={control}
+                render={({field}) => (
+                    <SelectInput
+                        options={selectChartTypeOptions}
+                        {...field}
+                        isSearchable={false}
+                        className="customFormSelectSmall"
+                    />
+                )}
+            />
+        </form>
         {renderSelectedChart()}
     </div>
 }

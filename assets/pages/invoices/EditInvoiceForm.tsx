@@ -1,6 +1,6 @@
 import {yupResolver} from "@hookform/resolvers/yup";
 import React, {useContext, useMemo} from "react";
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {Option, SelectInput} from "../../components/form/SelectInput";
 import {ModalContext} from "../../components/Modal";
 import {useToast} from "../../hooks/useToast";
@@ -19,7 +19,7 @@ type Props = {
 };
 
 type FormData = {
-    status: string;
+    status: Option;
     sentAt: string | null;
     paidAt: string | null;
 };
@@ -38,7 +38,7 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
     }, []);
 
     const schema: yup.AnyObjectSchema = yup.object().shape({
-        status: yup.string(),
+        status: yup.object(),
         paidAt: yup.mixed().when("status", {
             is: "PAID",
             then: yup.date().typeError("Le format de la date est invalide."),
@@ -51,6 +51,7 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
 
     const {
         register,
+        control,
         handleSubmit,
         formState: {isSubmitting, errors},
         setError,
@@ -59,25 +60,28 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
         mode: "onTouched",
         resolver: yupResolver(schema),
         defaultValues: {
-            status: invoiceToEdit.status ?? "NEW",
+            status: invoiceToEdit.status ? selectStatusOptions.find((option: Option) => option.value === invoiceToEdit.status) as Option : selectStatusOptions[0],
             sentAt: invoiceToEdit?.sentAt ? dayjs(invoiceToEdit.sentAt).format("YYYY-MM-DD") : null,
             paidAt: invoiceToEdit?.paidAt ? dayjs(invoiceToEdit.paidAt).format("YYYY-MM-DD") : null,
         },
     });
 
     const onSubmit = handleSubmit(async (formData: FormData) => {
-        if (formData.status === "NEW" || formData.status === "CANCELLED") {
+        if (formData.status.value === "NEW" || formData.status.value === "CANCELLED") {
             formData.paidAt = null;
             formData.sentAt = null;
         }
-        if (formData.status === "PAID") {
+        if (formData.status.value === "PAID") {
             formData.sentAt = null;
         }
-        if (formData.status === "SENT") {
+        if (formData.status.value === "SENT") {
             formData.paidAt = null;
         }
 
-        const [isSuccess, data] = await updateInvoice(invoiceToEdit.id, formData);
+        const [isSuccess, data] = await updateInvoice(invoiceToEdit.id, {
+            ...formData,
+            status: formData.status.value as string
+        });
         if (isSuccess) {
             toast("success", "La facture a bien été mise à jour.");
             editInvoice(data as Invoice);
@@ -102,14 +106,21 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
 
     return (
         <form className="editInvoiceForm" onSubmit={onSubmit}>
-            <SelectInput
-                error={errors.status}
-                label="Statut"
-                options={selectStatusOptions}
-                {...register("status")}
+            <Controller
+                name="status"
+                control={control}
+                render={({field}) => (
+                    <SelectInput
+                        label="Statut"
+                        options={selectStatusOptions}
+                        placeholder="Sélectionner un statut..."
+                        isSearchable={false}
+                        {...field}
+                    />
+                )}
             />
 
-            {watch("status") === "SENT" && (
+            {watch("status").value === "SENT" && (
                 <DatePickerInput
                     error={errors.sentAt}
                     label="Date d'envoi"
@@ -117,7 +128,7 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
                 />
             )}
 
-            {watch("status") === "PAID" && (
+            {watch("status").value === "PAID" && (
                 <DatePickerInput
                     error={errors.paidAt}
                     label="Date de paiement"

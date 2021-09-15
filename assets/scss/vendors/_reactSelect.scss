@@ -1,0 +1,79 @@
+.customFormSelect {
+  &__control {
+    min-height: 0 !important;
+    border-radius: var(--radius) !important;
+    border: 1px solid var(--input-color) !important;
+    background-color: var(--input-background) !important;
+  }
+
+  &__value-container {
+    padding: 1.6rem !important;
+
+    .customFormSelect__placeholder, .customFormSelect__single-value {
+      color: var(--text-color-alt) !important;
+      font-size: 1.6rem !important;
+    }
+
+    div:last-of-type {
+      margin: 0 !important;
+    }
+  }
+
+  &__indicators {
+    .customFormSelect__indicator {
+      padding: 0 1.6rem !important;
+      color: var(--text-color) !important;
+    }
+
+    .customFormSelect__indicator-separator {
+      background: none;
+    }
+  }
+
+  &__menu {
+    margin: .8rem 0 !important;
+    background-color: var(--input-background) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .16) !important;
+    border-radius: calc(var(--radius) / 2) !important;
+
+    &-list {
+      padding: .8rem 0 !important;
+    }
+  }
+
+  &__option {
+    padding: .8rem 1.6rem !important;
+    color: var(--text-color) !important;
+
+    &--is-focused {
+      background-color: var(--primary-color-a1) !important;
+    }
+
+    &--is-selected {
+      color: #FFF !important;
+      background-color: var(--primary-color) !important;
+      font-weight: 600;
+    }
+  }
+}
+
+.customFormSelectSmall {
+  .customFormSelect__control {
+    width: 100% !important;
+    border-radius: calc(var(--radius) / 3) !important;
+    border: 0.05rem solid var(--border-color) !important;
+    background-color: var(--select-background) !important;
+  }
+
+  .customFormSelect__value-container {
+    padding-block: 0.8rem !important;
+
+    .customFormSelect__placeholder, .customFormSelect__single-value {
+      color: var(--text-color) !important;
+    }
+
+    .customFormSelect__placeholder {
+      font-weight: 600;
+    }
+  }
+}

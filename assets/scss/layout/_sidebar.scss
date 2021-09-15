@@ -30,6 +30,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+
     &-item {
       padding: 1.6rem 0;
       padding-left: 6rem;
@@ -68,6 +69,7 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 1.6rem;
+
       button {
         display: flex;
         font-family: inherit;
@@ -82,17 +84,20 @@
         border-left: 4px solid transparent;
         color: var(--text-color);
         cursor: pointer;
+
         svg {
           margin-right: 1.6rem;
           height: 1.6rem;
           max-width: 2.4rem;
         }
+
         .dropdown__chevron {
           margin: 0;
           margin-left: 1.6rem;
           max-width: 1.6rem;
           max-height: 0.8rem;
         }
+
         transition: color 0.3s ease-in-out;
 
         &:hover {
@@ -116,6 +121,7 @@
       &--visible {
         display: flex;
       }
+
       &--hidden {
         display: none;
       }
@@ -125,11 +131,14 @@
       font-weight: 400;
       color: var(--text-color);
       text-decoration: none;
+
       &:not(:last-child) {
         margin-bottom: 1.6rem;
       }
+
       line-height: 1;
       transition: all 0.3s ease-in-out;
+
       &.active,
       &:hover {
         font-weight: 700;
@@ -138,6 +147,7 @@
       &--disabled {
         cursor: not-allowed;
         color: var(--text-color-alt);
+
         &:hover {
           font-weight: 600;
         }
@@ -149,6 +159,7 @@
       font-size: 1.6rem !important;
       font-family: inherit;
       line-height: 1;
+
       &:hover {
         color: var(--error-color) !important;
       }
@@ -157,6 +168,7 @@
 
   &__footer {
     text-align: center;
+
     p {
       font-weight: 700;
       line-height: 1;
@@ -201,9 +213,11 @@
 
   .sidebar__nav-dropdown {
     position: relative;
+
     button {
       justify-content: center;
       padding-left: 0 !important;
+
       svg {
         margin-right: 0;
       }
@@ -211,6 +225,7 @@
 
     .sidebar__nav-subItem {
       color: #fff;
+
       &--disabled {
         color: #fff;
         opacity: 0.5;
@@ -218,6 +233,7 @@
     }
 
     .sidebar__nav-subItems {
+      z-index: 999;
       width: 20rem;
       margin: 0;
       position: absolute;
@@ -278,9 +294,11 @@
         border-top-color: var(--primary-color);
       }
     }
+
     &-dropdown button {
       border-left: none !important;
     }
+
     &-subItems {
       left: -375% !important;
       top: -200% !important;

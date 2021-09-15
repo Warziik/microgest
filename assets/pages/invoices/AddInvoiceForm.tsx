@@ -46,15 +46,14 @@ export function AddInvoiceForm({addInvoice, invoiceToEdit}: Props) {
             .required("Ce champ est requis."),
         services: yup.array().of(
             yup.object().shape({
-                name: yup.string().required("Ce champ est requis."),
-                description: yup.string().max(255),
-                quantity: yup.number().integer().required("Ce champ est requis."),
-                unitPrice: yup.number().required("Ce champ est requis."),
+                name: yup.string().required(""),
+                quantity: yup.number().integer().typeError("").required(""),
+                unitPrice: yup.number().typeError("").required(""),
             })
         ),
         tvaApplicable: yup.boolean(),
-        serviceDoneAt: yup.date().typeError("Le format de la date est invalide."),
-        paymentDeadline: yup.date().typeError("Le format de la date est invalide."),
+        serviceDoneAt: yup.date().typeError("Le format de la date est invalide.").required("Ce champ est requis."),
+        paymentDeadline: yup.date().typeError("Le format de la date est invalide.").required("Ce champ est requis."),
         paymentDelayRate: yup
             .number()
             .typeError("Le taux doit être un nombre compris entre 0 et 100."),
@@ -83,8 +82,8 @@ export function AddInvoiceForm({addInvoice, invoiceToEdit}: Props) {
                 };
             }) ?? [{name: "", quantity: 1, unitPrice: 0}],
             tvaApplicable: invoiceToEdit?.tvaApplicable ?? true,
-            serviceDoneAt: invoiceToEdit?.serviceDoneAt.substr(0, 10) ?? "",
-            paymentDeadline: invoiceToEdit?.paymentDeadline.substr(0, 10) ?? "",
+            serviceDoneAt: invoiceToEdit?.serviceDoneAt ?? "",
+            paymentDeadline: invoiceToEdit?.paymentDeadline ?? "",
             paymentDelayRate: invoiceToEdit?.paymentDelayRate ?? 0,
             isDraft: invoiceToEdit?.isDraft ?? false,
         },
@@ -180,16 +179,29 @@ export function AddInvoiceForm({addInvoice, invoiceToEdit}: Props) {
                         />
                     )}
                 />
-                <DatePickerInput
-                    error={errors.serviceDoneAt}
-                    label="Date d'exécution"
-                    {...register("serviceDoneAt")}
+
+                <Controller
+                    name="serviceDoneAt"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.serviceDoneAt}
+                            label="Date d'exécution"
+                            {...field}
+                        />
+                    )}
                 />
 
-                <DatePickerInput
-                    error={errors.paymentDeadline}
-                    label="Date limite de règlement"
-                    {...register("paymentDeadline")}
+                <Controller
+                    name="paymentDeadline"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.paymentDeadline}
+                            label="Date limite de règlement"
+                            {...field}
+                        />
+                    )}
                 />
 
                 <TextInput

@@ -11,7 +11,6 @@ import {ErrorResponse} from "../../types/ErrorResponse";
 import {Violation} from "../../types/Violation";
 import {DatePickerInput} from "../../components/form/DatePickerInput";
 import {Button} from "../../components/Button";
-import dayjs from "dayjs";
 
 type Props = {
     invoiceToEdit: Invoice;
@@ -50,7 +49,6 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
     });
 
     const {
-        register,
         control,
         handleSubmit,
         formState: {isSubmitting, errors},
@@ -61,8 +59,8 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
         resolver: yupResolver(schema),
         defaultValues: {
             status: invoiceToEdit.status ? selectStatusOptions.find((option: Option) => option.value === invoiceToEdit.status) as Option : selectStatusOptions[0],
-            sentAt: invoiceToEdit?.sentAt ? dayjs(invoiceToEdit.sentAt).format("YYYY-MM-DD") : null,
-            paidAt: invoiceToEdit?.paidAt ? dayjs(invoiceToEdit.paidAt).format("YYYY-MM-DD") : null,
+            sentAt: invoiceToEdit.sentAt ?? "",
+            paidAt: invoiceToEdit.paidAt ?? "",
         },
     });
 
@@ -121,18 +119,30 @@ export function EditInvoiceForm({invoiceToEdit, editInvoice}: Props) {
             />
 
             {watch("status").value === "SENT" && (
-                <DatePickerInput
-                    error={errors.sentAt}
-                    label="Date d'envoi"
-                    {...register("sentAt")}
+                <Controller
+                    name="sentAt"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.sentAt}
+                            label="Date d'envoi"
+                            {...field}
+                        />
+                    )}
                 />
             )}
 
             {watch("status").value === "PAID" && (
-                <DatePickerInput
-                    error={errors.paidAt}
-                    label="Date de paiement"
-                    {...register("paidAt")}
+                <Controller
+                    name="paidAt"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.paidAt}
+                            label="Date de paiement"
+                            {...field}
+                        />
+                    )}
                 />
             )}
 

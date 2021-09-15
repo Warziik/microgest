@@ -11,7 +11,6 @@ import {DatePickerInput} from "../../components/form/DatePickerInput";
 import {Button} from "../../components/Button";
 import {Devis} from "../../types/Devis";
 import {updateDevis} from "../../services/DevisService";
-import dayjs from "dayjs";
 
 type Props = {
     devisToEdit: Devis;
@@ -50,7 +49,6 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
     });
 
     const {
-        register,
         control,
         handleSubmit,
         formState: {isSubmitting, errors},
@@ -61,10 +59,8 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
         resolver: yupResolver(schema),
         defaultValues: {
             status: devisToEdit.status ? selectStatusOptions.find((option: Option) => option.value === devisToEdit.status) as Option : selectStatusOptions[0],
-            sentAt: devisToEdit?.sentAt ? dayjs(devisToEdit.sentAt).format("YYYY-MM-DD") : null,
-            signedAt: devisToEdit?.signedAt
-                ? dayjs(devisToEdit.signedAt).format("YYYY-MM-DD")
-                : null,
+            sentAt: devisToEdit?.sentAt ?? "",
+            signedAt: devisToEdit?.signedAt ?? ""
         },
     });
 
@@ -123,18 +119,30 @@ export function EditDevisForm({devisToEdit, editDevis}: Props) {
             />
 
             {watch("status").value === "SENT" && (
-                <DatePickerInput
-                    error={errors.sentAt}
-                    label="Date d'envoi"
-                    {...register("sentAt")}
+                <Controller
+                    name="sentAt"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.sentAt}
+                            label="Date d'envoi"
+                            {...field}
+                        />
+                    )}
                 />
             )}
 
             {watch("status").value === "SIGNED" && (
-                <DatePickerInput
-                    error={errors.signedAt}
-                    label="Date de signature"
-                    {...register("signedAt")}
+                <Controller
+                    name="signedAt"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.signedAt}
+                            label="Date de signature"
+                            {...field}
+                        />
+                    )}
                 />
             )}
 

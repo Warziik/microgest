@@ -56,10 +56,9 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
         isDraft: yup.boolean(),
         services: yup.array().of(
             yup.object().shape({
-                name: yup.string().required("Ce champ est requis."),
-                description: yup.string().max(255),
-                quantity: yup.number().integer().required("Ce champ est requis."),
-                unitPrice: yup.number().required("Ce champ est requis."),
+                name: yup.string().required(""),
+                quantity: yup.number().integer().typeError("").required(""),
+                unitPrice: yup.number().typeError("").required(""),
             })
         ),
     });
@@ -83,10 +82,10 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
                     unitPrice: service.unitPrice,
                 };
             }) ?? [{name: "", quantity: 1, unitPrice: 0}],
-            validityDate: devisToEdit?.validityDate.substr(0, 10) ?? "",
-            workStartDate: devisToEdit?.workStartDate.substr(0, 10) ?? "",
+            validityDate: devisToEdit?.validityDate ?? "",
+            workStartDate: devisToEdit?.workStartDate ?? "",
             workDuration: devisToEdit?.workDuration ?? "",
-            paymentDeadline: devisToEdit?.paymentDeadline.substr(0, 10) ?? "",
+            paymentDeadline: devisToEdit?.paymentDeadline ?? "",
             paymentDelayRate: devisToEdit?.paymentDelayRate ?? 0,
             tvaApplicable: devisToEdit?.tvaApplicable ?? true,
             isDraft: devisToEdit?.isDraft ?? false,
@@ -181,16 +180,28 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
                     )}
                 />
 
-                <DatePickerInput
-                    error={errors.validityDate}
-                    label="Date d'expiration du devis"
-                    {...register("validityDate")}
+                <Controller
+                    name="validityDate"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.validityDate}
+                            label="Date d'expiration du devis"
+                            {...field}
+                        />
+                    )}
                 />
 
-                <DatePickerInput
-                    error={errors.validityDate}
-                    label="Date de début de la mission"
-                    {...register("workStartDate")}
+                <Controller
+                    name="workStartDate"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.workStartDate}
+                            label="Date de début de la mission"
+                            {...field}
+                        />
+                    )}
                 />
 
                 <TextInput
@@ -199,10 +210,16 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
                     {...register("workDuration")}
                 />
 
-                <DatePickerInput
-                    error={errors.paymentDeadline}
-                    label="Date limite de règlement"
-                    {...register("paymentDeadline")}
+                <Controller
+                    name="paymentDeadline"
+                    control={control}
+                    render={({field}) => (
+                        <DatePickerInput
+                            error={errors.paymentDeadline}
+                            label="Date limite de règlement"
+                            {...field}
+                        />
+                    )}
                 />
 
                 <TextInput

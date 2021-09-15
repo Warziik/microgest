@@ -1,0 +1,82 @@
+.customFormCalendar {
+  position: absolute;
+  z-index: 999;
+  margin: .8rem 0;
+  background-color: var(--input-background);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+  border-radius: calc(var(--radius) / 2);
+  padding: 1.6rem;
+
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: 1.6rem;
+
+  button {
+    margin-top: 0 !important;
+  }
+
+  .react-calendar__navigation {
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text-color) !important;
+    }
+
+    &__arrow {
+      font-size: 2.4rem;
+    }
+
+    &__prev2-button, &__next2-button {
+      display: none !important;
+    }
+
+    &__label {
+      font-size: 1.6rem;
+      pointer-events: none;
+      font-weight: 600;
+      font-family: inherit;
+    }
+  }
+
+  .react-calendar__viewContainer {
+    .react-calendar__month-view__weekdays {
+      display: none !important;
+    }
+
+    .react-calendar__month-view__days {
+      button {
+        border: none;
+        background: none;
+        color: var(--text-color);
+        padding-block: .8rem;
+        font-family: inherit;
+        font-size: 1.4rem;
+        cursor: pointer;
+        border-radius: calc(var(--radius) / 3);
+
+        &:hover {
+          background-color: var(--primary-color-a1);
+        }
+      }
+
+      .react-calendar__tile--now {
+        border: 1px solid var(--primary-color);
+      }
+
+      .react-calendar__tile--active {
+        background-color: var(--primary-color);
+        color: #FFF !important;
+        font-weight: 600;
+
+        &:hover {
+          background-color: var(--primary-color);
+        }
+      }
+
+      &__day--neighboringMonth {
+        color: var(--text-color-alt) !important;
+      }
+    }
+  }
+}

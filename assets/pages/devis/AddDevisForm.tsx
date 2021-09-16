@@ -187,6 +187,7 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
                         <DatePickerInput
                             error={errors.validityDate}
                             label="Date d'expiration du devis"
+                            minDateNow={true}
                             {...field}
                         />
                     )}
@@ -217,6 +218,7 @@ export function AddDevisForm({addDevis, devisToEdit}: Props) {
                         <DatePickerInput
                             error={errors.paymentDeadline}
                             label="Date limite de règlement"
+                            minDateNow={true}
                             {...field}
                         />
                     )}

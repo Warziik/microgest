@@ -199,6 +199,7 @@ export function AddInvoiceForm({addInvoice, invoiceToEdit}: Props) {
                         <DatePickerInput
                             error={errors.paymentDeadline}
                             label="Date limite de règlement"
+                            minDateNow={true}
                             {...field}
                         />
                     )}

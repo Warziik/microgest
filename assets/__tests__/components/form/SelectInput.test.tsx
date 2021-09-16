@@ -3,12 +3,23 @@ import {render, screen} from "@testing-library/react";
 import {Option, SelectInput} from "../../../components/form/SelectInput";
 
 describe("Select Input", () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+
     beforeEach(() => {
         const options: Option[] = [
             {label: "Option 1", value: "1"},
             {label: "Option 2", value: "2"}
         ];
-        render(<SelectInput options={options} name="test" label="Test label" info="Info message"/>)
+        render(<SelectInput
+            options={options}
+            name="test"
+            label="Test label"
+            info="Info message"
+            onChange={onChange}
+            onBlur={onBlur}
+            value={null}
+        />)
     });
 
     it("should render a select input with a label", () => {

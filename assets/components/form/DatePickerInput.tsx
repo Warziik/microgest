@@ -9,13 +9,15 @@ type Props = {
     name: string;
     error?: FieldError;
     info?: string;
-    onChange: (value: Date) => void;
+    onChange: (value: string) => void;
     value: string | null;
+    minDateNow?: boolean;
+    maxDateNow?: boolean;
 }
 
 const DatePickerInput = React.forwardRef(
     (
-        {label, name, error, className, info, onChange, value}: Props,
+        {label, name, error, className, info, onChange, value, minDateNow, maxDateNow}: Props,
         ref: Ref<HTMLInputElement>
     ) => {
         const datePickerRef = useRef<HTMLDivElement>(null);
@@ -28,7 +30,7 @@ const DatePickerInput = React.forwardRef(
 
         const handleDateChange = (value: Date) => {
             setDateValue(value);
-            onChange(value);
+            onChange(dayjs(value).format("YYYY-MM-DD"));
             setShowCalendar(() => !showCalendar);
         }
 
@@ -71,6 +73,8 @@ const DatePickerInput = React.forwardRef(
                         className="customFormCalendar"
                         value={dateValue}
                         onChange={handleDateChange}
+                        minDate={minDateNow ? new Date() : undefined}
+                        maxDate={maxDateNow ? new Date() : undefined}
                     />}
                 </div>
                 {error && (

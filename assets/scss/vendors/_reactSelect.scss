@@ -59,10 +59,17 @@
 
 .customFormSelectSmall {
   .customFormSelect__control {
-    width: 100% !important;
+    min-width: 11rem;
+    cursor: pointer;
     border-radius: calc(var(--radius) / 3) !important;
     border: 0.05rem solid var(--border-color) !important;
     background-color: var(--select-background) !important;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      font-weight: 600;
+      background-color: var(--primary-color-a05) !important;
+    }
   }
 
   .customFormSelect__value-container {

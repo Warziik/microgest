@@ -172,12 +172,8 @@
     input:checked + .form__switch-custom {
       background-color: var(--primary-color);
 
-      &-closeIcon {
-        opacity: 0;
-      }
-
-      &-checkIcon {
-        opacity: 1;
+      .form__switch-custom-checkIcon {
+        opacity: 1 !important;
       }
 
       &:before {
@@ -199,6 +195,7 @@ form {
   gap: 1.6rem;
 
   button {
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.8rem;
@@ -220,7 +217,7 @@ form {
     transition: all 0.3s ease-in-out;
 
     &:hover {
-      font-weight: 700;
+      font-weight: 600;
       background-color: var(--primary-color-a05);
     }
   }
@@ -246,6 +243,9 @@ input[type="number"] {
 }
 
 @media only screen and (max-width: 600px) {
+  .sorting-ctas {
+    flex-direction: column;
+  }
   .form__horizontal {
     flex-direction: column;
     gap: 0;

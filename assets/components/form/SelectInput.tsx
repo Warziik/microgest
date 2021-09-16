@@ -1,4 +1,4 @@
-import React, {Ref} from "react";
+import React, {FocusEventHandler, Ref} from "react";
 import {FieldError} from "react-hook-form";
 import Select from "react-select";
 
@@ -17,9 +17,9 @@ interface Props extends React.ComponentPropsWithoutRef<"select"> {
     placeholder?: string;
     isSearchable?: boolean;
     noOptionMessage?: string;
-    onChange?: any;
-    onBlur?: any
-    value?: any;
+    onChange: (value: any) => void;
+    onBlur: FocusEventHandler
+    value: any;
 }
 
 const SelectInput = React.forwardRef(

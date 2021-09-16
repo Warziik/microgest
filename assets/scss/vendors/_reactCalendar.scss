@@ -25,6 +25,10 @@
 
     &__arrow {
       font-size: 2.4rem;
+
+      &:disabled {
+        color: var(--primary-color-disabled) !important;
+      }
     }
 
     &__prev2-button, &__next2-button {
@@ -36,6 +40,10 @@
       pointer-events: none;
       font-weight: 600;
       font-family: inherit;
+
+      &:first-letter {
+        text-transform: uppercase;
+      }
     }
   }
 
@@ -58,6 +66,10 @@
         &:hover {
           background-color: var(--primary-color-a1);
         }
+
+        &:disabled {
+          color: var(--primary-color-disabled) !important;
+        }
       }
 
       .react-calendar__tile--now {
@@ -77,6 +89,14 @@
       &__day--neighboringMonth {
         color: var(--text-color-alt) !important;
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .modal__center .modal__content {
+    .customFormCalendar {
+      bottom: 100% !important;
     }
   }
 }

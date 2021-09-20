@@ -18,7 +18,7 @@ export function AddressFormPart({selectCountryOptions}: Props) {
                     error={errors.country}
                     label="Pays"
                     options={selectCountryOptions}
-                    placeholder="Sélectionner votre pays"
+                    placeholder="Sélectionner le pays"
                     noOptionMessage="Aucun pays trouvé."
                     {...field}
                 />

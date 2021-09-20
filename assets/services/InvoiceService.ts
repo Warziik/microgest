@@ -37,13 +37,13 @@ export async function fetchInvoice(id: number): Promise<[boolean, Invoice]> {
     const cachedInvoice = await Cache.get(`invoice.${id}`);
     if (cachedInvoice) return [true, cachedInvoice as Invoice];
 
-    const [isSuccess, data] = await DataAccess.request(`${INVOICES_URI}/${id}`, {
+    const [isSuccess, responseData] = await DataAccess.request(`${INVOICES_URI}/${id}`, {
         method: "GET",
     });
 
-    if (isSuccess) Cache.set(`invoice.${id}`, data);
+    if (isSuccess) Cache.set(`invoice.${id}`, responseData);
 
-    return [isSuccess, data];
+    return [isSuccess, responseData];
 }
 
 export function fetchLastAddedInvoices(): Promise<[boolean, Collection<Invoice> | ErrorResponse]> {

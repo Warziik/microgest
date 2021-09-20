@@ -1,11 +1,13 @@
 import * as CustomerService from "../../services/CustomerService";
 import fetchMock from "jest-fetch-mock";
-import { CustomerFormData } from "../../types/Customer";
+import {CustomerFormData} from "../../types/Customer";
 
 fetchMock.enableMocks();
 
 describe("CustomerService", () => {
-    const allCustomersData = {};
+    const allCustomersData = {
+        "hydra:member": []
+    };
 
     const customerData: CustomerFormData = {
         type: "PERSON",

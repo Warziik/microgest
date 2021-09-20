@@ -25,12 +25,19 @@ export async function fetchAllInvoices(): Promise<[boolean, Collection<Invoice>]
     return [isSuccess, responseData];
 }
 
-export function fetchAllInvoicesOfCustomer(
+export async function fetchAllInvoicesOfCustomer(
     customerId: number
 ): Promise<[boolean, Collection<Invoice> | ErrorResponse]> {
-    return DataAccess.request(`${CUSTOMERS_URI}/${customerId}/invoices`, {
+    const cachedInvoicesOfCustomer = await Cache.get(`customer.${customerId}.invoices`);
+    if (cachedInvoicesOfCustomer) return [true, cachedInvoicesOfCustomer as Collection<Invoice>];
+
+    const [isSuccess, responseData] = await DataAccess.request(`${CUSTOMERS_URI}/${customerId}/invoices`, {
         method: "GET",
     });
+
+    if (isSuccess) Cache.set(`customer.${customerId}.invoices`, responseData);
+
+    return [isSuccess, responseData];
 }
 
 export async function fetchInvoice(id: number): Promise<[boolean, Invoice]> {

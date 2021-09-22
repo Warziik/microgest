@@ -10,7 +10,7 @@ export function AddressStep() {
     const {nextStep, previousStep} = useContext(StepperContext);
 
     const methods = useFormContext();
-    const {trigger, setValue, formState: {isSubmitting}} = methods;
+    const {trigger, formState: {isSubmitting}} = methods;
 
     const [selectCountryOptions, setSelectCountryOptions] = useState<Option[]>([]);
 
@@ -26,7 +26,6 @@ export function AddressStep() {
             options.push({value: alpha2ToAlpha3(key), label: value});
         }
         setSelectCountryOptions(options);
-        setValue("country", options[0].value as string);
     }, []);
 
     return (

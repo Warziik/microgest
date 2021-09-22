@@ -36,10 +36,6 @@
     text-align: center;
   }
 
-  &__main {
-    height: 100%;
-  }
-
   transition: visibility 0.3s;
 
   &[aria-hidden="true"] {

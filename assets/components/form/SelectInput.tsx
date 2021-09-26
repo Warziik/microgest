@@ -1,5 +1,5 @@
 import React, {FocusEventHandler, Ref} from "react";
-import {FieldError} from "react-hook-form";
+import {DeepMap, FieldError} from "react-hook-form";
 import Select from "react-select";
 
 export type Option = {
@@ -10,7 +10,7 @@ export type Option = {
 interface Props extends React.ComponentPropsWithoutRef<"select"> {
     label?: string;
     name: string;
-    error?: FieldError;
+    error?: FieldError | DeepMap<any, FieldError>;
     options: Option[];
     className?: string;
     info?: string;

@@ -22,6 +22,7 @@ export function PersonalStep() {
       "email",
       "phone",
       "password",
+        "passwordConfirm"
     ]);
 
     if (result) {

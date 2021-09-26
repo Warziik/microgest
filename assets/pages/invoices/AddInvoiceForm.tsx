@@ -171,6 +171,7 @@ export function AddInvoiceForm({addInvoice, invoiceToEdit}: Props) {
                     control={control}
                     render={({field}) => (
                         <SelectInput
+                            error={errors.customer}
                             label="Client"
                             options={selectCustomerOptions}
                             placeholder="Sélectionner un client..."

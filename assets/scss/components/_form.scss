@@ -45,8 +45,9 @@
   &--invalid {
     input,
     select,
-    textarea {
-      border-color: var(--error-color);
+    textarea,
+    .customFormSelect__control {
+      border-color: var(--error-color) !important;
     }
 
     &-message {

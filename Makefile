@@ -1,5 +1,7 @@
-PHP_CONTAINER = docker exec -ti php8-container
-NODE_CONTAINER = docker-compose run --rm node-service
+USER = $(shell id -u):$(shell id -g)
+
+PHP_CONTAINER = docker exec -ti --user $(USER) php8-container
+NODE_CONTAINER = docker-compose run --rm --user $(USER) node-service
 
 .DEFAULT_GOAL = help
 
@@ -39,7 +41,7 @@ build-docker: ##@docker Build the Docker-compose stack
 install: build-docker ##@project Install the PHP and JavaScript dependencies.
 	$(PHP_CONTAINER) composer install -n
 	$(NODE_CONTAINER) yarn install
-	$(PHP_CONTAINER) touch .env.local && echo JWT_PASSPHRASE=test > .env.local
+	$(PHP_CONTAINER) touch .env.local && echo "JWT_PASSPHRASE=test\nAPI_URL=\"'http://localhost:8080/api'\"" > .env.local
 
 .PHONY: assets
 assets: ##@project Build the JavaScript assets.
@@ -53,7 +55,6 @@ jwt-keys: ##@project Generate the JWT keys.
 .PHONY: cache-clear
 cache-clear: ##@project Clear the cache.
 	$(PHP_CONTAINER) symfony console c:c
-
 
 ## ----------------------------------------------------------------
 ## DATABASE

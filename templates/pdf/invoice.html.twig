@@ -1,0 +1,16 @@
+<!ODCType html>
+<html lang="fr">
+        <head>
+                <meta charset="UTF-8" />
+        </head>
+        <body>
+                <h1>Facture n°{{ invoice.chrono }}</h1>
+                <ul>
+                        {% for service in invoice.services %}
+                                <li>{{ service.name }}</li>
+                        {% endfor %}
+                </ul>
+
+                <p>Total TTC: {{ invoice.getTotalAmount() }}</p>
+        </body>
+</html>

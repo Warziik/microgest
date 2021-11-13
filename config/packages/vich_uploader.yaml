@@ -9,3 +9,20 @@ vich_uploader:
       uri_prefix: /images/customers
       upload_destination: "%kernel.project_dir%/public/images/customers"
       namer: Vich\UploaderBundle\Naming\OrignameNamer
+
+    invoice_file:
+      uri_prefix: /pdf/invoices
+      upload_destination: "%kernel.project_dir%/public/pdf/invoices"
+      namer: App\Namer\ExportableFileNamer
+      inject_on_load: true
+      directory_namer:
+        service: vich_uploader.namer_directory_property
+        options: { property: 'customer.owner.id', transliterate: true }
+
+    devis_file:
+      uri_prefix: /pdf/devis
+      upload_destination: "%kernel.project_dir%/public/pdf/devis"
+      namer: App\Namer\ExportableFileNamer
+      directory_namer:
+        service: vich_uploader.namer_directory_property
+        options: { property: 'customer.owner.id', transliterate: true }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notification;
+namespace App\Email;
 
 use App\Entity\ResetPassword;
 use App\Entity\User;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class UserNotification
+final class UserEmail
 {
     public function __construct(private MailerInterface $mailer)
     {

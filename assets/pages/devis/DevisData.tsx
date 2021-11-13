@@ -10,6 +10,9 @@ import {Icon} from "../../components/Icon";
 import {useAuth} from "../../hooks/useAuth";
 import {Controller, useForm} from "react-hook-form";
 import {Option, SelectInput} from "../../components/form/SelectInput";
+import {Invoice} from "../../types/Invoice";
+import {downloadExportableDocument} from "../../services/CommonService";
+import {useToast} from "../../hooks/useToast";
 
 type Props = {
     devis: Devis[];
@@ -30,6 +33,7 @@ export function DevisData({
     const {push} = useHistory();
     const {pathname} = useLocation();
     const {userData} = useAuth();
+    const toast = useToast();
 
     const [allDevis, setAllDevis] = useState<Record<string, MonthlyDevis[]>>();
     const [sortableTypeReverse, setSortableTypeReverse] = useState<Record<string, boolean>>({});
@@ -122,6 +126,12 @@ export function DevisData({
             });
         }
     };
+
+    const handleDownloadFile = async (devis: Devis) => {
+        const isSuccess = await downloadExportableDocument("devis", devis.id);
+        if (isSuccess) toast("success", "Le devis a bien été récupéré.");
+        else toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+    }
 
     return (
         <Tabs defaultActiveTab={displayUrls ? getDefaultTab() : 0}>
@@ -225,11 +235,9 @@ export function DevisData({
                                                                 <Button
                                                                     type="contrast"
                                                                     size="small"
-                                                                    onClick={() =>
-                                                                        push(`/devis-détails/${devis.id}/export`)
-                                                                    }
+                                                                    onClick={() => handleDownloadFile(devis)}
                                                                 >
-                                                                    Exporter
+                                                                    Télécharger
                                                                 </Button>
                                                             )) ||
                                                             "-"}

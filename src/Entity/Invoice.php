@@ -7,13 +7,17 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\CreateUpdateInvoiceDevis;
+use App\Controller\DownloadExportableDocument;
 use App\Repository\InvoiceRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 #[ORM\Table(name: "invoices")]
@@ -33,6 +37,12 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'controller' => CreateUpdateInvoiceDevis::class,
             ],
             'delete' => ['security' => 'object.getCustomer().getOwner() == user'],
+            'export' => [
+                'security' => 'object.getCustomer().getOwner() == user',
+                'method' => Request::METHOD_GET,
+                'path' => '/invoices/{id}/export',
+                'controller' => DownloadExportableDocument::class,
+            ],
         ],
         subresourceOperations: [
             'api_customers_invoices_get_subresource' => [
@@ -48,6 +58,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ]
 #[ApiFilter(OrderFilter::class, properties: ["createdAt" => "desc"], arguments: ["orderParameterName" => "order"])]
 #[ApiFilter(SearchFilter::class, properties: ["status" => "exact", "paidAt" => "start"])]
+#[Vich\Uploadable]
 class Invoice
 {
     #[ORM\Id]
@@ -146,10 +157,10 @@ class Invoice
     #[ORM\Column(type: "integer", nullable: true)]
     #[Assert\NotBlank(allowNull: true)]
     #[Assert\Range(
-        min: 0,
-        max: 100,
         notInRangeMessage: "Le taux des péanlités de retard ou d'absence de paiement doit être
-        un pourcentage compris entre {{ min }} et {{ max }}."
+        un pourcentage compris entre {{ min }} et {{ max }}.",
+        min: 0,
+        max: 100
     )]
     #[Groups([
         'invoices:read',
@@ -172,6 +183,15 @@ class Invoice
     ])]
     private bool $isDraft;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Assert\Type(\DateTimeImmutable::class)]
+    #[Groups([
+        'invoices:read',
+        'invoices:write',
+        'invoice:update'
+    ])]
+    private ?\DateTimeImmutable $undraftedAt = null;
+
     #[ORM\Column(type: "datetime", nullable: true)]
     #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
@@ -193,10 +213,10 @@ class Invoice
     private ?DateTimeInterface $paidAt = null;
 
     #[ORM\OneToMany(
-        targetEntity: InvoiceService::class,
         mappedBy: "invoice",
-        orphanRemoval: true,
-        cascade: ["persist", "remove"]
+        targetEntity: InvoiceService::class,
+        cascade: ["persist", "remove"],
+        orphanRemoval: true
     )]
     #[Groups([
         'invoices:read',
@@ -206,6 +226,12 @@ class Invoice
         'allInvoices:read',
     ])]
     private Collection $services;
+
+    #[Vich\UploadableField(mapping: "invoice_file", fileNameProperty: 'fileName')]
+    private ?File $file = null;
+
+    #[ORM\Column(name: "file", type: "string", length: 255, nullable: true)]
+    private ?string $fileName = null;
 
     public function __construct()
     {
@@ -348,6 +374,8 @@ class Invoice
     {
         $this->isDraft = $isDraft;
 
+        if ($isDraft === false) $this->setUndraftedAt(new \DateTimeImmutable());
+
         return $this;
     }
 
@@ -391,5 +419,49 @@ class Invoice
         }
 
         return $this;
+    }
+
+    public function getUndraftedAt(): ?\DateTimeImmutable
+    {
+        return $this->undraftedAt;
+    }
+
+    public function setUndraftedAt(?\DateTimeImmutable $undraftedAt): self
+    {
+        $this->undraftedAt = $undraftedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param File|null $file
+     */
+    public function setFile(?File $file): void
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string|null $fileName
+     */
+    public function setFileName(?string $fileName): void
+    {
+        $this->fileName = $fileName;
     }
 }

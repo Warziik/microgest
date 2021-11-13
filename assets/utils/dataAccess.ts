@@ -12,7 +12,8 @@ export class DataAccess {
   public static async request(
     endpoint: string,
     requestParams: RequestInit,
-    setContentType = true
+    setContentType = true,
+    responseBlob = false
   ): Promise<[boolean, any]> {
     this.defaultHeaders.delete("Authorization");
 
@@ -41,7 +42,12 @@ export class DataAccess {
     if (response.status === 204) {
       return [response.ok, []];
     } else {
-      const responseData: Record<string, any> = await response.json();
+      let responseData: Record<string, any>;
+      if (responseBlob) {
+        responseData = [await response.blob(), response.headers];
+      } else {
+        responseData = await response.json();
+      }
 
       return [response.ok, responseData];
     }

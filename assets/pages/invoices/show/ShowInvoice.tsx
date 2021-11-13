@@ -11,10 +11,10 @@ import {Icon} from "../../../components/Icon";
 import {EditInvoiceForm} from "../EditInvoiceForm";
 import {Modal} from "../../../components/Modal";
 import {Tooltip} from "../../../components/Tooltip";
-import {GenerateExportableDocument} from "../../../components/GenerateExportableDocument";
 import {Breadcrumb} from "../../../components/Breadcrumb";
 import {AddInvoiceForm} from "../AddInvoiceForm";
 import {ShowInvoiceSkeleton} from "../../../components/skeletons/ShowInvoiceSkeleton";
+import {downloadExportableDocument} from "../../../services/CommonService";
 
 type MatchParams = {
     id: string;
@@ -84,6 +84,14 @@ export function ShowInvoice() {
             }
         }
     };
+
+    const handleDownloadFile = async () => {
+        if (invoice) {
+            const isSuccess = await downloadExportableDocument("invoice", invoice.id);
+            if (isSuccess) toast("success", "La facture a bien été récupérée.");
+            else toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+        }
+    }
 
     return (
         <div className="showInvoice">
@@ -160,21 +168,19 @@ export function ShowInvoice() {
                             <div className="showInvoice__header-ctas">
                                 <Tooltip
                                     isActive={invoice.isDraft}
-                                    content="Vous ne pouvez pas exporter une facture brouillon."
+                                    content="Vous ne pouvez pas télécharger une facture brouillon."
                                     position="top"
                                 >
                                     <Button
                                         type="contrast"
-                                        center={true}
                                         icon="download"
-                                        disabled={invoice.isDraft}
                                         onClick={
                                             !invoice.isDraft
-                                                ? () => history.push(`/facture/${invoice.id}/export`)
+                                                ? () => handleDownloadFile()
                                                 : undefined
                                         }
                                     >
-                                        Exporter la facture
+                                        Télécharger la facture
                                     </Button>
                                 </Tooltip>
 
@@ -290,7 +296,6 @@ export function ShowInvoice() {
                         </div>
 
                         <div className="showInvoice__display">
-                            <GenerateExportableDocument data={invoice}/>
                         </div>
                         {/*           <div className="showInvoice__other">
             <h3>Envoi de la facture par mail</h3>

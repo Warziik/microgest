@@ -1,0 +1,14 @@
+<!ODCType html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<h1>Devis n°{{ devis.chrono }}</h1>
+<ul>
+    {% for service in devis.services %}
+        <li>{{ service.name }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Email\UserEmail;
 use App\Entity\ResetPassword;
 use App\Entity\User;
-use App\Notification\UserNotification;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +23,7 @@ class ForgotPassword extends AbstractController
     public function __construct(
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager,
-        private UserNotification $userNotification
+        private UserEmail $userEmailNotification
     ) {
     }
 
@@ -43,7 +43,7 @@ class ForgotPassword extends AbstractController
         $this->entityManager->persist($resetPassword);
         $this->entityManager->flush();
 
-        $this->userNotification->sendResetPasswordMail($user, $resetPassword);
+        $this->userEmailNotification->sendResetPasswordMail($user, $resetPassword);
 
         return new JsonResponse(
             [

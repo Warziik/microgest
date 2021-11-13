@@ -10,13 +10,13 @@ import {Badge} from "../../../components/Badge";
 import {Button} from "../../../components/Button";
 import {Link} from "react-router-dom";
 import {Icon} from "../../../components/Icon";
-import {GenerateExportableDocument} from "../../../components/GenerateExportableDocument";
 import {Breadcrumb} from "../../../components/Breadcrumb";
 import {Modal} from "../../../components/Modal";
 import {EditDevisForm} from "../EditDevisForm";
 import {Tooltip} from "../../../components/Tooltip";
 import {AddDevisForm} from "../AddDevisForm";
 import {ShowInvoiceSkeleton} from "../../../components/skeletons/ShowInvoiceSkeleton";
+import {downloadExportableDocument} from "../../../services/CommonService";
 
 type MatchParams = {
     id: string;
@@ -85,6 +85,14 @@ export function ShowDevis() {
             }
         }
     };
+
+    const handleDownloadFile = async () => {
+        if (devis) {
+            const isSuccess = await downloadExportableDocument("devis", devis.id);
+            if (isSuccess) toast("success", "Le devis a bien été récupéré.");
+            else toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+        }
+    }
 
     return (
         <div className="showInvoice">
@@ -155,22 +163,19 @@ export function ShowDevis() {
                             <div className="showInvoice__header-ctas">
                                 <Tooltip
                                     isActive={devis.isDraft}
-                                    content="Vous ne pouvez pas exporter un devis brouillon."
+                                    content="Vous ne pouvez pas télécharger un devis brouillon."
                                     position="top"
                                 >
                                     <Button
                                         type="contrast"
-                                        center={true}
                                         icon="download"
-                                        disabled={devis.isDraft}
                                         onClick={
                                             !devis.isDraft
-                                                ? () =>
-                                                    history.push(`/devis-détails/${devis.id}/export`)
+                                                ? () => handleDownloadFile()
                                                 : undefined
                                         }
                                     >
-                                        Exporter le devis
+                                        Télécharger le devis
                                     </Button>
                                 </Tooltip>
 
@@ -289,10 +294,6 @@ export function ShowDevis() {
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-
-                        <div className="showInvoice__display">
-                            <GenerateExportableDocument data={devis}/>
                         </div>
                         {/*           <div className="showInvoice__other">
       <h3>Envoi de la facture par mail</h3>

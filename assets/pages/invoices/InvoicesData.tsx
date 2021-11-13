@@ -11,6 +11,8 @@ import {Icon} from "../../components/Icon";
 import {Controller, useForm} from "react-hook-form";
 import {Option, SelectInput} from "../../components/form/SelectInput";
 import {useAuth} from "../../hooks/useAuth";
+import {downloadExportableDocument} from "../../services/CommonService";
+import {useToast} from "../../hooks/useToast";
 
 type Props = {
     invoices: Invoice[];
@@ -27,6 +29,7 @@ export function InvoicesData({invoices, displayCustomer = false, displayUrls = f
     const {pathname} = useLocation();
     const {push} = useHistory();
     const {userData} = useAuth();
+    const toast = useToast();
 
     const [allInvoices, setAllInvoices] =
         useState<Record<string, MonthlyInvoices[]>>();
@@ -122,6 +125,12 @@ export function InvoicesData({invoices, displayCustomer = false, displayUrls = f
             });
         }
     };
+
+    const handleDownloadFile = async (invoice: Invoice) => {
+        const isSuccess = await downloadExportableDocument("invoice", invoice.id);
+        if (isSuccess) toast("success", "La facture a bien été récupérée.");
+        else toast("error", "Une erreur inattendue s&apos;est produite, veuillez réessayer plus tard.");
+    }
 
     return (
         <Tabs defaultActiveTab={displayUrls ? getDefaultTab() : 0}>
@@ -237,11 +246,9 @@ export function InvoicesData({invoices, displayCustomer = false, displayUrls = f
                                                                     <Button
                                                                         type="contrast"
                                                                         size="small"
-                                                                        onClick={() =>
-                                                                            push(`/facture/${invoice.id}/export`)
-                                                                        }
+                                                                        onClick={() => handleDownloadFile(invoice)}
                                                                     >
-                                                                        Exporter
+                                                                        Télécharger
                                                                     </Button>
                                                                 )) ||
                                                                 "-"}

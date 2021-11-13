@@ -4,6 +4,7 @@
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /public/images/customers
+/public/pdf
 /var/
 /vendor/
 /node_modules/

@@ -63,3 +63,6 @@ services:
         "%gesdinet_jwt_refresh_token.token_parameter_name%",
         "%app.jwt_refresh_token_cookie_name%",
       ]
+
+  App\Namer\ExportableFileNamer:
+    public: true

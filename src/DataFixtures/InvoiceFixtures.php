@@ -22,7 +22,7 @@ class InvoiceFixtures extends Fixture implements DependentFixtureInterface
             $i->setChrono('F-' . date('Y') . '-' . str_pad($c, 6, '0', STR_PAD_LEFT));
             $i->setStatus($faker->randomElement(['NEW', 'SENT', 'PAID', 'CANCELLED']));
             $i->setTvaApplicable($faker->randomElement([true, false]));
-            $i->setIsDraft($faker->randomElement([true, false]));
+            $i->setIsDraft(true);
             $i->setServiceDoneAt($faker->dateTimeBetween('-2 weeks', '-1 week'));
             $i->setPaymentDeadline(new DateTime('+30 days'));
             $i->setPaymentDelayRate($faker->randomElement([5, 10, 15, 20, null]));

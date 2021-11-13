@@ -6,9 +6,7 @@ import {ResetPassword} from "../pages/auth/ResetPassword";
 import {Customers} from "../pages/customers/Customers";
 import {ShowCustomer} from "../pages/customers/show/ShowCustomer";
 import {Devis} from "../pages/devis/Devis";
-import {DevisExport} from "../pages/devis/DevisExport";
 import {Overview} from "../pages/overview/Overview";
-import {InvoiceExport} from "../pages/invoices/InvoiceExport";
 import {Invoices} from "../pages/invoices/Invoices";
 import {ShowInvoice} from "../pages/invoices/show/ShowInvoice";
 import {NotFound} from "../pages/NotFound";
@@ -23,19 +21,9 @@ export function Router() {
             <Switch>
                 <PrivateRoute path="/paramètres" component={Settings}/>
 
-                <PrivateRoute
-                    path="/devis-détails/:id/export"
-                    noLayout={true}
-                    component={DevisExport}
-                />
                 <PrivateRoute path="/devis-détails/:id" component={ShowDevis}/>
                 <PrivateRoute path="/devis" component={Devis}/>
 
-                <PrivateRoute
-                    path="/facture/:id/export"
-                    noLayout={true}
-                    component={InvoiceExport}
-                />
                 <PrivateRoute path="/facture/:id" component={ShowInvoice}/>
                 <PrivateRoute path="/factures" component={Invoices}/>
 

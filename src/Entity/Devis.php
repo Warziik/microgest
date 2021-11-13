@@ -6,13 +6,17 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Controller\CreateUpdateInvoiceDevis;
+use App\Controller\DownloadExportableDocument;
 use App\Repository\DevisRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 #[
@@ -31,6 +35,12 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'controller' => CreateUpdateInvoiceDevis::class,
             ],
             'delete' => ['security' => 'object.getCustomer().getOwner() == user'],
+            'export' => [
+                'security' => 'object.getCustomer().getOwner() == user',
+                'method' => Request::METHOD_GET,
+                'path' => '/devis/{id}/export',
+                'controller' => DownloadExportableDocument::class,
+            ],
         ],
         subresourceOperations: [
             'api_customers_devis_get_subresource' => [
@@ -45,6 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     )
 ]
 #[ApiFilter(OrderFilter::class, properties: ["createdAt" => "desc"], arguments: ["orderParameterName" => "order"])]
+#[Vich\Uploadable]
 class Devis
 {
     #[ORM\Id]
@@ -192,6 +203,15 @@ class Devis
     ])]
     private bool $isDraft;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Assert\Type(\DateTimeImmutable::class)]
+    #[Groups([
+        'devis:read',
+        'devis:write',
+        'devis:update'
+    ])]
+    private ?\DateTimeImmutable $undraftedAt = null;
+
     #[ORM\Column(type: "datetime", nullable: true)]
     #[Assert\Type(DateTimeInterface::class)]
     #[Groups([
@@ -226,6 +246,12 @@ class Devis
         'allDevis:read'
     ])]
     private Collection $services;
+
+    #[Vich\UploadableField(mapping: "devis_file", fileNameProperty: 'fileName')]
+    private ?File $file = null;
+
+    #[ORM\Column(name: "file", type: "string", length: 255, nullable: true)]
+    private ?string $fileName = null;
 
     public function __construct()
     {
@@ -367,6 +393,8 @@ class Devis
     {
         $this->isDraft = $isDraft;
 
+        if ($isDraft === false) $this->setUndraftedAt(new \DateTimeImmutable());
+
         return $this;
     }
 
@@ -422,5 +450,50 @@ class Devis
         }
 
         return $this;
+    }
+
+    public function getUndraftedAt(): ?\DateTimeImmutable
+    {
+        return $this->undraftedAt;
+    }
+
+    public function setUndraftedAt(?\DateTimeImmutable $undraftedAt): self
+    {
+        $this->undraftedAt = $undraftedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param File|null $file
+     */
+    public function setFile(?File $file): self
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string|null $fileName
+     */
+    public function setFileName(?string $fileName): void
+    {
+        $this->fileName = $fileName;
     }
 }
